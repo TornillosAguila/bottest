@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "version": 3,
+    "version": 5,
     "updated": "2026-05-20",
-    "description": "Grupo Águila — Año 2026 (Ene–May): admon re-integrado exclusivamente con datos 2026"
+    "description": "Grupo Águila — 2026 con Flujo de Efectivo explícito"
   },
   "ventas": {
     "metas": {
@@ -591,10 +591,10 @@
         -249618.9500000002,
         70970.0,
         143370.0,
-        null,
+        -2184800.0,
         245335.76000000024,
         -522310.56000000006,
-        null,
+        -5202032.0,
         -781928.76,
         2757687.4000000004,
         452962.8699999994,

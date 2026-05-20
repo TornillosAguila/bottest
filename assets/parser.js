@@ -71,12 +71,19 @@
     /* — ADMON — */
     const A = raw.admon;
     const aMeses = [...new Set(A.cortes.map(c => c.mes))];
-    // Recalcula flujo
+    /* Preservar FLUJO explícito del JSON si existe; calcular sólo cuando falte */
+    const flujoExistente = A.data['FLUJO'] || [];
     A.data['FLUJO'] = A.cortes.map((_,i) => {
+      // Si ya viene un valor explícito en el JSON, respetarlo
+      if (flujoExistente[i] != null && !isNaN(flujoExistente[i])) {
+        return flujoExistente[i];
+      }
+      // Si no, calcularlo (tratando null como 0 para Ing/Egr/Gas)
       const ing = A.data['INGRESOS']?.[i];
       const egr = A.data['EGRESOS']?.[i];
       const gas = A.data['GASTOS_OPERACION']?.[i];
-      return (ing != null && egr != null) ? (ing - egr - (gas || 0)) : null;
+      if (ing == null && egr == null && gas == null) return null;
+      return (ing || 0) - (egr || 0) - (gas || 0);
     });
 
     const admon = {
