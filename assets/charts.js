@@ -385,6 +385,145 @@
   };
 
   /* ════════════════════════════════════════
+     RESUMEN EMPRESA — Gráficas anuales y KPI rentabilidad
+  ════════════════════════════════════════ */
+  window.buildEmpresa = function() {
+    const V = window.Dash.ventas;
+    const O = window.Dash.ope;
+    const A = window.Dash.admon;
+    const sumNN = a => a.filter(v => v!=null && !isNaN(v)).reduce((s,v)=>s+v, 0);
+
+    /* ── Chart 1: Ventas anuales por canal ── */
+    const canalLabels = V.canalesVenta.map(capMes);
+    const canalVals   = V.canalesVenta.map(c => sumNN(V.data[c]));
+    const canalCols   = V.canalesVenta.map(c => V.canalConfig[c].color);
+    mk('chartEmpVentasCanales', { type:'bar', data:{
+      labels: [...canalLabels, 'Total'],
+      datasets:[
+        ds_bar('Total anual', [...canalVals, sumNN(V.data['VENTAS TOTALES'])], [...canalCols, '#f87171']),
+      ]},
+      options: barOpts('$') });
+
+    /* ── Chart 2: Ventas totales por mes ── */
+    const vMes = porMes(V.cortes, V.data['VENTAS TOTALES'], 'sum');
+    mk('chartEmpVentasMes', { type:'line', data:{
+      labels: vMes.labels,
+      datasets:[
+        ds_line('Ventas Mensuales', vMes.valoresMes, '#22d3ee', {fill:true}),
+        ds_metaArr(vMes.conteoMes.map(n => V.metas['VENTAS TOTALES'] * n)),
+      ]},
+      options: lineOpts('$') });
+
+    /* ── Chart 3: Compras vs Nivel Servicio mensual (operaciones) ── */
+    const cMes  = porMes(O.cortes, O.data['COMPRA'],         'sum');
+    const nsMes = porMes(O.cortes, O.data['NIVEL_SERVICIO'], 'sum');
+    mk('chartEmpOpeFlujo', { type:'bar', data:{
+      labels: cMes.labels,
+      datasets:[
+        ds_bar('Compras',         cMes.valoresMes,  '#4f8ef7'),
+        ds_bar('Nivel Servicio',  nsMes.valoresMes, '#f59e0b'),
+      ]},
+      options: barOpts('$') });
+
+    /* ── Chart 4: Devoluciones y Máquinas (operaciones) ── */
+    const dMes   = porMes(O.cortes, O.data['DEVOLUCIONES'], 'sum');
+    const mqMes  = porMes(O.cortes, O.data['MAQUINAS'],     'sum');
+    mk('chartEmpOpeCalidad', { type:'bar', data:{
+      labels: dMes.labels,
+      datasets:[
+        ds_bar('Devoluciones',    dMes.valoresMes,  '#22c55e'),
+        ds_bar('Máqs. Reparadas', mqMes.valoresMes, '#a78bfa'),
+      ]},
+      options: barOpts('num') });
+
+    /* ── Chart 5: Ingresos/Egresos/Gastos mensual (admon) ── */
+    const ingMes = porMes(A.cortes, A.data['INGRESOS'],         'sum');
+    const egrMes = porMes(A.cortes, A.data['EGRESOS'],          'sum');
+    const gasMes = porMes(A.cortes, A.data['GASTOS_OPERACION'], 'sum');
+    mk('chartEmpAdmonFinanzas', { type:'bar', data:{
+      labels: ingMes.labels,
+      datasets:[
+        ds_bar('Ingresos', ingMes.valoresMes, '#4f8ef7'),
+        ds_bar('Egresos',  egrMes.valoresMes, '#f87171'),
+        ds_bar('Gastos',   gasMes.valoresMes, '#f59e0b'),
+      ]},
+      options: barOpts('$') });
+
+    /* ── Chart 6: Flujo de Efectivo acumulado ── */
+    const fluMes = porMes(A.cortes, A.data['FLUJO'], 'sum');
+    // Acumulado
+    let acum = 0;
+    const acumArr = fluMes.valoresMes.map(v => { acum += (v||0); return acum; });
+    mk('chartEmpAdmonFlujo', { type:'line', data:{
+      labels: fluMes.labels,
+      datasets:[
+        ds_line('Flujo Mensual',     fluMes.valoresMes, '#22d3ee'),
+        ds_line('Flujo Acumulado',   acumArr,           '#a78bfa', {fill:true}),
+      ]},
+      options: lineOpts('$') });
+
+    /* ── Chart 7: Rentabilidad mensual (KPI principal) ── */
+    // Margen Operativo por mes = (VentasMes - ComprasMes - GastosMes) / VentasMes * 100
+    const allMeses = [...new Set([...V.meses, ...O.meses, ...A.meses])];
+
+    function sumMonthValues(cortes, valores, mes) {
+      let s = 0, has = false;
+      cortes.forEach((c,i) => {
+        if (c.mes === mes && valores[i] != null && !isNaN(valores[i])) {
+          s += valores[i]; has = true;
+        }
+      });
+      return has ? s : null;
+    }
+
+    const ventasPorMes  = allMeses.map(m => sumMonthValues(V.cortes, V.data['VENTAS TOTALES'], m));
+    const comprasPorMes = allMeses.map(m => sumMonthValues(O.cortes, O.data['COMPRA'], m));
+    const gastosPorMes  = allMeses.map(m => sumMonthValues(A.cortes, A.data['GASTOS_OPERACION'], m));
+
+    const rentMes = allMeses.map((m,i) => {
+      const v = ventasPorMes[i];
+      const c = comprasPorMes[i] || 0;
+      const g = gastosPorMes[i]  || 0;
+      if (v == null || v === 0) return null;
+      return +(((v - c - g) / v) * 100).toFixed(1);
+    });
+
+    // Total anual rentabilidad para línea de referencia
+    const totV = sumNN(V.data['VENTAS TOTALES']);
+    const totC = sumNN(O.data['COMPRA']);
+    const totG = sumNN(A.data['GASTOS_OPERACION']);
+    const rentAnual = totV > 0 ? +(((totV - totC - totG) / totV) * 100).toFixed(1) : 0;
+
+    mk('chartRentabilidadMes', { type:'line', data:{
+      labels: allMeses.map(capMes),
+      datasets:[
+        { label:'Rentabilidad mensual %', data: rentMes,
+          borderColor:'#22d3ee', backgroundColor:'rgba(34,211,238,.15)',
+          borderWidth:3, pointRadius:6, pointHoverRadius:8,
+          pointBackgroundColor: rentMes.map(v => v == null ? '#2e3350' : v >= rentAnual ? '#22c55e' : v >= 20 ? '#f59e0b' : '#f87171'),
+          pointBorderColor:'#fff', pointBorderWidth:2, tension:.35, fill:true },
+        { label:`Promedio anual (${rentAnual}%)`, data: Array(allMeses.length).fill(rentAnual),
+          type:'line', borderColor:'#f87171bb', borderWidth:2, borderDash:[8,5],
+          pointRadius:0, fill:false },
+      ]},
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode:'index', intersect:false },
+        plugins: {
+          legend: { position:'top' },
+          tooltip: { callbacks: { label: c => ' '+(c.raw==null ? 'sin datos' : c.raw.toFixed(1)+'%') } },
+        },
+        scales: {
+          x: { grid:{color:GRID}, ticks:{...TICK} },
+          y: { grid:{color:GRID}, ticks:{...TICK, callback: v => v+'%'},
+               suggestedMin: Math.min(0, ...rentMes.filter(v=>v!=null)) - 5,
+               suggestedMax: Math.max(...rentMes.filter(v=>v!=null), rentAnual) + 5 },
+        },
+      }
+    });
+  };
+
+  /* ════════════════════════════════════════
      CONSOLIDADO
   ════════════════════════════════════════ */
   window.buildConsolidado = function() {

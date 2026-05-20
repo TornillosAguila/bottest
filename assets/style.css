@@ -237,6 +237,90 @@ tr:hover td { background: var(--surface2); }
   text-align: center;
 }
 
+/* ══════════════════════════════════════════
+   RESUMEN EMPRESA — Hero KPI y secciones
+   ══════════════════════════════════════════ */
+.hero-rent {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 20px;
+  background: linear-gradient(135deg, rgba(245,158,11,.12) 0%, rgba(79,142,247,.08) 100%);
+  border: 1px solid rgba(245,158,11,.35);
+  border-radius: 16px;
+  padding: 22px 26px;
+  margin-bottom: 22px;
+  align-items: center;
+}
+.hero-left .hero-label {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 2px; color: var(--amber);
+  margin-bottom: 8px;
+}
+.hero-left .hero-value {
+  font-size: 48px; font-weight: 800;
+  color: #fff; line-height: 1;
+  background: linear-gradient(135deg, #f59e0b 0%, #22d3ee 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero-left .hero-sub {
+  font-size: 12px; color: var(--muted);
+  margin-top: 8px;
+}
+.hero-right {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.hero-metric {
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+.hero-metric-label {
+  font-size: 10px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 1px;
+  color: var(--muted); margin-bottom: 4px;
+}
+.hero-metric-value {
+  font-size: 17px; font-weight: 700; color: #fff;
+}
+.hero-metric-sub {
+  font-size: 10px; color: var(--muted); margin-top: 2px;
+}
+@media (max-width: 900px) {
+  .hero-rent { grid-template-columns: 1fr; }
+  .hero-right { grid-template-columns: repeat(3, 1fr); }
+  .hero-left .hero-value { font-size: 36px; }
+}
+@media (max-width: 600px) {
+  .hero-right { grid-template-columns: 1fr; }
+}
+
+/* Section titles para Resumen Empresa */
+.empresa-section-title {
+  font-size: 14px; font-weight: 700;
+  color: var(--text);
+  padding: 14px 0 10px;
+  margin: 18px 0 14px;
+  border-bottom: 2px solid var(--border);
+  letter-spacing: .5px;
+}
+
+/* KPI grid empresa: más compacto */
+#kpi-empresa-ope, #kpi-empresa-admon {
+  margin-bottom: 16px;
+}
+@media (max-width: 1200px) {
+  #kpi-empresa-ventas { grid-template-columns: repeat(3,1fr) !important; }
+  #kpi-empresa-ope    { grid-template-columns: repeat(3,1fr) !important; }
+  #kpi-empresa-admon  { grid-template-columns: repeat(3,1fr) !important; }
+}
+@media (max-width: 700px) {
+  #kpi-empresa-ventas, #kpi-empresa-ope, #kpi-empresa-admon { grid-template-columns: repeat(2,1fr) !important; }
+}
+
 /* ── DOT ── */
 .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
 

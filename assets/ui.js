@@ -662,6 +662,91 @@
   }
 
   /* ══════════════════════════════════════════════════════════
+     RESUMEN EMPRESA — KPIs anuales
+  ══════════════════════════════════════════════════════════ */
+  function buildResumenEmpresa() {
+    const V = window.Dash.ventas;
+    const O = window.Dash.ope;
+    const A = window.Dash.admon;
+    const sumNN = a => a.filter(v => v!=null && !isNaN(v)).reduce((s,v)=>s+v, 0);
+    const avgNN = a => { const f=a.filter(v=>v!=null&&!isNaN(v)); return f.length?f.reduce((s,v)=>s+v,0)/f.length:0; };
+
+    /* ── Totales anuales ── */
+    // Ventas
+    const totV = sumNN(V.data['VENTAS TOTALES']);
+    const totPV  = sumNN(V.data['PUNTO DE VENTA']);
+    const totCC  = sumNN(V.data['CALL CENTER']);
+    const totPL  = sumNN(V.data['PLATAFORMA']);
+    const totAS  = sumNN(V.data['ASESORES']);
+    // Ope
+    const totCompras = sumNN(O.data['COMPRA']);
+    const totDev     = sumNN(O.data['DEVOLUCIONES']);
+    const totNS      = sumNN(O.data['NIVEL_SERVICIO']);
+    const totMaq     = sumNN(O.data['MAQUINAS']);
+    const avgDias    = avgNN(O.data['DIAS_REPARACION']);
+    // Admon
+    const totIng = sumNN(A.data['INGRESOS']);
+    const totEgr = sumNN(A.data['EGRESOS']);
+    const totGas = sumNN(A.data['GASTOS_OPERACION']);
+    const totFlu = sumNN(A.data['FLUJO']);
+    const avgCob = avgNN(A.data['PLAZO_COBRO']);
+    const avgRec = avgNN(A.data['RECUPERACION']);
+
+    /* ── Rentabilidad (Margen Operativo) ── */
+    const margenOperativo = totV > 0 ? ((totV - totCompras - totGas) / totV * 100) : 0;
+    const margenBruto     = totV > 0 ? ((totV - totCompras) / totV * 100) : 0;
+    const margenNeto      = totIng > 0 ? (totFlu / totIng * 100) : 0;
+
+    /* ── HERO ── */
+    document.getElementById('hero-rent-value').textContent = margenOperativo.toFixed(1) + '%';
+    document.getElementById('hero-rent-sub').textContent = 'Margen operativo · Año 2026';
+    document.getElementById('hero-rent-breakdown').innerHTML = `
+      <div class="hero-metric">
+        <div class="hero-metric-label">💰 Margen Bruto</div>
+        <div class="hero-metric-value">${margenBruto.toFixed(1)}%</div>
+        <div class="hero-metric-sub">(Ventas − Compras) ÷ Ventas</div>
+      </div>
+      <div class="hero-metric">
+        <div class="hero-metric-label">📊 Margen Operativo</div>
+        <div class="hero-metric-value">${margenOperativo.toFixed(1)}%</div>
+        <div class="hero-metric-sub">descontando gastos operación</div>
+      </div>
+      <div class="hero-metric">
+        <div class="hero-metric-label">🌊 Margen Neto</div>
+        <div class="hero-metric-value" style="color:${margenNeto>=0?'var(--green)':'var(--red)'}">${margenNeto.toFixed(1)}%</div>
+        <div class="hero-metric-sub">Flujo Efectivo ÷ Ingresos</div>
+      </div>`;
+
+    /* ── KPIs VENTAS ── */
+    const gV = document.getElementById('kpi-empresa-ventas');
+    gV.innerHTML = `
+      <div class="kpi-card blue"><div class="kpi-label">🏪 Punto de Venta</div><div class="kpi-value">${fmtK(totPV)}</div><div class="kpi-sub">Anual · 19 cortes</div></div>
+      <div class="kpi-card green"><div class="kpi-label">📞 Call Center</div><div class="kpi-value">${fmtK(totCC)}</div><div class="kpi-sub">Anual · 19 cortes</div></div>
+      <div class="kpi-card amber"><div class="kpi-label">💻 Plataforma</div><div class="kpi-value">${fmtK(totPL)}</div><div class="kpi-sub">Anual · 19 cortes</div></div>
+      <div class="kpi-card purple"><div class="kpi-label">👥 Asesores</div><div class="kpi-value">${fmtK(totAS)}</div><div class="kpi-sub">Anual · 19 cortes</div></div>
+      <div class="kpi-card red"><div class="kpi-label">💰 Ventas Totales</div><div class="kpi-value">${fmtK(totV)}</div><div class="kpi-sub">Suma anual real</div></div>`;
+
+    /* ── KPIs OPERACIONES ── */
+    const gO = document.getElementById('kpi-empresa-ope');
+    gO.innerHTML = `
+      <div class="kpi-card blue"><div class="kpi-label">📦 Compras</div><div class="kpi-value">${fmtK(totCompras)}</div><div class="kpi-sub">Anual · ${O.cortes.length} cortes</div></div>
+      <div class="kpi-card green"><div class="kpi-label">↩️ Devoluciones</div><div class="kpi-value">${Math.round(totDev)}</div><div class="kpi-sub">Total anual</div></div>
+      <div class="kpi-card amber"><div class="kpi-label">📊 Nivel Servicio</div><div class="kpi-value">${fmtK(totNS)}</div><div class="kpi-sub">Suma anual</div></div>
+      <div class="kpi-card purple"><div class="kpi-label">🔧 Máqs. Reparadas</div><div class="kpi-value">${Math.round(totMaq)}</div><div class="kpi-sub">Total anual</div></div>
+      <div class="kpi-card red"><div class="kpi-label">⏱️ Días Prom. Reparación</div><div class="kpi-value">${avgDias.toFixed(1)}</div><div class="kpi-sub">Promedio anual</div></div>`;
+
+    /* ── KPIs ADMINISTRACIÓN ── */
+    const gA = document.getElementById('kpi-empresa-admon');
+    gA.innerHTML = `
+      <div class="kpi-card blue"><div class="kpi-label">💵 Ingresos</div><div class="kpi-value">${fmtK(totIng)}</div><div class="kpi-sub">Anual · ${A.cortes.length} cortes</div></div>
+      <div class="kpi-card purple"><div class="kpi-label">💸 Egresos</div><div class="kpi-value">${fmtK(totEgr)}</div><div class="kpi-sub">Anual</div></div>
+      <div class="kpi-card red"><div class="kpi-label">⚙️ Gastos Operación</div><div class="kpi-value">${fmtK(totGas)}</div><div class="kpi-sub">Anual</div></div>
+      <div class="kpi-card ${totFlu>=0?'green':'red'}"><div class="kpi-label">🌊 Flujo Acumulado</div><div class="kpi-value" style="color:${totFlu>=0?'#22c55e':'#f87171'}">${fmtK(totFlu)}</div><div class="kpi-sub">${totFlu>=0?'Positivo ✓':'Negativo ⚠'}</div></div>
+      <div class="kpi-card amber"><div class="kpi-label">📅 Plazo Cobro</div><div class="kpi-value">${avgCob.toFixed(1)}d</div><div class="kpi-sub">Promedio · meta &lt;35</div></div>
+      <div class="kpi-card green"><div class="kpi-label">📈 % Recuperación</div><div class="kpi-value">${(avgRec*100).toFixed(1)}%</div><div class="kpi-sub">Promedio · meta &lt;33%</div></div>`;
+  }
+
+  /* ══════════════════════════════════════════════════════════
      NAVEGACIÓN
   ══════════════════════════════════════════════════════════ */
   const builtPages = {};
@@ -700,6 +785,7 @@
       if (id==='admon')   { buildKPIsAdmon(); window.buildAdmon(); }
       if (id==='tabla-a') buildTablaAdmon();
       if (id==='consolidado') { buildSemaforo(); window.buildConsolidado(); }
+      if (id==='empresa')     { buildResumenEmpresa(); window.buildEmpresa(); }
     }
   };
 

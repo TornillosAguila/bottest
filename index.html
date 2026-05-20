@@ -41,6 +41,7 @@
     <div class="tab sep"    onclick="showPage('admon',this)">💼 Administración</div>
     <div class="tab"        onclick="showPage('tabla-a',this)">📋 Detalle Admon.</div>
     <div class="tab sep"    onclick="showPage('consolidado',this)">🔷 Consolidado</div>
+    <div class="tab sep"    onclick="showPage('empresa',this)" style="color:#f59e0b">🎯 Resumen Empresa</div>
   </div>
 
   <div class="main">
@@ -347,6 +348,88 @@
           <div id="semaforo-list" style="margin-top:6px"></div>
         </div>
       </div>
+    <!-- ══ RESUMEN EMPRESA ══ -->
+    <div class="page" id="page-empresa">
+
+      <!-- Hero KPI Rentabilidad -->
+      <div class="hero-rent" id="hero-rent">
+        <div class="hero-left">
+          <div class="hero-label">🎯 RENTABILIDAD EMPRESA 2026</div>
+          <div class="hero-value" id="hero-rent-value">—</div>
+          <div class="hero-sub" id="hero-rent-sub">Margen operativo · Año en curso</div>
+        </div>
+        <div class="hero-right" id="hero-rent-breakdown"></div>
+      </div>
+
+      <!-- ── Sección VENTAS ── -->
+      <div class="empresa-section-title">🛒 Resumen de Ventas — Año 2026</div>
+      <div class="kpi-grid" id="kpi-empresa-ventas" style="grid-template-columns:repeat(5,1fr)"></div>
+      <div class="charts-row cols-2e">
+        <div class="panel">
+          <div class="panel-title">Total Anual por Canal</div>
+          <div class="panel-sub">Suma de todos los cortes 2026</div>
+          <div class="chart-box"><canvas id="chartEmpVentasCanales" role="img"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Ventas Totales por Mes</div>
+          <div class="panel-sub">Consolidación mensual</div>
+          <div class="chart-box"><canvas id="chartEmpVentasMes" role="img"></canvas></div>
+        </div>
+      </div>
+
+      <!-- ── Sección OPERACIONES ── -->
+      <div class="empresa-section-title">⚙️ Resumen de Operaciones — Año 2026</div>
+      <div class="kpi-grid" id="kpi-empresa-ope" style="grid-template-columns:repeat(5,1fr)"></div>
+      <div class="charts-row cols-2e">
+        <div class="panel">
+          <div class="panel-title">Compras vs Nivel de Servicio (Mensual)</div>
+          <div class="panel-sub">Comparativo de flujo operativo</div>
+          <div class="chart-box"><canvas id="chartEmpOpeFlujo" role="img"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Devoluciones y Máquinas (Mensual)</div>
+          <div class="panel-sub">Indicadores de calidad y servicio</div>
+          <div class="chart-box"><canvas id="chartEmpOpeCalidad" role="img"></canvas></div>
+        </div>
+      </div>
+
+      <!-- ── Sección ADMINISTRACIÓN ── -->
+      <div class="empresa-section-title">💼 Resumen de Administración — Año 2026</div>
+      <div class="kpi-grid" id="kpi-empresa-admon" style="grid-template-columns:repeat(6,1fr)"></div>
+      <div class="charts-row cols-2e">
+        <div class="panel">
+          <div class="panel-title">Ingresos · Egresos · Gastos (Mensual)</div>
+          <div class="panel-sub">Flujo financiero consolidado</div>
+          <div class="chart-box"><canvas id="chartEmpAdmonFinanzas" role="img"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Flujo de Efectivo Acumulado</div>
+          <div class="panel-sub">Tendencia mes a mes del flujo</div>
+          <div class="chart-box"><canvas id="chartEmpAdmonFlujo" role="img"></canvas></div>
+        </div>
+      </div>
+
+      <!-- ── Sección RENTABILIDAD KPI ── -->
+      <div class="empresa-section-title">📊 KPI de Rentabilidad — Tendencia Mensual</div>
+      <div class="charts-row cols-1">
+        <div class="panel">
+          <div class="panel-title">Margen Operativo % por Mes</div>
+          <div class="panel-sub">Fórmula: (Ventas − Compras − Gastos Operación) ÷ Ventas × 100</div>
+          <div class="chart-box" style="min-height:280px"><canvas id="chartRentabilidadMes" role="img"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Nota informativa sobre las referencias -->
+      <div class="panel" style="margin-top:16px;background:rgba(245,158,11,.05);border-color:rgba(245,158,11,.3)">
+        <div class="panel-title" style="color:var(--amber)">ℹ️ Nota sobre los totales</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.7;margin-top:6px">
+          Los totales mostrados corresponden a la <strong style="color:var(--text)">suma real de todos los cortes registrados en 2026</strong>.
+          Si tu referencia en Excel suma la columna META + cortes (ej: $70.29M ventas / $37.92M compras),
+          la diferencia es exactamente <strong style="color:var(--text)">1 × meta semanal</strong> ($3.81M ventas · $2.16M compras).
+          Aquí mostramos el desempeño real sin incluir la meta como dato histórico.
+        </div>
+      </div>
+
     </div>
 
   </div><!-- /main -->
