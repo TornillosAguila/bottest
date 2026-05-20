@@ -223,6 +223,20 @@ tr:hover td { background: var(--surface2); }
 .page { display: none; }
 .page.active { display: block; }
 
+/* ── SECTION DIVIDER (consolidado mensual) ── */
+.section-divider {
+  font-size: 12px; font-weight: 600;
+  color: var(--amber);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 12px 0 4px;
+  margin: 8px 0 12px;
+  border-top: 1px solid rgba(245,158,11,.25);
+  border-bottom: 1px solid rgba(245,158,11,.15);
+  background: rgba(245,158,11,.04);
+  text-align: center;
+}
+
 /* ── DOT ── */
 .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
 

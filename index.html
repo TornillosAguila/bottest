@@ -82,6 +82,25 @@
           </div>
         </div>
       </div>
+
+      <div class="section-divider">📅 Consolidado mensual</div>
+
+      <div class="charts-row cols-2e">
+        <div class="panel">
+          <div class="panel-title">Ventas Totales por Mes</div>
+          <div class="panel-sub">Suma de todos los cortes del mes · línea punteada = meta mensual</div>
+          <div class="chart-box">
+            <canvas id="chartMesTotalLinea" role="img" aria-label="Ventas totales consolidadas por mes"></canvas>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Ventas Consolidadas por Mes</div>
+          <div class="panel-sub">Total mensual vs meta acumulada (meta semanal × cortes del mes)</div>
+          <div class="chart-box">
+            <canvas id="chartMesTotalBarra" role="img" aria-label="Ventas consolidadas mensuales vs meta"></canvas>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- ══ CANALES ══ -->
@@ -169,6 +188,34 @@
           <div class="chart-box"><canvas id="chartDias" role="img" aria-label="Días de reparación"></canvas></div>
         </div>
       </div>
+
+      <div class="section-divider">📅 Consolidado mensual</div>
+
+      <div class="charts-row cols-2e">
+        <div class="panel">
+          <div class="panel-title">📦 Compras por Mes</div>
+          <div class="panel-sub">Suma de compras por mes · meta acumulada</div>
+          <div class="chart-box"><canvas id="chartComprasMes" role="img" aria-label="Compras por mes"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">↩️ Devoluciones por Mes</div>
+          <div class="panel-sub">Suma mensual · Verde &lt; meta acumulada</div>
+          <div class="chart-box"><canvas id="chartDevolucionesMes" role="img" aria-label="Devoluciones por mes"></canvas></div>
+        </div>
+      </div>
+
+      <div class="charts-row cols-2e">
+        <div class="panel">
+          <div class="panel-title">📊 Nivel de Servicio por Mes</div>
+          <div class="panel-sub">Suma mensual ($) · meta acumulada</div>
+          <div class="chart-box"><canvas id="chartNivelServicioMes" role="img" aria-label="Nivel servicio por mes"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">🔧 Máquinas Reparadas por Mes</div>
+          <div class="panel-sub">Suma mensual · meta acumulada</div>
+          <div class="chart-box"><canvas id="chartMaquinasMes" role="img" aria-label="Máquinas reparadas por mes"></canvas></div>
+        </div>
+      </div>
     </div>
 
     <!-- ══ TABLA OPE ══ -->
@@ -220,6 +267,47 @@
           <div class="panel-title">📈 % Recuperación</div>
           <div class="panel-sub">Meta &lt;33%</div>
           <div class="chart-box"><canvas id="chartRecuperacion" role="img" aria-label="Recuperación"></canvas></div>
+        </div>
+      </div>
+
+      <div class="section-divider">📅 Consolidado mensual</div>
+
+      <div class="charts-row cols-2e">
+        <div class="panel">
+          <div class="panel-title">💵 Ingresos por Mes</div>
+          <div class="panel-sub">Suma mensual · meta acumulada</div>
+          <div class="chart-box"><canvas id="chartIngresosMes" role="img" aria-label="Ingresos por mes"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">💵 Ingresos vs Egresos por Mes</div>
+          <div class="panel-sub">Comparativo consolidado mensual</div>
+          <div class="chart-box"><canvas id="chartIngEgrMes" role="img" aria-label="Ingresos vs egresos por mes"></canvas></div>
+        </div>
+      </div>
+
+      <div class="charts-row cols-2e">
+        <div class="panel">
+          <div class="panel-title">🌊 Flujo de Efectivo por Mes</div>
+          <div class="panel-sub">Verde = positivo · Rojo = negativo</div>
+          <div class="chart-box"><canvas id="chartFlujoMes" role="img" aria-label="Flujo de efectivo por mes"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">⚙️ Gastos de Operación por Mes</div>
+          <div class="panel-sub">Suma mensual · meta acumulada</div>
+          <div class="chart-box"><canvas id="chartGastosMes" role="img" aria-label="Gastos operación por mes"></canvas></div>
+        </div>
+      </div>
+
+      <div class="charts-row cols-2e">
+        <div class="panel">
+          <div class="panel-title">📅 Plazo de Cobro por Mes</div>
+          <div class="panel-sub">Promedio de días por mes · meta 35</div>
+          <div class="chart-box"><canvas id="chartPlazoCobroMes" role="img" aria-label="Plazo cobro por mes"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">📈 % Recuperación por Mes</div>
+          <div class="panel-sub">Promedio mensual · meta &lt;33%</div>
+          <div class="chart-box"><canvas id="chartRecuperacionMes" role="img" aria-label="Recuperación por mes"></canvas></div>
         </div>
       </div>
     </div>
