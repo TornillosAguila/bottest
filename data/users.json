@@ -1,0 +1,40 @@
+{
+  "_meta": {
+    "version": 2,
+    "algorithm": "PBKDF2-HMAC-SHA256",
+    "iterations": 100000,
+    "keyLengthBits": 256,
+    "saltBytes": 16,
+    "note": "Las contraseñas NO se almacenan en texto plano. Roles: 'super' edita todo; 'ventas' | 'ope' | 'admon' edita solo su departamento. Para cambiar/crear cuentas, usa tools/hash-password.html o el botón 🔑 Contraseña en modo administrador."
+  },
+  "users": [
+    {
+      "username": "b3t0",
+      "role": "super",
+      "name": "Super Administrador",
+      "salt": "ac82dccbc86e89793a0492591e8f243c",
+      "hash": "5d3a223de5338fa242d0d49f5765e4d2a71c80a6ab4dbc35c558fbaab80e421e"
+    },
+    {
+      "username": "ventas",
+      "role": "ventas",
+      "name": "Departamento de Ventas",
+      "salt": "738ae430732cc58db32d7e46e1dafadb",
+      "hash": "a7a6ac3f6b2e0fd8e40f99a91357625884754214033040a69ad8a0a41624a82b"
+    },
+    {
+      "username": "operaciones",
+      "role": "ope",
+      "name": "Departamento de Operaciones",
+      "salt": "f6edb8152ffb24e56183a7623e3513b1",
+      "hash": "f9f6c5a1ec46af2b6f982f156abd79629a7257f475995c7e58912c6776526463"
+    },
+    {
+      "username": "administracion",
+      "role": "admon",
+      "name": "Departamento de Administración",
+      "salt": "5a83341080311213b9c1828c1a78acbe",
+      "hash": "103134bc6d8bdeb0f62b02097a043f4cca9bff637d839bcfc6f6f3ecb726625c"
+    }
+  ]
+}
