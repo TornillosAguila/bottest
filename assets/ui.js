@@ -264,6 +264,131 @@
     toast('📥 dash.json descargado — sube el archivo a tu repo de GitHub', 'info', 5000);
   }
 
+  /* ════════════════════════════════════════════════════════════
+     GUARDAR EN GITHUB — commit directo de dash.json al repositorio
+     ════════════════════════════════════════════════════════════ */
+  const GH_CONFIG = {
+    owner:  'TornillosAguila',
+    repo:   'bottest',
+    branch: 'main',
+    path:   'data/dash.json',
+  };
+
+  /* El token se guarda SOLO en sessionStorage (se borra al cerrar la pestaña)
+     o en memoria. Nunca en localStorage ni en el repo. */
+  function getGhToken() {
+    try { return sessionStorage.getItem('ghToken') || window.__ghTokenMem || null; }
+    catch(e) { return window.__ghTokenMem || null; }
+  }
+  function clearGhToken() {
+    try { sessionStorage.removeItem('ghToken'); } catch(e){}
+    window.__ghTokenMem = null;
+  }
+
+  /* Codifica UTF-8 → base64 (maneja acentos como "Águila" correctamente) */
+  function toBase64Utf8(str) {
+    const bytes = new TextEncoder().encode(str);
+    let bin = '';
+    bytes.forEach(b => bin += String.fromCharCode(b));
+    return btoa(bin);
+  }
+
+  function showGitHubTokenModal(onReady) {
+    const ov = createOverlay(`
+      <div class="modal">
+        <div class="modal-title">☁️ Conectar con GitHub</div>
+        <div class="modal-sub">Pega tu <strong>token fine-grained</strong> con permiso <em>Contents: Read and write</em> sobre <strong>${GH_CONFIG.owner}/${GH_CONFIG.repo}</strong>.</div>
+        <label>Token de acceso</label>
+        <input type="password" id="gh-token" autocomplete="off" placeholder="github_pat_...">
+        <label style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:12px;font-weight:400">
+          <input type="checkbox" id="gh-remember" checked style="width:auto"> Recordar mientras esta pestaña esté abierta
+        </label>
+        <div style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.7">
+          🔒 Crea uno en <strong>github.com/settings/personal-access-tokens</strong> → Fine-grained · Repository access: solo <strong>${GH_CONFIG.repo}</strong> · Permissions → <strong>Contents: Read and write</strong>.<br>
+          ⚠️ Es una credencial de escritura: nunca la subas al repo ni la compartas.
+        </div>
+        <div class="modal-error" id="gh-err"></div>
+        <div class="modal-actions">
+          <button class="btn-secondary" id="gh-cancel">Cancelar</button>
+          <button class="btn-primary"   id="gh-ok">Conectar</button>
+        </div>
+      </div>`);
+    ov.querySelector('#gh-cancel').addEventListener('click', () => ov.remove());
+    ov.querySelector('#gh-ok').addEventListener('click', () => {
+      const tk  = ov.querySelector('#gh-token').value.trim();
+      const err = ov.querySelector('#gh-err');
+      if (!tk) { err.textContent = 'Pega un token válido'; err.classList.add('show'); return; }
+      if (ov.querySelector('#gh-remember').checked) {
+        try { sessionStorage.setItem('ghToken', tk); } catch(e) { window.__ghTokenMem = tk; }
+      } else { window.__ghTokenMem = tk; }
+      ov.remove();
+      if (onReady) onReady();
+    });
+    setTimeout(() => ov.querySelector('#gh-token').focus(), 50);
+  }
+
+  async function commitToGitHub() {
+    if (!adminLogged()) { toast('🔒 Inicia sesión de administrador', 'error'); return; }
+    const token = getGhToken();
+    if (!token) { showGitHubTokenModal(() => commitToGitHub()); return; }
+
+    // Persistir también localmente para que esta sesión quede consistente
+    saveToLocalStorage();
+
+    const base = `https://api.github.com/repos/${GH_CONFIG.owner}/${GH_CONFIG.repo}/contents/${GH_CONFIG.path}`;
+    const headers = {
+      'Authorization': 'Bearer ' + token,
+      'Accept': 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+    };
+
+    toast('☁️ Guardando en GitHub…', 'info', 8000);
+    try {
+      // 1) Obtener el SHA actual del archivo (necesario para actualizarlo)
+      let sha;
+      const getRes = await fetch(base + '?ref=' + GH_CONFIG.branch, { headers, cache:'no-store' });
+      if (getRes.status === 200) {
+        sha = (await getRes.json()).sha;
+      } else if (getRes.status === 404) {
+        sha = undefined;  // archivo aún no existe → se creará
+      } else if (getRes.status === 401) {
+        clearGhToken();
+        toast('❌ Token inválido o expirado. Vuelve a conectar.', 'error', 6000);
+        return;
+      } else {
+        toast('❌ No se pudo leer el repo (HTTP ' + getRes.status + ')', 'error', 6000);
+        return;
+      }
+
+      // 2) Preparar el contenido (mismo formato que Exportar JSON)
+      const content = JSON.stringify(window.DashRaw, null, 2);
+      const stamp   = new Date().toISOString().slice(0,16).replace('T', ' ');
+      const body = {
+        message: 'Dashboard: actualizar cortes (' + stamp + ')',
+        content: toBase64Utf8(content),
+        branch:  GH_CONFIG.branch,
+      };
+      if (sha) body.sha = sha;
+
+      // 3) PUT → hace el commit
+      const putRes = await fetch(base, { method:'PUT', headers, body: JSON.stringify(body) });
+      if (putRes.status === 200 || putRes.status === 201) {
+        toast('✅ Guardado en GitHub. Visible en el sitio y otras máquinas en ~1-2 min.', 'success', 7000);
+      } else if (putRes.status === 409) {
+        toast('⚠️ Conflicto: el dash.json cambió en el repo. Recarga la página y reintenta.', 'error', 7000);
+      } else if (putRes.status === 401 || putRes.status === 403) {
+        toast('❌ Sin permiso de escritura. El token necesita Contents: Read and write sobre este repo.', 'error', 8000);
+      } else {
+        const t = await putRes.text();
+        console.error('GitHub PUT error', putRes.status, t);
+        toast('❌ Error al guardar (HTTP ' + putRes.status + ')', 'error', 6000);
+      }
+    } catch (e) {
+      console.error('GitHub commit error', e);
+      toast('❌ Error de red al contactar GitHub', 'error', 6000);
+    }
+  }
+
   /* ── Limpiar override ──────────────────────────────────────── */
   function clearOverride() {
     if (!confirm('¿Eliminar cambios locales y volver a los datos del servidor?')) return;
@@ -457,6 +582,7 @@
       div.innerHTML = `
         <button class="btn-admin add"    id="atb-add-${seccion}">➕ Nueva semana</button>
         <button class="btn-admin save"   id="atb-save-${seccion}">💾 Guardar cambios</button>
+        <button class="btn-admin github" id="atb-github-${seccion}" title="Hacer commit de dash.json directo a tu repositorio" style="background:rgba(34,197,94,.18);border-color:rgba(34,197,94,.55);color:#22c55e;font-weight:700">☁️ Guardar en GitHub</button>
         <button class="btn-admin refresh" id="atb-refresh-${seccion}" title="Recalcular y refrescar todas las gráficas" style="background:rgba(34,211,238,.15);border-color:rgba(34,211,238,.5);color:#22d3ee">🔄 Actualizar</button>
         <button class="btn-admin export" id="atb-export-${seccion}">📥 Exportar JSON</button>
         <button class="btn-admin clear"  id="atb-clear-${seccion}">🗑️ Limpiar caché</button>
@@ -466,6 +592,7 @@
         saveToLocalStorage();
         document.dispatchEvent(new Event('dashrebuilt'));   // refresca todas las vistas
       });
+      div.querySelector(`#atb-github-${seccion}`).addEventListener('click', commitToGitHub);
       div.querySelector(`#atb-refresh-${seccion}`).addEventListener('click', () => {
         rebuildDash();                          // recalcula totales/flujo/meses y refresca todo
         toast('🔄 Dashboards actualizados');
