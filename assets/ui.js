@@ -404,6 +404,19 @@
   }
 
   /* Reconstruir window.Dash desde DashRaw */
+  // Recalcula el acumulado mensual (último corte de cada mes) — réplica de parser.calcAcumulado
+  function calcAcumuladoLocal(cortes, data) {
+    const meses = [...new Set(cortes.map(c => c.mes))];
+    const acu = {};
+    meses.forEach(mes => {
+      const idx  = cortes.map((c,i) => c.mes === mes ? i : -1).filter(i => i >= 0);
+      const last = idx[idx.length - 1];
+      acu[mes] = {};
+      Object.keys(data).forEach(k => { acu[mes][k] = data[k]?.[last] || 0; });
+    });
+    return acu;
+  }
+
   function rebuildDash() {
     const raw = window.DashRaw;
     // Recalcula totales y flujo
@@ -417,6 +430,20 @@
       const gas = raw.admon.data['GASTOS_OPERACION']?.[i];
       return ing!=null?ing-(egr||0)-(gas||0):null;
     });
+
+    // ── Refrescar las "fotos fijas" que el parser calculó una sola vez ──
+    // (window.Dash.X.data es la misma referencia que raw.X.data, pero meses
+    //  y acumuladoMes son snapshots separados que hay que recalcular)
+    const D = window.Dash;
+    if (D) {
+      ['ventas','ope','admon'].forEach(sec => {
+        if (D[sec] && D[sec].cortes) {
+          D[sec].meses = [...new Set(D[sec].cortes.map(c => c.mes))];
+          D[sec].acumuladoMes = calcAcumuladoLocal(D[sec].cortes, D[sec].data);
+        }
+      });
+    }
+
     document.dispatchEvent(new Event('dashrebuilt'));
   }
 
@@ -430,6 +457,7 @@
       div.innerHTML = `
         <button class="btn-admin add"    id="atb-add-${seccion}">➕ Nueva semana</button>
         <button class="btn-admin save"   id="atb-save-${seccion}">💾 Guardar cambios</button>
+        <button class="btn-admin refresh" id="atb-refresh-${seccion}" title="Recalcular y refrescar todas las gráficas" style="background:rgba(34,211,238,.15);border-color:rgba(34,211,238,.5);color:#22d3ee">🔄 Actualizar</button>
         <button class="btn-admin export" id="atb-export-${seccion}">📥 Exportar JSON</button>
         <button class="btn-admin clear"  id="atb-clear-${seccion}">🗑️ Limpiar caché</button>
         <button class="btn-admin pwd"    id="atb-pwd-${seccion}" title="Cambiar mi contraseña">🔑 Contraseña</button>`;
@@ -437,6 +465,10 @@
       div.querySelector(`#atb-save-${seccion}`).addEventListener('click', () => {
         saveToLocalStorage();
         document.dispatchEvent(new Event('dashrebuilt'));   // refresca todas las vistas
+      });
+      div.querySelector(`#atb-refresh-${seccion}`).addEventListener('click', () => {
+        rebuildDash();                          // recalcula totales/flujo/meses y refresca todo
+        toast('🔄 Dashboards actualizados');
       });
       div.querySelector(`#atb-export-${seccion}`).addEventListener('click', exportJSON);
       div.querySelector(`#atb-clear-${seccion}`).addEventListener('click', clearOverride);
@@ -950,6 +982,7 @@
       builtPages[id] = true;
       const V = window.Dash.ventas;
 
+      if (id==='resumen')     { buildKPIsVentas(); if(window.buildVentas) window.buildVentas(); }
       if (id==='canales') {
         buildMonthFilters();
         V.canalesVenta.forEach(c => window.buildCanalChart(c,'TODOS'));
@@ -980,20 +1013,24 @@
     initAdminButton();
   });
 
-  // Si el admin reconstruyó datos, refrescar TODO lo que dependa de los datos
+  // Si el admin reconstruyó datos, refrescar TODAS las vistas
   document.addEventListener('dashrebuilt', () => {
     buildHeader();
-    buildKPIsVentas();
-    if (window.buildVentas) window.buildVentas();   // gráficas de la pestaña Resumen
 
-    // Invalidar caché de las demás páginas para que se reconstruyan al visitarlas
-    Object.keys(builtPages).forEach(k => { if (k !== 'resumen') builtPages[k] = false; });
+    // Invalidar TODA la caché de páginas (incluido resumen) para que se
+    // reconstruyan con datos frescos la próxima vez que se visiten
+    Object.keys(builtPages).forEach(k => builtPages[k] = false);
 
-    // Reconstruir de inmediato la página que está visible ahora mismo
+    // Reconstruir SOLO la página visible ahora mismo (evita dibujar en
+    // canvas ocultos de tamaño 0). Las demás se reconstruyen al navegar.
     const activePage = document.querySelector('.page.active');
     if (activePage) {
       const id = activePage.id.replace('page-', '');
-      if (id !== 'resumen') showPage(id, document.querySelector('.tab.active'));
+      showPage(id, document.querySelector('.tab.active'));
+    } else {
+      // Si por alguna razón no hay página activa, al menos refrescar KPIs
+      buildKPIsVentas();
+      if (window.buildVentas) window.buildVentas();
     }
   });
 
