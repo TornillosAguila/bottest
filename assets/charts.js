@@ -628,5 +628,6 @@
   };
 
   /* ── Init ──────────────────────────────── */
+  window.buildVentas = buildVentas;   // exponer para refrescar el Resumen tras admin save
   document.addEventListener('dashready', buildVentas);
 })();

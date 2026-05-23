@@ -434,7 +434,10 @@
         <button class="btn-admin clear"  id="atb-clear-${seccion}">🗑️ Limpiar caché</button>
         <button class="btn-admin pwd"    id="atb-pwd-${seccion}" title="Cambiar mi contraseña">🔑 Contraseña</button>`;
       div.querySelector(`#atb-add-${seccion}`).addEventListener('click', () => showNewCorteModal(seccion));
-      div.querySelector(`#atb-save-${seccion}`).addEventListener('click', saveToLocalStorage);
+      div.querySelector(`#atb-save-${seccion}`).addEventListener('click', () => {
+        saveToLocalStorage();
+        document.dispatchEvent(new Event('dashrebuilt'));   // refresca todas las vistas
+      });
       div.querySelector(`#atb-export-${seccion}`).addEventListener('click', exportJSON);
       div.querySelector(`#atb-clear-${seccion}`).addEventListener('click', clearOverride);
       div.querySelector(`#atb-pwd-${seccion}`).addEventListener('click', showChangePasswordModal);
@@ -977,10 +980,21 @@
     initAdminButton();
   });
 
-  // Si el admin reconstruyó datos, refrescar header y KPIs
+  // Si el admin reconstruyó datos, refrescar TODO lo que dependa de los datos
   document.addEventListener('dashrebuilt', () => {
     buildHeader();
     buildKPIsVentas();
+    if (window.buildVentas) window.buildVentas();   // gráficas de la pestaña Resumen
+
+    // Invalidar caché de las demás páginas para que se reconstruyan al visitarlas
+    Object.keys(builtPages).forEach(k => { if (k !== 'resumen') builtPages[k] = false; });
+
+    // Reconstruir de inmediato la página que está visible ahora mismo
+    const activePage = document.querySelector('.page.active');
+    if (activePage) {
+      const id = activePage.id.replace('page-', '');
+      if (id !== 'resumen') showPage(id, document.querySelector('.tab.active'));
+    }
   });
 
 })();
