@@ -115,6 +115,21 @@
     return { meses, valoresMes, conteoMes, labels: meses.map(capMes) };
   }
 
+  /* Meses únicos calculados EN VIVO desde los cortes (nunca usa fotos fijas) */
+  const mesesDe = cortes => [...new Set(cortes.map(c => c.mes))];
+
+  /* Valor del ÚLTIMO corte de cada mes, calculado en vivo.
+     Devuelve un objeto { MES: valorDelUltimoCorteDeEseMes }.
+     Esto reemplaza la dependencia de V.acumuladoMes (foto fija del parser). */
+  function ultimoPorMes(cortes, valores) {
+    const out = {};
+    cortes.forEach((c, i) => {
+      const v = valores?.[i];
+      if (v != null && !isNaN(v)) out[c.mes] = v;   // el último que se vea gana
+    });
+    return out;
+  }
+
   /* ════════════════════════════════════════
      VENTAS — Resumen
   ════════════════════════════════════════ */
@@ -130,11 +145,13 @@
       options: lineOpts('$') });
 
     /* (Original) Ventas por Mes — Último Corte */
+    const vMeses   = mesesDe(V.cortes);
+    const vUltimo  = ultimoPorMes(V.cortes, VT);
     mk('chartMeses', { type:'bar', data:{
-      labels: V.meses.map(capMes),
+      labels: vMeses.map(capMes),
       datasets:[
-        ds_bar('Ventas (último corte)', V.meses.map(m=>V.acumuladoMes[m]?.['VENTAS TOTALES']||0), V.meses.map((_,i)=>COLS[i%COLS.length])),
-        { label:'Meta semanal', data:Array(V.meses.length).fill(MT), type:'line',
+        ds_bar('Ventas (último corte)', vMeses.map(m=>vUltimo[m]||0), vMeses.map((_,i)=>COLS[i%COLS.length])),
+        { label:'Meta semanal', data:Array(vMeses.length).fill(MT), type:'line',
           borderColor:'#f87171bb', borderWidth:2, borderDash:[5,4],
           pointRadius:5, pointStyle:'crossRot', pointBackgroundColor:'#f87171', fill:false },
       ]}, options: barOpts('$') });
@@ -502,7 +519,7 @@
 
     /* ── Chart 7: Rentabilidad mensual (KPI principal) ── */
     // Margen Operativo por mes = (VentasMes - ComprasMes - GastosMes) / VentasMes * 100
-    const allMeses = [...new Set([...V.meses, ...O.meses, ...A.meses])];
+    const allMeses = [...new Set([...mesesDe(V.cortes), ...mesesDe(O.cortes), ...mesesDe(A.cortes)])];
 
     function sumMonthValues(cortes, valores, mes) {
       let s = 0, has = false;
@@ -569,8 +586,9 @@
     const O = window.Dash.ope;
     const A = window.Dash.admon;
 
-    const VM     = V.meses;
-    const vtMes  = VM.map(m=>V.acumuladoMes[m]?.['VENTAS TOTALES']||0);
+    const VM     = mesesDe(V.cortes);
+    const vtUlt  = ultimoPorMes(V.cortes, V.data['VENTAS TOTALES']);
+    const vtMes  = VM.map(m=>vtUlt[m]||0);
     const cmpMes = VM.map(m=>{
       const ii=O.cortes.map((c,i)=>c.mes===m?i:-1).filter(i=>i>=0);
       const vv=ii.map(i=>O.data['COMPRA'][i]).filter(v=>v!==null);
@@ -584,7 +602,7 @@
         { ...ds_line('Compras', cmpMes, '#a78bfa'), borderDash:[5,3] },
       ]}, options: lineOpts('$') });
 
-    const AM    = A.meses;
+    const AM    = mesesDe(A.cortes);
     const ingM  = AM.map(m=>{const ii=A.cortes.map((c,i)=>c.mes===m?i:-1).filter(i=>i>=0);const vv=ii.map(i=>A.data['INGRESOS'][i]).filter(v=>v!==null);return vv.length?avg(vv):null;});
     const egrM  = AM.map(m=>{const ii=A.cortes.map((c,i)=>c.mes===m?i:-1).filter(i=>i>=0);const vv=ii.map(i=>A.data['EGRESOS'][i]).filter(v=>v!==null);return vv.length?avg(vv):null;});
 
@@ -594,7 +612,7 @@
       options: barOpts('$') });
 
     const allM  = [...new Set([...VM,...AM])];
-    const vt3   = allM.map(m=>V.acumuladoMes[m]?.['VENTAS TOTALES']||null);
+    const vt3   = allM.map(m=>vtUlt[m]??null);
     const cmp3  = allM.map(m=>{const ii=O.cortes.map((c,i)=>c.mes===m?i:-1).filter(i=>i>=0);if(!ii.length)return null;const vv=ii.map(i=>O.data['COMPRA'][i]).filter(v=>v!==null);return vv.length?vv[vv.length-1]:null;});
     const ing3  = allM.map(m=>{const ii=A.cortes.map((c,i)=>c.mes===m?i:-1).filter(i=>i>=0);if(!ii.length)return null;const vv=ii.map(i=>A.data['INGRESOS'][i]).filter(v=>v!==null);return vv.length?vv[vv.length-1]:null;});
 
