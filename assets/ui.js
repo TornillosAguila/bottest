@@ -579,7 +579,11 @@
     div.dataset.section = seccion;
 
     if (canEditSection(seccion)) {
-      div.innerHTML = `
+      const esSuper = window.Auth?.isSuper() === true;
+
+      if (esSuper) {
+        // ── SUPER ADMIN (b3t0): control total ──
+        div.innerHTML = `
         <button class="btn-admin add"    id="atb-add-${seccion}">➕ Nueva semana</button>
         <button class="btn-admin save"   id="atb-save-${seccion}">💾 Guardar cambios</button>
         <button class="btn-admin github" id="atb-github-${seccion}" title="Hacer commit de dash.json directo a tu repositorio" style="background:rgba(34,197,94,.18);border-color:rgba(34,197,94,.55);color:#22c55e;font-weight:700">☁️ Guardar en GitHub</button>
@@ -587,19 +591,30 @@
         <button class="btn-admin export" id="atb-export-${seccion}">📥 Exportar JSON</button>
         <button class="btn-admin clear"  id="atb-clear-${seccion}">🗑️ Limpiar caché</button>
         <button class="btn-admin pwd"    id="atb-pwd-${seccion}" title="Cambiar mi contraseña">🔑 Contraseña</button>`;
-      div.querySelector(`#atb-add-${seccion}`).addEventListener('click', () => showNewCorteModal(seccion));
-      div.querySelector(`#atb-save-${seccion}`).addEventListener('click', () => {
-        saveToLocalStorage();
-        document.dispatchEvent(new Event('dashrebuilt'));   // refresca todas las vistas
-      });
-      div.querySelector(`#atb-github-${seccion}`).addEventListener('click', commitToGitHub);
-      div.querySelector(`#atb-refresh-${seccion}`).addEventListener('click', () => {
-        rebuildDash();                          // recalcula totales/flujo/meses y refresca todo
-        toast('🔄 Dashboards actualizados');
-      });
-      div.querySelector(`#atb-export-${seccion}`).addEventListener('click', exportJSON);
-      div.querySelector(`#atb-clear-${seccion}`).addEventListener('click', clearOverride);
-      div.querySelector(`#atb-pwd-${seccion}`).addEventListener('click', showChangePasswordModal);
+        div.querySelector(`#atb-add-${seccion}`).addEventListener('click', () => showNewCorteModal(seccion));
+        div.querySelector(`#atb-save-${seccion}`).addEventListener('click', () => {
+          saveToLocalStorage();
+          document.dispatchEvent(new Event('dashrebuilt'));   // refresca todas las vistas
+        });
+        div.querySelector(`#atb-github-${seccion}`).addEventListener('click', commitToGitHub);
+        div.querySelector(`#atb-refresh-${seccion}`).addEventListener('click', () => {
+          rebuildDash();                          // recalcula totales/flujo/meses y refresca todo
+          toast('🔄 Dashboards actualizados');
+        });
+        div.querySelector(`#atb-export-${seccion}`).addEventListener('click', exportJSON);
+        div.querySelector(`#atb-clear-${seccion}`).addEventListener('click', clearOverride);
+        div.querySelector(`#atb-pwd-${seccion}`).addEventListener('click', showChangePasswordModal);
+
+      } else {
+        // ── USUARIO DE DEPARTAMENTO: solo lo esencial para evitar errores ──
+        div.innerHTML = `
+        <button class="btn-admin add"    id="atb-add-${seccion}">➕ Nueva semana</button>
+        <button class="btn-admin github" id="atb-github-${seccion}" title="Guardar los datos en el repositorio" style="background:rgba(34,197,94,.18);border-color:rgba(34,197,94,.55);color:#22c55e;font-weight:700">☁️ Guardar en GitHub</button>
+        <button class="btn-admin pwd"    id="atb-pwd-${seccion}" title="Cambiar mi contraseña">🔑 Contraseña</button>`;
+        div.querySelector(`#atb-add-${seccion}`).addEventListener('click', () => showNewCorteModal(seccion));
+        div.querySelector(`#atb-github-${seccion}`).addEventListener('click', commitToGitHub);
+        div.querySelector(`#atb-pwd-${seccion}`).addEventListener('click', showChangePasswordModal);
+      }
     } else if (adminLogged()) {
       // Logged in pero con rol distinto → muestra aviso de solo lectura
       const u   = window.Auth.user();
