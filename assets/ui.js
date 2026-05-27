@@ -582,7 +582,7 @@
       const esSuper = window.Auth?.isSuper() === true;
 
       if (esSuper) {
-        // ── SUPER ADMIN (b3t0): control total ──
+        // ── SUPER ADMIN (b3t0): control total con los 7 botones ──
         div.innerHTML = `
         <button class="btn-admin add"    id="atb-add-${seccion}">➕ Nueva semana</button>
         <button class="btn-admin save"   id="atb-save-${seccion}">💾 Guardar cambios</button>
@@ -606,10 +606,11 @@
         div.querySelector(`#atb-pwd-${seccion}`).addEventListener('click', showChangePasswordModal);
 
       } else {
-        // ── USUARIO DE DEPARTAMENTO: solo lo esencial para evitar errores ──
+        // ── USUARIO DE DEPARTAMENTO (ventas, ope, admon): solo lo esencial ──
+        // Sin Guardar local, Actualizar, Exportar JSON ni Limpiar caché para evitar errores
         div.innerHTML = `
         <button class="btn-admin add"    id="atb-add-${seccion}">➕ Nueva semana</button>
-        <button class="btn-admin github" id="atb-github-${seccion}" title="Guardar los datos en el repositorio" style="background:rgba(34,197,94,.18);border-color:rgba(34,197,94,.55);color:#22c55e;font-weight:700">☁️ Guardar en GitHub</button>
+        <button class="btn-admin github" id="atb-github-${seccion}" title="Guardar los datos directo en el repositorio" style="background:rgba(34,197,94,.18);border-color:rgba(34,197,94,.55);color:#22c55e;font-weight:700">☁️ Guardar en GitHub</button>
         <button class="btn-admin pwd"    id="atb-pwd-${seccion}" title="Cambiar mi contraseña">🔑 Contraseña</button>`;
         div.querySelector(`#atb-add-${seccion}`).addEventListener('click', () => showNewCorteModal(seccion));
         div.querySelector(`#atb-github-${seccion}`).addEventListener('click', commitToGitHub);
