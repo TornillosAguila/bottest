@@ -241,15 +241,27 @@
     if (adminLogged()) activateAdminMode();
   }
 
+  /* ── Secciones que el usuario actual puede editar ──────────── */
+  // 'ventas'|'ope'|'admon' → solo esa; 'super' → las tres.
+  function ownedSections() {
+    const r = currentRole();
+    if (r === 'super') return ['ventas','ope','admon'];
+    if (['ventas','ope','admon'].includes(r)) return [r];
+    return [];
+  }
+
   /* ── Guardar cambios (localStorage) ────────────────────────── */
+  // El override local SOLO conserva la(s) sección(es) propia(s). Así este
+  // navegador nunca vuelve a aplicar (ni a subir) datos viejos de otros
+  // departamentos sobre lo que ellos ya guardaron en el repo.
   function saveToLocalStorage() {
-    const raw = window.DashRaw;
-    localStorage.setItem('dashOverride', JSON.stringify({
-      _meta:  raw._meta,
-      ventas: { cortes: raw.ventas.cortes, data: raw.ventas.data, metas: raw.ventas.metas },
-      ope:    { cortes: raw.ope.cortes,    data: raw.ope.data,    metas: raw.ope.metas },
-      admon:  { cortes: raw.admon.cortes,  data: raw.admon.data,  metas: raw.admon.metas },
-    }));
+    const raw  = window.DashRaw;
+    const secs = ownedSections();
+    const payload = { _meta: raw._meta, _sections: secs };
+    secs.forEach(s => {
+      payload[s] = { cortes: raw[s].cortes, data: raw[s].data, metas: raw[s].metas };
+    });
+    localStorage.setItem('dashOverride', JSON.stringify(payload));
     toast('💾 Cambios guardados localmente');
   }
 
@@ -292,6 +304,12 @@
     bytes.forEach(b => bin += String.fromCharCode(b));
     return btoa(bin);
   }
+  /* Decodifica base64 (con saltos de línea, como lo devuelve GitHub) → UTF-8 */
+  function fromBase64Utf8(b64) {
+    const bin   = atob(String(b64 || '').replace(/\s/g, ''));
+    const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+    return new TextDecoder().decode(bytes);
+  }
 
   function showGitHubTokenModal(onReady) {
     const ov = createOverlay(`
@@ -332,7 +350,10 @@
     const token = getGhToken();
     if (!token) { showGitHubTokenModal(() => commitToGitHub()); return; }
 
-    // Persistir también localmente para que esta sesión quede consistente
+    const secs = ownedSections();
+    if (!secs.length) { toast('🔒 Tu usuario no tiene una sección para guardar', 'error'); return; }
+
+    // Persistir localmente (solo la sección propia) para consistencia de esta sesión
     saveToLocalStorage();
 
     const base = `https://api.github.com/repos/${GH_CONFIG.owner}/${GH_CONFIG.repo}/contents/${GH_CONFIG.path}`;
@@ -343,49 +364,86 @@
     };
 
     toast('☁️ Guardando en GitHub…', 'info', 8000);
-    try {
-      // 1) Obtener el SHA actual del archivo (necesario para actualizarlo)
-      let sha;
-      const getRes = await fetch(base + '?ref=' + GH_CONFIG.branch, { headers, cache:'no-store' });
-      if (getRes.status === 200) {
-        sha = (await getRes.json()).sha;
-      } else if (getRes.status === 404) {
-        sha = undefined;  // archivo aún no existe → se creará
-      } else if (getRes.status === 401) {
-        clearGhToken();
-        toast('❌ Token inválido o expirado. Vuelve a conectar.', 'error', 6000);
-        return;
-      } else {
-        toast('❌ No se pudo leer el repo (HTTP ' + getRes.status + ')', 'error', 6000);
+
+    // Read-modify-write con reintentos: leemos SIEMPRE la copia más reciente
+    // del repo y mezclamos ÚNICAMENTE nuestra(s) sección(es). Las de los otros
+    // departamentos se respetan tal cual están en el servidor.
+    const MAX_TRIES = 4;
+    for (let attempt = 1; attempt <= MAX_TRIES; attempt++) {
+      try {
+        // 1) Leer contenido + SHA actuales del repo
+        let sha, serverObj = null;
+        const getRes = await fetch(base + '?ref=' + GH_CONFIG.branch +
+                                   '&t=' + Date.now(), { headers, cache:'no-store' });
+        if (getRes.status === 200) {
+          const j = await getRes.json();
+          sha = j.sha;
+          try { serverObj = JSON.parse(fromBase64Utf8(j.content)); }
+          catch(e) { serverObj = null; }   // si está corrupto, lo regeneramos
+        } else if (getRes.status === 404) {
+          sha = undefined;                 // aún no existe → se creará completo
+        } else if (getRes.status === 401) {
+          clearGhToken();
+          toast('❌ Token inválido o expirado. Vuelve a conectar.', 'error', 6000);
+          return;
+        } else {
+          toast('❌ No se pudo leer el repo (HTTP ' + getRes.status + ')', 'error', 6000);
+          return;
+        }
+
+        // 2) Base = copia del servidor; sobre ella montamos SOLO lo nuestro
+        const merged = serverObj
+          ? JSON.parse(JSON.stringify(serverObj))
+          : JSON.parse(JSON.stringify(window.DashRaw));
+        secs.forEach(s => { merged[s] = window.DashRaw[s]; });
+        merged._meta = window.DashRaw._meta || merged._meta;
+
+        // 3) PUT con el SHA recién leído
+        const content = JSON.stringify(merged, null, 2);
+        const stamp   = new Date().toISOString().slice(0,16).replace('T', ' ');
+        const body = {
+          message: `Dashboard: ${secs.join('+')} (${stamp})`,
+          content: toBase64Utf8(content),
+          branch:  GH_CONFIG.branch,
+        };
+        if (sha) body.sha = sha;
+
+        const putRes = await fetch(base, { method:'PUT', headers, body: JSON.stringify(body) });
+
+        if (putRes.status === 200 || putRes.status === 201) {
+          // Éxito: el override local ya no hace falta y podría re-aplicar datos
+          // viejos en el próximo load, así que lo limpiamos.
+          try { localStorage.removeItem('dashOverride'); } catch(e){}
+          // Reflejar en memoria lo que realmente quedó en el repo
+          window.DashRaw = merged;
+          if (typeof rebuildDash === 'function') rebuildDash();
+          toast('✅ Guardado en GitHub (' + secs.join(', ') +
+                '). Visible en ~1-2 min.', 'success', 7000);
+          return;
+        } else if (putRes.status === 409) {
+          // El archivo cambió entre el GET y el PUT (otro depto guardó a la vez).
+          // Reintentamos el ciclo completo con el SHA nuevo.
+          if (attempt < MAX_TRIES) {
+            await new Promise(r => setTimeout(r, 400 * attempt));
+            continue;
+          }
+          toast('⚠️ Conflicto persistente. Recarga la página y reintenta.', 'error', 7000);
+          return;
+        } else if (putRes.status === 401 || putRes.status === 403) {
+          toast('❌ Sin permiso de escritura. El token necesita Contents: Read and write.', 'error', 8000);
+          return;
+        } else {
+          const t = await putRes.text();
+          console.error('GitHub PUT error', putRes.status, t);
+          toast('❌ Error al guardar (HTTP ' + putRes.status + ')', 'error', 6000);
+          return;
+        }
+      } catch (e) {
+        console.error('GitHub commit error', e);
+        if (attempt < MAX_TRIES) { await new Promise(r => setTimeout(r, 400 * attempt)); continue; }
+        toast('❌ Error de red al contactar GitHub', 'error', 6000);
         return;
       }
-
-      // 2) Preparar el contenido (mismo formato que Exportar JSON)
-      const content = JSON.stringify(window.DashRaw, null, 2);
-      const stamp   = new Date().toISOString().slice(0,16).replace('T', ' ');
-      const body = {
-        message: 'Dashboard: actualizar cortes (' + stamp + ')',
-        content: toBase64Utf8(content),
-        branch:  GH_CONFIG.branch,
-      };
-      if (sha) body.sha = sha;
-
-      // 3) PUT → hace el commit
-      const putRes = await fetch(base, { method:'PUT', headers, body: JSON.stringify(body) });
-      if (putRes.status === 200 || putRes.status === 201) {
-        toast('✅ Guardado en GitHub. Visible en el sitio y otras máquinas en ~1-2 min.', 'success', 7000);
-      } else if (putRes.status === 409) {
-        toast('⚠️ Conflicto: el dash.json cambió en el repo. Recarga la página y reintenta.', 'error', 7000);
-      } else if (putRes.status === 401 || putRes.status === 403) {
-        toast('❌ Sin permiso de escritura. El token necesita Contents: Read and write sobre este repo.', 'error', 8000);
-      } else {
-        const t = await putRes.text();
-        console.error('GitHub PUT error', putRes.status, t);
-        toast('❌ Error al guardar (HTTP ' + putRes.status + ')', 'error', 6000);
-      }
-    } catch (e) {
-      console.error('GitHub commit error', e);
-      toast('❌ Error de red al contactar GitHub', 'error', 6000);
     }
   }
 

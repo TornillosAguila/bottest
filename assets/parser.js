@@ -127,16 +127,23 @@
       if (!resp.ok) throw new Error('No se pudo cargar data/dash.json (HTTP ' + resp.status + ')');
       const raw = await resp.json();
 
-      /* Si existe override de admin en localStorage, mezclarlo */
+      /* Si existe override LOCAL en localStorage, mezclarlo.
+         IMPORTANTE: el override solo puede tocar LA(S) SECCIÓN(ES) que el
+         propio usuario editó (over._sections). Antes se hacía Object.assign
+         de las 3 secciones siempre, lo que pisaba con datos viejos de este
+         navegador los cortes recién subidos por OTROS departamentos. */
       const overStr = localStorage.getItem('dashOverride');
       if (overStr) {
         try {
           const over = JSON.parse(overStr);
-          if (over._meta?.version === raw._meta?.version) {
-            if (over.ventas) Object.assign(raw.ventas, over.ventas);
-            if (over.ope)    Object.assign(raw.ope,    over.ope);
-            if (over.admon)  Object.assign(raw.admon,  over.admon);
-            console.info('[Admin] Override de localStorage aplicado');
+          const SECS = ['ventas','ope','admon'];
+          if (over._meta?.version === raw._meta?.version && Array.isArray(over._sections)) {
+            over._sections.forEach(s => {
+              if (SECS.includes(s) && over[s]) {
+                raw[s] = over[s];   // solo la sección propia, nunca las ajenas
+              }
+            });
+            console.info('[Admin] Override local aplicado a:', over._sections.join(', '));
           }
         } catch(e) { console.warn('[Admin] Override inválido, ignorado', e); }
       }
