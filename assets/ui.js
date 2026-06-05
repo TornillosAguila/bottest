@@ -1091,23 +1091,23 @@
     const carteraVen = A.data['CARTERA_VENCIDA'] || [];
     const avgCarteraVig  = avgNN(carteraVig);   // promedio = saldo típico vigente
     const avgCarteraVen  = avgNN(carteraVen);
-    // Ingreso esperado por rotación de cartera = recuperación promedio × cartera vigente
+    // Ingreso esperado por rotación de cartera = saldo vigente promedio × % recuperación.
+    // (El saldo vigente YA es un promedio por corte; multiplicarlo por nº de cortes lo
+    //  sumaba 21 veces e inflaba el resultado ~21x. Es un cobro esperado, una sola vez.)
     const recRate        = avgRec > 0 ? avgRec : (A.metas['RECUPERACION'] || 0.33);
-    const ingresoEsperadoCartera = avgCarteraVig * recRate * Math.max(1, A.cortes.length);
+    const ingresoEsperadoCartera = avgCarteraVig * recRate;
 
     /* ── Rentabilidad (Margen Operativo) ── */
     const margenOperativo = totV > 0 ? ((totV - totCompras - totGas) / totV * 100) : 0;
     const margenBruto     = totV > 0 ? ((totV - totCompras) / totV * 100) : 0;
     // Margen Neto clásico (contable)
     const margenNeto      = totIng > 0 ? (totFlu / totIng * 100) : 0;
-    // Margen Neto Proyectado: amortizado con la cartera vigente esperada a cobrar
-    // Fórmula: (Flujo + Ingreso esperado por cartera) / (Ingresos + Ingreso esperado por cartera)
-    const totIngProy      = totIng + ingresoEsperadoCartera;
-    const totFluProy      = totFlu + ingresoEsperadoCartera;
-    const margenNetoProy  = totIngProy > 0 ? (totFluProy / totIngProy * 100) : 0;
-    // Si el margen neto contable es negativo, mostramos el proyectado como el indicador principal
-    // (de esta forma "no sale negativo" cuando hay cartera vigente que amortizar)
-    const margenNetoMostrado = (margenNeto < 0 && margenNetoProy > margenNeto) ? margenNetoProy : margenNeto;
+    // Margen Neto Proyectado: flujo neto + ingreso esperado por cobro de cartera vigente,
+    // medido sobre los INGRESOS REALES. (Antes se sumaba el ingreso esperado también al
+    //  denominador (Flujo+X)/(Ingresos+X), lo que arrastraba el % hacia 100% siempre.)
+    const margenNetoProy  = totIng > 0 ? ((totFlu + ingresoEsperadoCartera) / totIng * 100) : 0;
+    // La tarjeta está etiquetada "Proyectado": mostramos el proyectado; el contable va en el subtítulo.
+    const margenNetoMostrado = margenNetoProy;
 
     /* ── HERO ── */
     document.getElementById('hero-rent-value').textContent = margenOperativo.toFixed(1) + '%';
@@ -1158,7 +1158,7 @@
       <div class="kpi-card green"><div class="kpi-label">📈 % Recuperación</div><div class="kpi-value">${(avgRec*100).toFixed(1)}%</div><div class="kpi-sub">Promedio · meta &lt;33%</div></div>
       <div class="kpi-card green"><div class="kpi-label">💼 Cartera Vigente</div><div class="kpi-value">${fmtK(avgCarteraVig)}</div><div class="kpi-sub">Promedio por corte · meta ${fmtK(A.metas['CARTERA_VIGENTE']||0)}</div></div>
       <div class="kpi-card red"><div class="kpi-label">⚠️ Cartera Vencida</div><div class="kpi-value">${fmtK(avgCarteraVen)}</div><div class="kpi-sub">Promedio por corte · meta &lt;${fmtK(A.metas['CARTERA_VENCIDA']||0)}</div></div>
-      <div class="kpi-card blue"><div class="kpi-label">🔄 Ingreso esperado x cartera</div><div class="kpi-value">${fmtK(ingresoEsperadoCartera)}</div><div class="kpi-sub">% Recup. × Cartera × cortes</div></div>
+      <div class="kpi-card blue"><div class="kpi-label">🔄 Ingreso esperado x cartera</div><div class="kpi-value">${fmtK(ingresoEsperadoCartera)}</div><div class="kpi-sub">% Recup. × Cartera vigente</div></div>
       <div class="kpi-card amber"><div class="kpi-label">🛡️ Margen Neto Proyectado</div><div class="kpi-value" style="color:${margenNetoMostrado>=0?'#22c55e':'#f87171'}">${margenNetoMostrado.toFixed(1)}%</div><div class="kpi-sub">amortizando cartera vigente</div></div>`;
   }
 
