@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "version": 8,
+    "version": 9,
     "updated": "2026-06-05",
-    "description": "Grupo Aguila - 2026 + Cartera Vigente/Vencida recalculada proporcional a ventas (ratio promedio de cortes, May/29 ancla) + Auth por rol"
+    "description": "Grupo Aguila - 2026 + Cartera recalculada + RECUPERACION normalizada (May/22, May/29 a fraccion) + Auth por rol"
   },
   "ventas": {
     "metas": {
@@ -595,8 +595,8 @@
         0.4,
         0.34,
         0.33,
-        36,
-        39
+        0.36,
+        0.39
       ],
       "EGRESOS": [
         2119635,
