@@ -1122,11 +1122,6 @@
         <div class="hero-metric-label">📊 Margen Operativo</div>
         <div class="hero-metric-value">${margenOperativo.toFixed(1)}%</div>
         <div class="hero-metric-sub">descontando gastos operación</div>
-      </div>
-      <div class="hero-metric">
-        <div class="hero-metric-label">🌊 Margen Neto Proyectado</div>
-        <div class="hero-metric-value" style="color:${margenNetoMostrado>=0?'var(--green)':'var(--red)'}">${margenNetoMostrado.toFixed(1)}%</div>
-        <div class="hero-metric-sub">amortizado con cartera vigente (contable: ${margenNeto.toFixed(1)}%)</div>
       </div>`;
 
     /* ── KPIs VENTAS ── */
