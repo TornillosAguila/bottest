@@ -1127,10 +1127,10 @@
     /* ── KPIs VENTAS ── */
     const gV = document.getElementById('kpi-empresa-ventas');
     gV.innerHTML = `
-      <div class="kpi-card blue"><div class="kpi-label">🏪 Punto de Venta</div><div class="kpi-value">${fmtK(totPV)}</div><div class="kpi-sub">Anual · 19 cortes</div></div>
-      <div class="kpi-card green"><div class="kpi-label">📞 Call Center</div><div class="kpi-value">${fmtK(totCC)}</div><div class="kpi-sub">Anual · 19 cortes</div></div>
-      <div class="kpi-card amber"><div class="kpi-label">💻 Plataforma</div><div class="kpi-value">${fmtK(totPL)}</div><div class="kpi-sub">Anual · 19 cortes</div></div>
-      <div class="kpi-card purple"><div class="kpi-label">👥 Asesores</div><div class="kpi-value">${fmtK(totAS)}</div><div class="kpi-sub">Anual · 19 cortes</div></div>
+      <div class="kpi-card blue"><div class="kpi-label">🏪 Punto de Venta</div><div class="kpi-value">${fmtK(totPV)}</div><div class="kpi-sub">Anual · ${V.cortes.length} cortes</div></div>
+      <div class="kpi-card green"><div class="kpi-label">📞 Call Center</div><div class="kpi-value">${fmtK(totCC)}</div><div class="kpi-sub">Anual · ${V.cortes.length} cortes</div></div>
+      <div class="kpi-card amber"><div class="kpi-label">💻 Plataforma</div><div class="kpi-value">${fmtK(totPL)}</div><div class="kpi-sub">Anual · ${V.cortes.length} cortes</div></div>
+      <div class="kpi-card purple"><div class="kpi-label">👥 Asesores</div><div class="kpi-value">${fmtK(totAS)}</div><div class="kpi-sub">Anual · ${V.cortes.length} cortes</div></div>
       <div class="kpi-card red"><div class="kpi-label">💰 Ventas Totales</div><div class="kpi-value">${fmtK(totV)}</div><div class="kpi-sub">Suma anual real</div></div>`;
 
     /* ── KPIs OPERACIONES ── */
