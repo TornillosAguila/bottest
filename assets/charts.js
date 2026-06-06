@@ -18,6 +18,22 @@
   const GRID  = 'rgba(46,51,80,0.5)';
   const MUTED = '#8b90b0';
   const TICK  = { color: MUTED, font:{ size:10 } };
+
+  /* Etiquetas del eje X: muestra ~10 cortes espaciados PERO siempre el primero
+     y el ÚLTIMO (antes autoSkip descartaba el corte más reciente, p. ej. Jun/06,
+     y parecía que la gráfica cortaba en May/29). */
+  const X_TICKS = {
+    ...TICK, maxRotation:40, autoSkip:false,
+    callback: function (value, index, ticks) {
+      const n = ticks.length;
+      if (n <= 11) return this.getLabelForValue(value);
+      const step = Math.ceil((n - 1) / 10);
+      if (index === 0 || index === n - 1 || index % step === 0) {
+        return this.getLabelForValue(value);
+      }
+      return '';
+    }
+  };
   const COLS  = ['#4f8ef7','#22c55e','#f59e0b','#a78bfa','#22d3ee','#f87171'];
   const fmtK  = v => {
     if (v === null || v === undefined || isNaN(v)) return '';
@@ -49,7 +65,7 @@
         tooltip: { callbacks: { label: c => ' '+(yFmt==='$'?fmt(c.raw):c.raw?.toFixed?.(1)??c.raw) } },
       },
       scales: {
-        x: { grid:{color:GRID}, ticks:{...TICK, maxRotation:40, autoSkip:true, maxTicksLimit:10} },
+        x: { grid:{color:GRID}, ticks:X_TICKS },
         y: { grid:{color:GRID}, ticks:{...TICK, callback: v => yFmt==='$'?fmtK(v):v+(yFmt==='%'?'%':'')} },
       },
       ...extra
@@ -65,7 +81,7 @@
         tooltip: { callbacks: { label: c => ' '+(yFmt==='$'?fmt(c.raw):c.raw?.toFixed?.(1)??c.raw) } },
       },
       scales: {
-        x: { grid:{display:false}, ticks:{...TICK, maxRotation:40, autoSkip:true, maxTicksLimit:10} },
+        x: { grid:{display:false}, ticks:X_TICKS },
         y: { grid:{color:GRID}, ticks:{...TICK, callback: v => yFmt==='$'?fmtK(v):v+(yFmt==='%'?'%':'')} },
       },
       ...extra
@@ -232,7 +248,7 @@
         interaction:{mode:'index',intersect:false},
         plugins:{ legend:{position:'top'}, tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.raw)}`}} },
         scales:{
-          x:{stacked:true, grid:{color:GRID}, ticks:{...TICK,maxRotation:40,autoSkip:true,maxTicksLimit:10}},
+          x:{stacked:true, grid:{color:GRID}, ticks:X_TICKS},
           y:{stacked:true, grid:{color:GRID}, ticks:{...TICK,callback:fmtK}} }} });
   };
 
