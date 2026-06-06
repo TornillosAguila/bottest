@@ -257,7 +257,7 @@
   function saveToLocalStorage() {
     const raw  = window.DashRaw;
     const secs = ownedSections();
-    const payload = { _meta: raw._meta, _sections: secs };
+    const payload = { _meta: raw._meta, _sections: secs, _savedAt: Date.now() };
     secs.forEach(s => {
       payload[s] = { cortes: raw[s].cortes, data: raw[s].data, metas: raw[s].metas };
     });
@@ -397,6 +397,9 @@
           : JSON.parse(JSON.stringify(window.DashRaw));
         secs.forEach(s => { merged[s] = window.DashRaw[s]; });
         merged._meta = window.DashRaw._meta || merged._meta;
+        // Marca de publicación: permite invalidar overrides locales más viejos
+        // que esta subida, aunque la 'version' no cambie.
+        merged._meta = { ...merged._meta, publishedAt: new Date().toISOString() };
 
         // 3) PUT con el SHA recién leído
         const content = JSON.stringify(merged, null, 2);
