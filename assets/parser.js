@@ -23,6 +23,26 @@
     return acu;
   }
 
+  /* ¿El bloque del servidor es MÁS NUEVO que el override local de esa sección?
+     Basta con que se cumpla UNA de estas reglas:
+       1) El servidor tiene MÁS cortes que el override (se agregó un corte nuevo).
+       2) La etiqueta del último corte difiere (cambió la estructura del corte).
+       3) Existe publishedAt/updated en el servidor posterior al _savedAt del override.
+     Si el servidor es más nuevo, NO se debe aplicar el override (datos viejos). */
+  function isServerFresher(srvSec, ovrSec, srvMeta, over) {
+    if (!srvSec || !ovrSec) return false;
+    const srvCortes = srvSec.cortes || [];
+    const ovrCortes = ovrSec.cortes || [];
+    if (srvCortes.length > ovrCortes.length) return true;
+    const srvLast = srvCortes[srvCortes.length - 1]?.label;
+    const ovrLast = ovrCortes[ovrCortes.length - 1]?.label;
+    if (srvLast && ovrLast && srvLast !== ovrLast) return true;
+    const pub = Date.parse(srvMeta?.publishedAt || srvMeta?.updated || '');
+    const sav = Number(over?._savedAt) || 0;
+    if (pub && sav && pub > sav) return true;
+    return false;
+  }
+
   /* Procesa el JSON crudo → estructura window.Dash */
   function buildDash(raw) {
     /* — VENTAS — */
@@ -138,12 +158,27 @@
           const over = JSON.parse(overStr);
           const SECS = ['ventas','ope','admon'];
           if (over._meta?.version === raw._meta?.version && Array.isArray(over._sections)) {
+            // GUARDA DE FRESCURA: el override local jamás debe pisar datos del
+            // servidor más nuevos. Antes solo se comparaba _meta.version, pero
+            // esa version NO se incrementa al subir cortes nuevos (ni en subidas
+            // manuales por GitHub), así que un override viejo del MISMO version
+            // seguía tapando lo recién publicado (p. ej. el corte de Junio en
+            // Operaciones).
+            const applied = [];
+            const skipped = [];
             over._sections.forEach(s => {
-              if (SECS.includes(s) && over[s]) {
-                raw[s] = over[s];   // solo la sección propia, nunca las ajenas
+              if (!SECS.includes(s) || !over[s]) return;
+              if (isServerFresher(raw[s], over[s], raw._meta, over)) {
+                skipped.push(s);   // el servidor ya trae datos más nuevos → respétalos
+              } else {
+                raw[s] = over[s];  // edición local aún vigente → aplícala
+                applied.push(s);
               }
             });
-            console.info('[Admin] Override local aplicado a:', over._sections.join(', '));
+            if (applied.length) console.info('[Admin] Override local aplicado a:', applied.join(', '));
+            if (skipped.length) console.info('[Admin] Override IGNORADO (servidor más reciente) en:', skipped.join(', '));
+            // Si todas las secciones quedaron obsoletas, descarta el override.
+            if (applied.length === 0) { try { localStorage.removeItem('dashOverride'); } catch(e){} }
           }
         } catch(e) { console.warn('[Admin] Override inválido, ignorado', e); }
       }
