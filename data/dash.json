@@ -1,8 +1,9 @@
 {
   "_meta": {
-    "version": 9,
-    "updated": "2026-06-05",
-    "description": "Grupo Aguila - 2026 + Cartera recalculada + RECUPERACION normalizada (May/22, May/29 a fraccion) + Auth por rol"
+    "version": 10,
+    "updated": "2026-06-06",
+    "publishedAt": "2026-06-06T00:00:00Z",
+    "description": "Grupo Aguila - 2026 + Cartera recalculada + RECUPERACION normalizada (May/22, May/29 a fraccion) + Auth por rol + depuracion datos sucios (v10)"
   },
   "ventas": {
     "metas": {
@@ -78,8 +79,8 @@
         "label": "Abr/25"
       },
       {
-        "mes": "ABRIL",
-        "label": "Abr/01"
+        "mes": "MAYO",
+        "label": "May/01"
       },
       {
         "mes": "MAYO",
@@ -209,7 +210,7 @@
         3089003,
         3388103,
         3430509,
-        3.3,
+        3299959,
         3180366,
         3481348,
         1154912,
@@ -276,8 +277,8 @@
         "label": "Mar/27"
       },
       {
-        "mes": "MARZO",
-        "label": "Mar/03"
+        "mes": "ABRIL",
+        "label": "Abr/03"
       },
       {
         "mes": "ABRIL",
@@ -292,8 +293,8 @@
         "label": "Abr/25"
       },
       {
-        "mes": "ABRIL",
-        "label": "Abr/01"
+        "mes": "MAYO",
+        "label": "May/01"
       },
       {
         "mes": "MAYO",
@@ -365,7 +366,7 @@
         378335,
         332742,
         345044,
-        2108290,
+        null,
         259377,
         292055,
         201446,
@@ -401,7 +402,7 @@
         8.89,
         7.51,
         9.26,
-        91,
+        9.1,
         8.54,
         8.39
       ],
