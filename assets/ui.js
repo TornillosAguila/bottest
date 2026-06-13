@@ -1103,14 +1103,6 @@
     /* ── Rentabilidad (Margen Operativo) ── */
     const margenOperativo = totV > 0 ? ((totV - totCompras - totGas) / totV * 100) : 0;
     const margenBruto     = totV > 0 ? ((totV - totCompras) / totV * 100) : 0;
-    // Margen Neto clásico (contable)
-    const margenNeto      = totIng > 0 ? (totFlu / totIng * 100) : 0;
-    // Margen Neto Proyectado: flujo neto + ingreso esperado por cobro de cartera vigente,
-    // medido sobre los INGRESOS REALES. (Antes se sumaba el ingreso esperado también al
-    //  denominador (Flujo+X)/(Ingresos+X), lo que arrastraba el % hacia 100% siempre.)
-    const margenNetoProy  = totIng > 0 ? ((totFlu + ingresoEsperadoCartera) / totIng * 100) : 0;
-    // La tarjeta está etiquetada "Proyectado": mostramos el proyectado; el contable va en el subtítulo.
-    const margenNetoMostrado = margenNetoProy;
 
     /* ── HERO ── */
     document.getElementById('hero-rent-value').textContent = margenOperativo.toFixed(1) + '%';
@@ -1156,8 +1148,7 @@
       <div class="kpi-card green"><div class="kpi-label">📈 % Recuperación</div><div class="kpi-value">${(avgRec*100).toFixed(1)}%</div><div class="kpi-sub">Promedio · meta &lt;33%</div></div>
       <div class="kpi-card green"><div class="kpi-label">💼 Cartera Vigente</div><div class="kpi-value">${fmtK(avgCarteraVig)}</div><div class="kpi-sub">Promedio por corte · meta ${fmtK(A.metas['CARTERA_VIGENTE']||0)}</div></div>
       <div class="kpi-card red"><div class="kpi-label">⚠️ Cartera Vencida</div><div class="kpi-value">${fmtK(avgCarteraVen)}</div><div class="kpi-sub">Promedio por corte · meta &lt;${fmtK(A.metas['CARTERA_VENCIDA']||0)}</div></div>
-      <div class="kpi-card blue"><div class="kpi-label">🔄 Ingreso esperado x cartera</div><div class="kpi-value">${fmtK(ingresoEsperadoCartera)}</div><div class="kpi-sub">% Recup. × Cartera vigente</div></div>
-      <div class="kpi-card amber"><div class="kpi-label">🛡️ Margen Neto Proyectado</div><div class="kpi-value" style="color:${margenNetoMostrado>=0?'#22c55e':'#f87171'}">${margenNetoMostrado.toFixed(1)}%</div><div class="kpi-sub">amortizando cartera vigente</div></div>`;
+      <div class="kpi-card blue"><div class="kpi-label">🔄 Ingreso esperado x cartera</div><div class="kpi-value">${fmtK(ingresoEsperadoCartera)}</div><div class="kpi-sub">% Recup. × Cartera vigente</div></div>`;
   }
 
   /* ══════════════════════════════════════════════════════════
