@@ -661,6 +661,57 @@
     }
   };
 
+  /* ════════════════════════════════════════
+     ANIMACIONES PERIÓDICAS — Resumen Empresa
+     Cada 15s, mientras la pestaña esté activa:
+       1) las gráficas se "redibujan" desde 0 hasta su valor
+       2) las tarjetas KPI hacen un pulso breve
+  ════════════════════════════════════════ */
+  const EMPRESA_CHART_IDS = [
+    'chartEmpVentasCanales','chartEmpVentasMes',
+    'chartEmpOpeFlujo','chartEmpOpeCalidad',
+    'chartEmpAdmonFinanzas','chartEmpAdmonFlujo','chartEmpCartera',
+    'chartRentabilidadMes',
+  ];
+  let empresaLiveTimer = null;
+
+  function replayChart(id) {
+    const ch = CH[id];
+    if (!ch) return;
+    const snapshot = ch.data.datasets.map(ds => ds.data.slice());
+    ch.data.datasets.forEach(ds => { ds.data = ds.data.map(() => 0); });
+    ch.update('none');
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      ch.data.datasets.forEach((ds, i) => { ds.data = snapshot[i]; });
+      ch.update();
+    }));
+  }
+
+  function pulseEmpresaKPIs() {
+    ['kpi-empresa-ventas','kpi-empresa-ope','kpi-empresa-admon'].forEach(gridId => {
+      const grid = document.getElementById(gridId);
+      if (!grid) return;
+      grid.querySelectorAll('.kpi-card').forEach(card => {
+        card.classList.remove('kpi-live-pulse');
+        void card.offsetWidth; // forzar reflow para reiniciar la animación
+        card.classList.add('kpi-live-pulse');
+      });
+    });
+  }
+
+  window.startEmpresaLiveAnimations = function () {
+    if (empresaLiveTimer) return; // ya está corriendo
+    empresaLiveTimer = setInterval(() => {
+      if (document.hidden) return; // pestaña del navegador no visible
+      EMPRESA_CHART_IDS.forEach(replayChart);
+      pulseEmpresaKPIs();
+    }, 15000);
+  };
+
+  window.stopEmpresaLiveAnimations = function () {
+    if (empresaLiveTimer) { clearInterval(empresaLiveTimer); empresaLiveTimer = null; }
+  };
+
   /* ── Init ──────────────────────────────── */
   window.buildVentas = buildVentas;   // exponer para refrescar el Resumen tras admin save
   document.addEventListener('dashready', buildVentas);
