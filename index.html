@@ -17,8 +17,11 @@
 
   <div class="header">
     <div class="header-left">
-      <h1>📊 Dashboard Ejecutivo — Grupo Águila</h1>
-      <p>Reporte para Consejo Directivo · Grupo Águila</p>
+      <div class="header-logo">🦅</div>
+      <div>
+        <h1>Dashboard Ejecutivo — Grupo Águila</h1>
+        <p>Reporte para Consejo Directivo · Grupo Águila</p>
+      </div>
     </div>
     <div class="header-right">
       <div class="badge" id="hdr-periodo">Período: <span>—</span></div>
@@ -41,7 +44,7 @@
     <div class="tab sep"    onclick="showPage('admon',this)">💼 Administración</div>
     <div class="tab"        onclick="showPage('tabla-a',this)">📋 Detalle Admon.</div>
     <div class="tab sep"    onclick="showPage('consolidado',this)">🔷 Consolidado</div>
-    <div class="tab sep"    onclick="showPage('empresa',this)" style="color:#f59e0b">🎯 Resumen Empresa</div>
+    <div class="tab sep"    onclick="showPage('empresa',this)" style="color:#ff6a13">🎯 Resumen Empresa</div>
   </div>
 
   <div class="main">
@@ -387,6 +390,7 @@
           <div class="hero-label">🎯 RENTABILIDAD EMPRESA 2026</div>
           <div class="hero-value" id="hero-rent-value">—</div>
           <div class="hero-sub" id="hero-rent-sub">Margen operativo · Año en curso</div>
+          <div class="live-indicator"><span class="dot"></span>En vivo · gráficas y KPIs se actualizan cada 15s</div>
         </div>
         <div class="hero-right" id="hero-rent-breakdown"></div>
       </div>
@@ -462,10 +466,10 @@
 </div><!-- /app -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<script src="./assets/auth.js?v=10"></script>
-<script src="./assets/parser.js?v=10"></script>
-<script src="./assets/ui.js?v=10"></script>
-<script src="./assets/charts.js?v=10"></script>
+<script src="./assets/auth.js?v=11"></script>
+<script src="./assets/parser.js?v=11"></script>
+<script src="./assets/ui.js?v=11"></script>
+<script src="./assets/charts.js?v=11"></script>
 
 </body>
 </html>
