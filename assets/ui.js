@@ -1193,14 +1193,6 @@
       if (id==='consolidado') { buildSemaforo(); window.buildConsolidado(); }
       if (id==='empresa')     { buildResumenEmpresa(); window.buildEmpresa(); }
     }
-
-    // Animaciones "en vivo" (gráficas + KPIs) solo mientras Resumen Empresa
-    // esté en pantalla; se detienen al salir de la pestaña.
-    if (id === 'empresa') {
-      window.startEmpresaLiveAnimations && window.startEmpresaLiveAnimations();
-    } else {
-      window.stopEmpresaLiveAnimations && window.stopEmpresaLiveAnimations();
-    }
   };
 
   /* ── Init ─────────────────────────────────────────────────── */
