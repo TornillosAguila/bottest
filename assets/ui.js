@@ -1141,7 +1141,7 @@
     gO.innerHTML = `
       <div class="kpi-card blue"><div class="kpi-label">📦 Compras</div><div class="kpi-value">${fmtK(totCompras)}</div><div class="kpi-sub">Anual · ${O.cortes.length} cortes</div></div>
       <div class="kpi-card green"><div class="kpi-label">↩️ Devoluciones</div><div class="kpi-value">${Math.round(totDev)}</div><div class="kpi-sub">Total anual</div></div>
-      <div class="kpi-card amber"><div class="kpi-label">📊 Nivel Servicio</div><div class="kpi-value">${fmtK(totNS)}</div><div class="kpi-sub">Suma anual</div></div>
+      <div class="kpi-card amber"><div class="kpi-label">📊 Nivel Servicio</div><div class="kpi-value">${fmtK(totNS)}</div><div class="kpi-sub">Mercancía negada en ${fmtK(totNS)}</div></div>
       <div class="kpi-card purple"><div class="kpi-label">🔧 Máqs. Reparadas</div><div class="kpi-value">${Math.round(totMaq)}</div><div class="kpi-sub">Total anual</div></div>
       <div class="kpi-card red"><div class="kpi-label">⏱️ Días Prom. Reparación</div><div class="kpi-value">${avgDias.toFixed(1)}</div><div class="kpi-sub">Promedio anual</div></div>`;
 
