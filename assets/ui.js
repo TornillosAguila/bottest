@@ -647,8 +647,8 @@
         div.innerHTML = `
         <button class="btn-admin add"    id="atb-add-${seccion}">➕ Nueva semana</button>
         <button class="btn-admin save"   id="atb-save-${seccion}">💾 Guardar cambios</button>
-        <button class="btn-admin github" id="atb-github-${seccion}" title="Hacer commit de dash.json directo a tu repositorio" style="background:rgba(34,197,94,.18);border-color:rgba(34,197,94,.55);color:#22c55e;font-weight:700">☁️ Guardar en GitHub</button>
-        <button class="btn-admin refresh" id="atb-refresh-${seccion}" title="Recalcular y refrescar todas las gráficas" style="background:rgba(34,211,238,.15);border-color:rgba(34,211,238,.5);color:#22d3ee">🔄 Actualizar</button>
+        <button class="btn-admin github" id="atb-github-${seccion}" title="Hacer commit de dash.json directo a tu repositorio" style="background:rgba(52,211,153,.18);border-color:rgba(52,211,153,.55);color:#22c55e;font-weight:700">☁️ Guardar en GitHub</button>
+        <button class="btn-admin refresh" id="atb-refresh-${seccion}" title="Recalcular y refrescar todas las gráficas" style="background:rgba(45,212,191,.15);border-color:rgba(45,212,191,.5);color:#22d3ee">🔄 Actualizar</button>
         <button class="btn-admin export" id="atb-export-${seccion}">📥 Exportar JSON</button>
         <button class="btn-admin clear"  id="atb-clear-${seccion}">🗑️ Limpiar caché</button>
         <button class="btn-admin pwd"    id="atb-pwd-${seccion}" title="Cambiar mi contraseña">🔑 Contraseña</button>`;
@@ -671,7 +671,7 @@
         // Sin Guardar local, Actualizar, Exportar JSON ni Limpiar caché para evitar errores
         div.innerHTML = `
         <button class="btn-admin add"    id="atb-add-${seccion}">➕ Nueva semana</button>
-        <button class="btn-admin github" id="atb-github-${seccion}" title="Guardar los datos directo en el repositorio" style="background:rgba(34,197,94,.18);border-color:rgba(34,197,94,.55);color:#22c55e;font-weight:700">☁️ Guardar en GitHub</button>
+        <button class="btn-admin github" id="atb-github-${seccion}" title="Guardar los datos directo en el repositorio" style="background:rgba(52,211,153,.18);border-color:rgba(52,211,153,.55);color:#22c55e;font-weight:700">☁️ Guardar en GitHub</button>
         <button class="btn-admin pwd"    id="atb-pwd-${seccion}" title="Cambiar mi contraseña">🔑 Contraseña</button>`;
         div.querySelector(`#atb-add-${seccion}`).addEventListener('click', () => showNewCorteModal(seccion));
         div.querySelector(`#atb-github-${seccion}`).addEventListener('click', commitToGitHub);
@@ -1122,34 +1122,68 @@
     /* ── KPIs VENTAS ── */
     const gV = document.getElementById('kpi-empresa-ventas');
     gV.innerHTML = `
-      <div class="kpi-card blue"><div class="kpi-label">🏪 Punto de Venta</div><div class="kpi-value">${fmtK(totPV)}</div><div class="kpi-sub">Anual · ${V.cortes.length} cortes</div></div>
-      <div class="kpi-card green"><div class="kpi-label">📞 Call Center</div><div class="kpi-value">${fmtK(totCC)}</div><div class="kpi-sub">Anual · ${V.cortes.length} cortes</div></div>
-      <div class="kpi-card amber"><div class="kpi-label">💻 Plataforma</div><div class="kpi-value">${fmtK(totPL)}</div><div class="kpi-sub">Anual · ${V.cortes.length} cortes</div></div>
-      <div class="kpi-card purple"><div class="kpi-label">👥 Asesores</div><div class="kpi-value">${fmtK(totAS)}</div><div class="kpi-sub">Anual · ${V.cortes.length} cortes</div></div>
-      <div class="kpi-card red"><div class="kpi-label">💰 Ventas Totales</div><div class="kpi-value">${fmtK(totV)}</div><div class="kpi-sub">Suma anual real</div></div>`;
+      <div class="kpi-card blue"><div class="kpi-label">🏪 Punto de Venta</div><div class="kpi-value" data-anim-val="${totPV}" data-anim-fmt="money">${fmtK(totPV)}</div><div class="kpi-sub">Anual · ${V.cortes.length} cortes</div></div>
+      <div class="kpi-card green"><div class="kpi-label">📞 Call Center</div><div class="kpi-value" data-anim-val="${totCC}" data-anim-fmt="money">${fmtK(totCC)}</div><div class="kpi-sub">Anual · ${V.cortes.length} cortes</div></div>
+      <div class="kpi-card amber"><div class="kpi-label">💻 Plataforma</div><div class="kpi-value" data-anim-val="${totPL}" data-anim-fmt="money">${fmtK(totPL)}</div><div class="kpi-sub">Anual · ${V.cortes.length} cortes</div></div>
+      <div class="kpi-card purple"><div class="kpi-label">👥 Asesores</div><div class="kpi-value" data-anim-val="${totAS}" data-anim-fmt="money">${fmtK(totAS)}</div><div class="kpi-sub">Anual · ${V.cortes.length} cortes</div></div>
+      <div class="kpi-card orange"><div class="kpi-label">💰 Ventas Totales</div><div class="kpi-value" data-anim-val="${totV}" data-anim-fmt="money">${fmtK(totV)}</div><div class="kpi-sub">Suma anual real</div></div>`;
 
     /* ── KPIs OPERACIONES ── */
     const gO = document.getElementById('kpi-empresa-ope');
     gO.innerHTML = `
-      <div class="kpi-card blue"><div class="kpi-label">📦 Compras</div><div class="kpi-value">${fmtK(totCompras)}</div><div class="kpi-sub">Anual · ${O.cortes.length} cortes</div></div>
-      <div class="kpi-card green"><div class="kpi-label">↩️ Devoluciones</div><div class="kpi-value">${Math.round(totDev)}</div><div class="kpi-sub">Total anual</div></div>
-      <div class="kpi-card amber"><div class="kpi-label">📊 Nivel Servicio</div><div class="kpi-value">${fmtK(totNS)}</div><div class="kpi-sub">Mercancía negada en ${fmtK(totNS)}</div></div>
-      <div class="kpi-card purple"><div class="kpi-label">🔧 Máqs. Reparadas</div><div class="kpi-value">${Math.round(totMaq)}</div><div class="kpi-sub">Total anual</div></div>
-      <div class="kpi-card red"><div class="kpi-label">⏱️ Días Prom. Reparación</div><div class="kpi-value">${avgDias.toFixed(1)}</div><div class="kpi-sub">Promedio anual</div></div>`;
+      <div class="kpi-card blue"><div class="kpi-label">📦 Compras</div><div class="kpi-value" data-anim-val="${totCompras}" data-anim-fmt="money">${fmtK(totCompras)}</div><div class="kpi-sub">Anual · ${O.cortes.length} cortes</div></div>
+      <div class="kpi-card green"><div class="kpi-label">↩️ Devoluciones</div><div class="kpi-value" data-anim-val="${totDev}" data-anim-fmt="int">${Math.round(totDev)}</div><div class="kpi-sub">Total anual</div></div>
+      <div class="kpi-card amber"><div class="kpi-label">📊 Nivel Servicio</div><div class="kpi-value" data-anim-val="${totNS}" data-anim-fmt="money">${fmtK(totNS)}</div><div class="kpi-sub">Mercancía negada en ${fmtK(totNS)}</div></div>
+      <div class="kpi-card purple"><div class="kpi-label">🔧 Máqs. Reparadas</div><div class="kpi-value" data-anim-val="${totMaq}" data-anim-fmt="int">${Math.round(totMaq)}</div><div class="kpi-sub">Total anual</div></div>
+      <div class="kpi-card teal"><div class="kpi-label">⏱️ Días Prom. Reparación</div><div class="kpi-value" data-anim-val="${avgDias}" data-anim-fmt="dplain">${avgDias.toFixed(1)}</div><div class="kpi-sub">Promedio anual</div></div>`;
 
     /* ── KPIs ADMINISTRACIÓN ── */
     const gA = document.getElementById('kpi-empresa-admon');
     gA.innerHTML = `
-      <div class="kpi-card blue"><div class="kpi-label">💵 Ingresos</div><div class="kpi-value">${fmtK(totIng)}</div><div class="kpi-sub">Anual · ${A.cortes.length} cortes</div></div>
-      <div class="kpi-card purple"><div class="kpi-label">💸 Egresos</div><div class="kpi-value">${fmtK(totEgr)}</div><div class="kpi-sub">Anual</div></div>
-      <div class="kpi-card red"><div class="kpi-label">⚙️ Gastos Operación</div><div class="kpi-value">${fmtK(totGas)}</div><div class="kpi-sub">Anual</div></div>
-      <div class="kpi-card ${totFlu>=0?'green':'red'}"><div class="kpi-label">🌊 Flujo Acumulado</div><div class="kpi-value" style="color:${totFlu>=0?'#22c55e':'#f87171'}">${fmtK(totFlu)}</div><div class="kpi-sub">${totFlu>=0?'Positivo ✓':'Negativo ⚠'}</div></div>
-      <div class="kpi-card amber"><div class="kpi-label">📅 Plazo Cobro</div><div class="kpi-value">${avgCob.toFixed(1)}d</div><div class="kpi-sub">Promedio · meta &lt;35</div></div>
-      <div class="kpi-card green"><div class="kpi-label">📈 % Recuperación</div><div class="kpi-value">${(avgRec*100).toFixed(1)}%</div><div class="kpi-sub">Promedio · meta &lt;33%</div></div>
-      <div class="kpi-card green"><div class="kpi-label">💼 Cartera Vigente</div><div class="kpi-value">${fmtK(avgCarteraVig)}</div><div class="kpi-sub">Promedio por corte · meta ${fmtK(A.metas['CARTERA_VIGENTE']||0)}</div></div>
-      <div class="kpi-card red"><div class="kpi-label">⚠️ Cartera Vencida</div><div class="kpi-value">${fmtK(avgCarteraVen)}</div><div class="kpi-sub">Promedio por corte · meta &lt;${fmtK(A.metas['CARTERA_VENCIDA']||0)}</div></div>
-      <div class="kpi-card blue"><div class="kpi-label">🔄 Ingreso esperado x cartera</div><div class="kpi-value">${fmtK(ingresoEsperadoCartera)}</div><div class="kpi-sub">% Recup. × Cartera vigente</div></div>`;
+      <div class="kpi-card blue"><div class="kpi-label">💵 Ingresos</div><div class="kpi-value" data-anim-val="${totIng}" data-anim-fmt="money">${fmtK(totIng)}</div><div class="kpi-sub">Anual · ${A.cortes.length} cortes</div></div>
+      <div class="kpi-card purple"><div class="kpi-label">💸 Egresos</div><div class="kpi-value" data-anim-val="${totEgr}" data-anim-fmt="money">${fmtK(totEgr)}</div><div class="kpi-sub">Anual</div></div>
+      <div class="kpi-card red"><div class="kpi-label">⚙️ Gastos Operación</div><div class="kpi-value" data-anim-val="${totGas}" data-anim-fmt="money">${fmtK(totGas)}</div><div class="kpi-sub">Anual</div></div>
+      <div class="kpi-card ${totFlu>=0?'green':'red'}"><div class="kpi-label">🌊 Flujo Acumulado</div><div class="kpi-value" data-anim-val="${totFlu}" data-anim-fmt="money" style="color:${totFlu>=0?'#22c55e':'#f87171'}">${fmtK(totFlu)}</div><div class="kpi-sub">${totFlu>=0?'Positivo ✓':'Negativo ⚠'}</div></div>
+      <div class="kpi-card amber"><div class="kpi-label">📅 Plazo Cobro</div><div class="kpi-value" data-anim-val="${avgCob}" data-anim-fmt="dsuffix">${avgCob.toFixed(1)}d</div><div class="kpi-sub">Promedio · meta &lt;35</div></div>
+      <div class="kpi-card teal"><div class="kpi-label">📈 % Recuperación</div><div class="kpi-value" data-anim-val="${avgRec*100}" data-anim-fmt="pct">${(avgRec*100).toFixed(1)}%</div><div class="kpi-sub">Promedio · meta &lt;33%</div></div>
+      <div class="kpi-card green"><div class="kpi-label">💼 Cartera Vigente</div><div class="kpi-value" data-anim-val="${avgCarteraVig}" data-anim-fmt="money">${fmtK(avgCarteraVig)}</div><div class="kpi-sub">Promedio por corte · meta ${fmtK(A.metas['CARTERA_VIGENTE']||0)}</div></div>
+      <div class="kpi-card red"><div class="kpi-label">⚠️ Cartera Vencida</div><div class="kpi-value" data-anim-val="${avgCarteraVen}" data-anim-fmt="money">${fmtK(avgCarteraVen)}</div><div class="kpi-sub">Promedio por corte · meta &lt;${fmtK(A.metas['CARTERA_VENCIDA']||0)}</div></div>
+      <div class="kpi-card orange"><div class="kpi-label">🔄 Ingreso esperado x cartera</div><div class="kpi-value" data-anim-val="${ingresoEsperadoCartera}" data-anim-fmt="money">${fmtK(ingresoEsperadoCartera)}</div><div class="kpi-sub">% Recup. × Cartera vigente</div></div>`;
   }
+
+  /* ── Animación "conteo" de los números KPI (Resumen Empresa) ──
+     Va de 0 al valor real, con la misma duración/curva que el
+     redibujado de las gráficas (ver charts.js, replayChart). ── */
+  const KPI_ANIM_FMT = {
+    money:   v => fmtK(v),
+    int:     v => Math.round(v).toString(),
+    dsuffix: v => v.toFixed(1) + 'd',
+    dplain:  v => v.toFixed(1),
+    pct:     v => v.toFixed(1) + '%',
+  };
+  function easeInOutQuart(t) {
+    return t < 0.5 ? 8*t*t*t*t : 1 - Math.pow(-2*t+2, 4)/2;
+  }
+  window.animateEmpresaKPINumbers = function (duration) {
+    duration = duration || 2200;
+    ['kpi-empresa-ventas','kpi-empresa-ope','kpi-empresa-admon'].forEach(gridId => {
+      const grid = document.getElementById(gridId);
+      if (!grid) return;
+      grid.querySelectorAll('.kpi-value[data-anim-val]').forEach(el => {
+        const target = parseFloat(el.getAttribute('data-anim-val'));
+        if (isNaN(target)) return;
+        const fmtFn = KPI_ANIM_FMT[el.getAttribute('data-anim-fmt')] || (v => String(Math.round(v)));
+        const start = performance.now();
+        function step(now) {
+          const p = Math.min((now - start) / duration, 1);
+          el.textContent = fmtFn(target * easeInOutQuart(p));
+          if (p < 1) requestAnimationFrame(step);
+          else el.textContent = fmtFn(target);
+        }
+        requestAnimationFrame(step);
+      });
+    });
+  };
 
   /* ══════════════════════════════════════════════════════════
      NAVEGACIÓN
@@ -1191,7 +1225,15 @@
       if (id==='admon')   { buildKPIsAdmon(); window.buildAdmon(); }
       if (id==='tabla-a') buildTablaAdmon();
       if (id==='consolidado') { buildSemaforo(); window.buildConsolidado(); }
-      if (id==='empresa')     { buildResumenEmpresa(); window.buildEmpresa(); }
+      if (id==='empresa')     { buildResumenEmpresa(); window.buildEmpresa(); window.animateEmpresaKPINumbers && window.animateEmpresaKPINumbers(); }
+    }
+
+    // Animaciones "en vivo" (gráficas + KPIs) solo mientras Resumen Empresa
+    // esté en pantalla; se detienen al salir de la pestaña.
+    if (id === 'empresa') {
+      window.startEmpresaLiveAnimations && window.startEmpresaLiveAnimations();
+    } else {
+      window.stopEmpresaLiveAnimations && window.stopEmpresaLiveAnimations();
     }
   };
 

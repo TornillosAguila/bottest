@@ -15,8 +15,8 @@
   Chart.defaults.plugins.tooltip.cornerRadius  = 8;
 
   /* ── Constantes de estilo ──────────────── */
-  const GRID  = 'rgba(46,51,80,0.5)';
-  const MUTED = '#8b90b0';
+  const GRID  = 'rgba(255,255,255,0.05)';
+  const MUTED = '#a8998a';
   const TICK  = { color: MUTED, font:{ size:10 } };
 
   /* Etiquetas del eje X: muestra ~10 cortes espaciados PERO siempre el primero
@@ -34,7 +34,7 @@
       return '';
     }
   };
-  const COLS  = ['#4f8ef7','#22c55e','#f59e0b','#a78bfa','#22d3ee','#f87171'];
+  const COLS  = ['#38bdf8','#34d399','#fbbf24','#a78bfa','#2dd4bf','#fb7185'];
   const fmtK  = v => {
     if (v === null || v === undefined || isNaN(v)) return '';
     const a = Math.abs(v), s = v < 0 ? '-' : '';
@@ -90,21 +90,23 @@
 
   /* ── Dataset helpers ───────────────────── */
   function ds_line(label, data, color, opts={}) {
-    return { label, data, borderColor:color, backgroundColor:color+'18',
-      borderWidth:2, pointRadius:3, pointHoverRadius:5,
-      pointBackgroundColor:color, tension:.35, fill:!!opts.fill, ...opts };
+    return { label, data, borderColor:color, backgroundColor:color+'28',
+      borderWidth:2.5, pointRadius:3, pointHoverRadius:5,
+      pointBackgroundColor:color, pointBorderColor:'#0c0907', pointBorderWidth:1.5,
+      tension:.35, fill:!!opts.fill, ...opts };
   }
   function ds_bar(label, data, color, opts={}) {
-    return { label, data, backgroundColor:Array.isArray(color)?color:color+'cc',
-      borderColor:Array.isArray(color)?color:color, borderWidth:0,
+    const fill = Array.isArray(color) ? color.map(c=>c+'55') : color+'55';
+    return { label, data, backgroundColor:fill,
+      borderColor:Array.isArray(color)?color:color, borderWidth:1.5,
       borderRadius:5, borderSkipped:false, ...opts };
   }
-  function ds_meta(n, meta, color='#f87171') {
+  function ds_meta(n, meta, color='#fb7185') {
     return { label:'Meta', data:Array(n).fill(meta), type:'line',
       borderColor:color+'88', borderWidth:1.5, borderDash:[6,4],
       pointRadius:0, fill:false };
   }
-  function ds_metaArr(arr, color='#f87171') {
+  function ds_metaArr(arr, color='#fb7185') {
     return { label:'Meta Mensual', data:arr, type:'line',
       borderColor:color+'aa', borderWidth:1.5, borderDash:[6,4],
       pointRadius:0, fill:false };
@@ -157,7 +159,7 @@
 
     /* (Original) Ventas totales por corte — línea con 19 puntos */
     mk('chartTotalCortes', { type:'line', data:{ labels:LB,
-      datasets:[ ds_line('Ventas Netas', VT, '#4f8ef7', {fill:true}), ds_meta(LB.length, MT) ]},
+      datasets:[ ds_line('Ventas Netas', VT, '#38bdf8', {fill:true}), ds_meta(LB.length, MT) ]},
       options: lineOpts('$') });
 
     /* (Original) Ventas por Mes — Último Corte */
@@ -169,7 +171,7 @@
         ds_bar('Ventas (último corte)', vMeses.map(m=>vUltimo[m]||0), vMeses.map((_,i)=>COLS[i%COLS.length])),
         { label:'Meta semanal', data:Array(vMeses.length).fill(MT), type:'line',
           borderColor:'#f87171bb', borderWidth:2, borderDash:[5,4],
-          pointRadius:5, pointStyle:'crossRot', pointBackgroundColor:'#f87171', fill:false },
+          pointRadius:5, pointStyle:'crossRot', pointBackgroundColor:'#fb7185', fill:false },
       ]}, options: barOpts('$') });
 
     /* (NUEVO) Ventas Totales por Mes — consolidado de cortes */
@@ -178,7 +180,7 @@
 
     mk('chartMesTotalLinea', { type:'line', data:{ labels: ag.labels,
       datasets:[
-        ds_line('Ventas Netas Mensuales', ag.valoresMes, '#22d3ee', {fill:true}),
+        ds_line('Ventas Netas Mensuales', ag.valoresMes, '#2dd4bf', {fill:true}),
         ds_metaArr(metaMensual),
       ]},
       options: lineOpts('$') });
@@ -189,7 +191,7 @@
         ds_bar('Ventas', ag.valoresMes, ag.meses.map((_,i)=>COLS[i%COLS.length])),
         { label:'Meta Mensual', data: metaMensual, type:'line',
           borderColor:'#f87171bb', borderWidth:2, borderDash:[5,4],
-          pointRadius:5, pointStyle:'crossRot', pointBackgroundColor:'#f87171', fill:false },
+          pointRadius:5, pointStyle:'crossRot', pointBackgroundColor:'#fb7185', fill:false },
       ]}, options: barOpts('$') });
 
     /* Dona */
@@ -209,7 +211,7 @@
     mk('chartCumplimiento', { type:'bar', data:{
       labels: V.canalesVenta.map(capMes),
       datasets:[
-        ds_bar('Cumplimiento %', PCTS, PCTS.map(p=>p>=100?'#22c55e':p>=85?'#f59e0b':'#f87171')),
+        ds_bar('Cumplimiento %', PCTS, PCTS.map(p=>p>=100?'#34d399':p>=85?'#fbbf24':'#fb7185')),
         { label:'Meta 100%', data:Array(4).fill(100), type:'line',
           borderColor:'rgba(255,255,255,.2)', borderWidth:1.5, borderDash:[4,4], pointRadius:0, fill:false },
       ]}, options: barOpts('%', { scales:{
@@ -272,21 +274,21 @@
 
     /* ── ORIGINALES (por corte) ── */
     mk('chartCompras', { type:'line', data:{ labels:LB, datasets:[
-      ds_line('Compras', O.data['COMPRA'], '#4f8ef7', {fill:true}),
+      ds_line('Compras', O.data['COMPRA'], '#38bdf8', {fill:true}),
       ds_meta(LB.length, O.metas['COMPRA']) ]}, options: lineOpts('$') });
 
     mk('chartDevoluciones', { type:'bar', data:{ labels:LB, datasets:[
       ds_bar('Devoluciones', O.data['DEVOLUCIONES'],
         O.data['DEVOLUCIONES'].map(v=>v!==null&&v<O.metas['DEVOLUCIONES']?'#22c55ecc':'#f87171cc')),
-      ds_meta(LB.length, O.metas['DEVOLUCIONES'], '#f59e0b') ]},
+      ds_meta(LB.length, O.metas['DEVOLUCIONES'], '#fbbf24') ]},
       options: barOpts('num') });
 
     mk('chartNivelServicio', { type:'line', data:{ labels:LB, datasets:[
-      ds_line('Nivel Serv. ($)', O.data['NIVEL_SERVICIO'], '#f59e0b', {fill:true}) ]},
+      ds_line('Nivel Serv. ($)', O.data['NIVEL_SERVICIO'], '#fbbf24', {fill:true}) ]},
       options: lineOpts('$') });
 
     mk('chartNivelPct', { type:'line', data:{ labels:LB, datasets:[
-      ds_line('% Nivel Serv.', O.data['NIVEL_SERVICIO_PCT'], '#22d3ee'),
+      ds_line('% Nivel Serv.', O.data['NIVEL_SERVICIO_PCT'], '#2dd4bf'),
       { label:'Meta 8.8%', data:Array(LB.length).fill(8.8),
         borderColor:'#f87171aa', borderWidth:1.5, borderDash:[5,4], pointRadius:0, fill:false }]},
       options: lineOpts('%') });
@@ -294,13 +296,13 @@
     mk('chartMaquinas', { type:'bar', data:{ labels:LB, datasets:[
       ds_bar('Reparadas', O.data['MAQUINAS'],
         O.data['MAQUINAS'].map(v=>v!==null?'#a78bfacc':'#2e3350')),
-      ds_meta(LB.length, O.metas['MAQUINAS'], '#22c55e') ]},
+      ds_meta(LB.length, O.metas['MAQUINAS'], '#34d399') ]},
       options: barOpts('num') });
 
     mk('chartDias', { type:'bar', data:{ labels:LB, datasets:[
       ds_bar('Días', O.data['DIAS_REPARACION'],
         O.data['DIAS_REPARACION'].map(v=>v!==null&&v<=O.metas['DIAS_REPARACION']?'#22c55ecc':'#f87171cc')),
-      ds_meta(LB.length, O.metas['DIAS_REPARACION'], '#f59e0b') ]},
+      ds_meta(LB.length, O.metas['DIAS_REPARACION'], '#fbbf24') ]},
       options: barOpts('num') });
 
     /* ── NUEVAS (consolidadas por mes) ── */
@@ -314,19 +316,19 @@
     mk('chartDevolucionesMes', { type:'bar', data:{ labels: devMes.labels, datasets:[
       ds_bar('Devoluciones', devMes.valoresMes,
         devMes.valoresMes.map((v,i)=> v!=null && v < O.metas['DEVOLUCIONES']*devMes.conteoMes[i] ? '#22c55ecc':'#f87171cc')),
-      ds_metaArr(devMes.conteoMes.map(n => O.metas['DEVOLUCIONES'] * n), '#f59e0b'),
+      ds_metaArr(devMes.conteoMes.map(n => O.metas['DEVOLUCIONES'] * n), '#fbbf24'),
     ]}, options: barOpts('num') });
 
     const nsMes = porMes(O.cortes, O.data['NIVEL_SERVICIO'], 'sum');
     mk('chartNivelServicioMes', { type:'line', data:{ labels: nsMes.labels, datasets:[
-      ds_line('Nivel Servicio Mensual', nsMes.valoresMes, '#f59e0b', {fill:true}),
+      ds_line('Nivel Servicio Mensual', nsMes.valoresMes, '#fbbf24', {fill:true}),
       ds_metaArr(nsMes.conteoMes.map(n => O.metas['NIVEL_SERVICIO'] * n)),
     ]}, options: lineOpts('$') });
 
     const maqMes = porMes(O.cortes, O.data['MAQUINAS'], 'sum');
     mk('chartMaquinasMes', { type:'bar', data:{ labels: maqMes.labels, datasets:[
       ds_bar('Reparadas', maqMes.valoresMes, maqMes.meses.map((_,i)=>COLS[i%COLS.length])),
-      ds_metaArr(maqMes.conteoMes.map(n => O.metas['MAQUINAS'] * n), '#22c55e'),
+      ds_metaArr(maqMes.conteoMes.map(n => O.metas['MAQUINAS'] * n), '#34d399'),
     ]}, options: barOpts('num') });
   };
 
@@ -339,34 +341,34 @@
 
     /* ── ORIGINALES (por corte) ── */
     mk('chartIngresos', { type:'line', data:{ labels:LB, datasets:[
-      ds_line('Ingresos', A.data['INGRESOS'], '#4f8ef7', {fill:true}),
+      ds_line('Ingresos', A.data['INGRESOS'], '#38bdf8', {fill:true}),
       ds_meta(LB.length, A.metas['INGRESOS']) ]}, options: lineOpts('$') });
 
     mk('chartIngEgr', { type:'bar', data:{ labels:LB, datasets:[
-      ds_bar('Ingresos', A.data['INGRESOS'], '#4f8ef7'),
-      ds_bar('Egresos',  A.data['EGRESOS'],  '#f87171') ]},
+      ds_bar('Ingresos', A.data['INGRESOS'], '#38bdf8'),
+      ds_bar('Egresos',  A.data['EGRESOS'],  '#fb7185') ]},
       options: barOpts('$') });
 
     mk('chartFlujo', { type:'bar', data:{ labels:LB, datasets:[{
       label:'Flujo', data:A.data['FLUJO'],
       backgroundColor: A.data['FLUJO'].map(v=>v!==null&&v>=0?'#22c55e66':'#f8717166'),
-      borderColor:     A.data['FLUJO'].map(v=>v!==null&&v>=0?'#22c55e':'#f87171'),
+      borderColor:     A.data['FLUJO'].map(v=>v!==null&&v>=0?'#34d399':'#fb7185'),
       borderWidth:1, borderRadius:4, borderSkipped:false }]},
       options: barOpts('$') });
 
     mk('chartGastos', { type:'line', data:{ labels:LB, datasets:[
-      ds_line('Gastos', A.data['GASTOS_OPERACION'], '#f87171', {fill:true}),
-      ds_meta(LB.length, A.metas['GASTOS_OPERACION'], '#f59e0b') ]},
+      ds_line('Gastos', A.data['GASTOS_OPERACION'], '#fb7185', {fill:true}),
+      ds_meta(LB.length, A.metas['GASTOS_OPERACION'], '#fbbf24') ]},
       options: lineOpts('$') });
 
     mk('chartPlazoCobro', { type:'bar', data:{ labels:LB, datasets:[
       ds_bar('Días', A.data['PLAZO_COBRO'],
         A.data['PLAZO_COBRO'].map(v=>v!==null&&v<A.metas['PLAZO_COBRO']?'#22c55ecc':'#f87171cc')),
-      ds_meta(LB.length, A.metas['PLAZO_COBRO'], '#f59e0b') ]},
+      ds_meta(LB.length, A.metas['PLAZO_COBRO'], '#fbbf24') ]},
       options: barOpts('num') });
 
     mk('chartRecuperacion', { type:'line', data:{ labels:LB, datasets:[
-      ds_line('% Recuperación', A.data['RECUPERACION'].map(v=>v!==null?+(v*100).toFixed(1):null), '#22d3ee'),
+      ds_line('% Recuperación', A.data['RECUPERACION'].map(v=>v!==null?+(v*100).toFixed(1):null), '#2dd4bf'),
       { label:'Meta', data:Array(LB.length).fill(A.metas['RECUPERACION']),
         borderColor:'#f87171aa', borderWidth:1.5, borderDash:[5,4], pointRadius:0, fill:false }]},
       options: lineOpts('%') });
@@ -375,14 +377,14 @@
     const cVig = A.data['CARTERA_VIGENTE'] || [];
     const cVen = A.data['CARTERA_VENCIDA'] || [];
     mk('chartCarteraVigente', { type:'line', data:{ labels:LB, datasets:[
-      ds_line('Cartera Vigente', cVig, '#10b981', {fill:true}),
-      ds_meta(LB.length, A.metas['CARTERA_VIGENTE']||0, '#22c55e') ]},
+      ds_line('Cartera Vigente', cVig, '#34d399', {fill:true}),
+      ds_meta(LB.length, A.metas['CARTERA_VIGENTE']||0, '#34d399') ]},
       options: lineOpts('$') });
 
     mk('chartCarteraVencida', { type:'bar', data:{ labels:LB, datasets:[
       ds_bar('Cartera Vencida', cVen,
         cVen.map(v=>v!=null && v <= (A.metas['CARTERA_VENCIDA']||Infinity) ? '#22c55ecc' : '#ef4444cc')),
-      ds_meta(LB.length, A.metas['CARTERA_VENCIDA']||0, '#f59e0b') ]},
+      ds_meta(LB.length, A.metas['CARTERA_VENCIDA']||0, '#fbbf24') ]},
       options: barOpts('$') });
 
     /* ── NUEVAS (consolidadas por mes) ── */
@@ -394,22 +396,22 @@
 
     const egrMes = porMes(A.cortes, A.data['EGRESOS'], 'sum');
     mk('chartIngEgrMes', { type:'bar', data:{ labels: ingMes.labels, datasets:[
-      ds_bar('Ingresos', ingMes.valoresMes, '#4f8ef7'),
-      ds_bar('Egresos',  egrMes.valoresMes, '#f87171'),
+      ds_bar('Ingresos', ingMes.valoresMes, '#38bdf8'),
+      ds_bar('Egresos',  egrMes.valoresMes, '#fb7185'),
     ]}, options: barOpts('$') });
 
     const flujoMes = porMes(A.cortes, A.data['FLUJO'], 'sum');
     mk('chartFlujoMes', { type:'bar', data:{ labels: flujoMes.labels, datasets:[{
       label:'Flujo mensual', data: flujoMes.valoresMes,
       backgroundColor: flujoMes.valoresMes.map(v=>v!=null && v>=0?'#22c55e66':'#f8717166'),
-      borderColor:     flujoMes.valoresMes.map(v=>v!=null && v>=0?'#22c55e':'#f87171'),
+      borderColor:     flujoMes.valoresMes.map(v=>v!=null && v>=0?'#34d399':'#fb7185'),
       borderWidth:1, borderRadius:5, borderSkipped:false,
     }]}, options: barOpts('$') });
 
     const gasMes = porMes(A.cortes, A.data['GASTOS_OPERACION'], 'sum');
     mk('chartGastosMes', { type:'line', data:{ labels: gasMes.labels, datasets:[
-      ds_line('Gastos Mensuales', gasMes.valoresMes, '#f87171', {fill:true}),
-      ds_metaArr(gasMes.conteoMes.map(n => A.metas['GASTOS_OPERACION'] * n), '#f59e0b'),
+      ds_line('Gastos Mensuales', gasMes.valoresMes, '#fb7185', {fill:true}),
+      ds_metaArr(gasMes.conteoMes.map(n => A.metas['GASTOS_OPERACION'] * n), '#fbbf24'),
     ]}, options: lineOpts('$') });
 
     /* Promedios para Plazo de Cobro y % Recuperación */
@@ -424,7 +426,7 @@
 
     const recMes = porMes(A.cortes, A.data['RECUPERACION'], 'avg');
     mk('chartRecuperacionMes', { type:'line', data:{ labels: recMes.labels, datasets:[
-      ds_line('% Recuperación promedio', recMes.valoresMes.map(v=>v!=null?+(v*100).toFixed(1):null), '#22d3ee', {fill:true}),
+      ds_line('% Recuperación promedio', recMes.valoresMes.map(v=>v!=null?+(v*100).toFixed(1):null), '#2dd4bf', {fill:true}),
       { label:'Meta <'+A.metas['RECUPERACION']+'%',
         data: Array(recMes.labels.length).fill(A.metas['RECUPERACION']),
         type:'line', borderColor:'#f87171aa', borderWidth:1.5, borderDash:[5,4], pointRadius:0, fill:false },
@@ -434,8 +436,8 @@
     const vigMes = porMes(A.cortes, A.data['CARTERA_VIGENTE']||[], 'avg');
     const venMes = porMes(A.cortes, A.data['CARTERA_VENCIDA']||[], 'avg');
     mk('chartCarteraMes', { type:'bar', data:{ labels: vigMes.labels, datasets:[
-      ds_bar('Cartera Vigente', vigMes.valoresMes, '#10b981'),
-      ds_bar('Cartera Vencida', venMes.valoresMes, '#ef4444'),
+      ds_bar('Cartera Vigente', vigMes.valoresMes, '#34d399'),
+      ds_bar('Cartera Vencida', venMes.valoresMes, '#fb7185'),
     ]}, options: barOpts('$') });
   };
 
@@ -455,7 +457,7 @@
     mk('chartEmpVentasCanales', { type:'bar', data:{
       labels: [...canalLabels, 'Total'],
       datasets:[
-        ds_bar('Total anual', [...canalVals, sumNN(V.data['VENTAS TOTALES'])], [...canalCols, '#f87171']),
+        ds_bar('Total anual', [...canalVals, sumNN(V.data['VENTAS TOTALES'])], [...canalCols, '#fb7185']),
       ]},
       options: barOpts('$') });
 
@@ -464,7 +466,7 @@
     mk('chartEmpVentasMes', { type:'line', data:{
       labels: vMes.labels,
       datasets:[
-        ds_line('Ventas Mensuales', vMes.valoresMes, '#22d3ee', {fill:true}),
+        ds_line('Ventas Mensuales', vMes.valoresMes, '#2dd4bf', {fill:true}),
         ds_metaArr(vMes.conteoMes.map(n => V.metas['VENTAS TOTALES'] * n)),
       ]},
       options: lineOpts('$') });
@@ -475,8 +477,8 @@
     mk('chartEmpOpeFlujo', { type:'bar', data:{
       labels: cMes.labels,
       datasets:[
-        ds_bar('Compras',         cMes.valoresMes,  '#4f8ef7'),
-        ds_bar('Nivel Servicio',  nsMes.valoresMes, '#f59e0b'),
+        ds_bar('Compras',         cMes.valoresMes,  '#38bdf8'),
+        ds_bar('Nivel Servicio',  nsMes.valoresMes, '#fbbf24'),
       ]},
       options: barOpts('$') });
 
@@ -486,7 +488,7 @@
     mk('chartEmpOpeCalidad', { type:'bar', data:{
       labels: dMes.labels,
       datasets:[
-        ds_bar('Devoluciones',    dMes.valoresMes,  '#22c55e'),
+        ds_bar('Devoluciones',    dMes.valoresMes,  '#34d399'),
         ds_bar('Máqs. Reparadas', mqMes.valoresMes, '#a78bfa'),
       ]},
       options: barOpts('num') });
@@ -498,9 +500,9 @@
     mk('chartEmpAdmonFinanzas', { type:'bar', data:{
       labels: ingMes.labels,
       datasets:[
-        ds_bar('Ingresos', ingMes.valoresMes, '#4f8ef7'),
-        ds_bar('Egresos',  egrMes.valoresMes, '#f87171'),
-        ds_bar('Gastos',   gasMes.valoresMes, '#f59e0b'),
+        ds_bar('Ingresos', ingMes.valoresMes, '#38bdf8'),
+        ds_bar('Egresos',  egrMes.valoresMes, '#fb7185'),
+        ds_bar('Gastos',   gasMes.valoresMes, '#fbbf24'),
       ]},
       options: barOpts('$') });
 
@@ -512,7 +514,7 @@
     mk('chartEmpAdmonFlujo', { type:'line', data:{
       labels: fluMes.labels,
       datasets:[
-        ds_line('Flujo Mensual',     fluMes.valoresMes, '#22d3ee'),
+        ds_line('Flujo Mensual',     fluMes.valoresMes, '#2dd4bf'),
         ds_line('Flujo Acumulado',   acumArr,           '#a78bfa', {fill:true}),
       ]},
       options: lineOpts('$') });
@@ -524,8 +526,8 @@
       mk('chartEmpCartera', { type:'bar', data:{
         labels: vigE.labels,
         datasets:[
-          ds_bar('Cartera Vigente', vigE.valoresMes, '#10b981'),
-          ds_bar('Cartera Vencida', venE.valoresMes, '#ef4444'),
+          ds_bar('Cartera Vigente', vigE.valoresMes, '#34d399'),
+          ds_bar('Cartera Vencida', venE.valoresMes, '#fb7185'),
           { label:'Meta Vigente',
             data: Array(vigE.labels.length).fill(A.metas['CARTERA_VIGENTE']||0),
             type:'line', borderColor:'#10b981aa', borderWidth:1.5, borderDash:[5,4], pointRadius:0, fill:false },
@@ -569,9 +571,9 @@
       labels: allMeses.map(capMes),
       datasets:[
         { label:'Rentabilidad mensual %', data: rentMes,
-          borderColor:'#22d3ee', backgroundColor:'rgba(34,211,238,.15)',
+          borderColor:'#2dd4bf', backgroundColor:'rgba(34,211,238,.15)',
           borderWidth:3, pointRadius:6, pointHoverRadius:8,
-          pointBackgroundColor: rentMes.map(v => v == null ? '#2e3350' : v >= rentAnual ? '#22c55e' : v >= 20 ? '#f59e0b' : '#f87171'),
+          pointBackgroundColor: rentMes.map(v => v == null ? '#1c1510' : v >= rentAnual ? '#34d399' : v >= 20 ? '#fbbf24' : '#fb7185'),
           pointBorderColor:'#fff', pointBorderWidth:2, tension:.35, fill:true },
         { label:`Promedio anual (${rentAnual}%)`, data: Array(allMeses.length).fill(rentAnual),
           type:'line', borderColor:'#f87171bb', borderWidth:2, borderDash:[8,5],
@@ -614,7 +616,7 @@
     mk('chartConsVtasCmp', { type:'line', data:{
       labels: VM.map(capMes),
       datasets:[
-        ds_line('Ventas',  vtMes,  '#4f8ef7'),
+        ds_line('Ventas',  vtMes,  '#38bdf8'),
         { ...ds_line('Compras', cmpMes, '#a78bfa'), borderDash:[5,3] },
       ]}, options: lineOpts('$') });
 
@@ -624,7 +626,7 @@
 
     mk('chartConsIngEgr', { type:'bar', data:{
       labels: AM.map(capMes),
-      datasets:[ ds_bar('Ingresos',ingM,'#4f8ef7'), ds_bar('Egresos',egrM,'#f87171') ]},
+      datasets:[ ds_bar('Ingresos',ingM,'#38bdf8'), ds_bar('Egresos',egrM,'#fb7185') ]},
       options: barOpts('$') });
 
     const allM  = [...new Set([...VM,...AM])];
@@ -635,9 +637,9 @@
     mk('chartConsTendencia', { type:'line', data:{
       labels: allM.map(capMes),
       datasets:[
-        ds_line('Ventas',   vt3,  '#4f8ef7'),
+        ds_line('Ventas',   vt3,  '#38bdf8'),
         { ...ds_line('Compras',  cmp3, '#a78bfa'), borderDash:[5,3] },
-        { ...ds_line('Ingresos', ing3, '#22c55e'), borderDash:[3,3] },
+        { ...ds_line('Ingresos', ing3, '#34d399'), borderDash:[3,3] },
       ]}, options: lineOpts('$') });
 
     /* ── Cartera Total Vigente y Vencida (mensual) ── */
@@ -649,8 +651,8 @@
       mk('chartConsCartera', { type:'bar', data:{
         labels: vigMesCons.labels,
         datasets:[
-          ds_bar('Cartera Vigente', vigMesCons.valoresMes, '#10b981'),
-          ds_bar('Cartera Vencida', venMesCons.valoresMes, '#ef4444'),
+          ds_bar('Cartera Vigente', vigMesCons.valoresMes, '#34d399'),
+          ds_bar('Cartera Vencida', venMesCons.valoresMes, '#fb7185'),
         ]
       }, options: barOpts('$', {
         scales: {
@@ -659,6 +661,65 @@
         },
       }) });
     }
+  };
+
+  /* ════════════════════════════════════════
+     ANIMACIONES PERIÓDICAS — Resumen Empresa
+     Cada 15s, mientras la pestaña esté activa:
+       1) las gráficas se "redibujan" desde 0 hasta su valor
+       2) los números de las tarjetas KPI cuentan de 0 a su valor
+       3) las tarjetas KPI hacen un pulso breve
+     Las gráficas y los números comparten la misma duración/curva
+     (REPLAY_DURATION) para que se vean sincronizados.
+  ════════════════════════════════════════ */
+  const REPLAY_DURATION = 2200;
+  const REPLAY_EASING   = 'easeInOutQuart';
+  const EMPRESA_CHART_IDS = [
+    'chartEmpVentasCanales','chartEmpVentasMes',
+    'chartEmpOpeFlujo','chartEmpOpeCalidad',
+    'chartEmpAdmonFinanzas','chartEmpAdmonFlujo','chartEmpCartera',
+    'chartRentabilidadMes',
+  ];
+  let empresaLiveTimer = null;
+
+  function replayChart(id) {
+    const ch = CH[id];
+    if (!ch) return;
+    const snapshot = ch.data.datasets.map(ds => ds.data.slice());
+    ch.data.datasets.forEach(ds => { ds.data = ds.data.map(() => 0); });
+    ch.update('none');
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      ch.data.datasets.forEach((ds, i) => { ds.data = snapshot[i]; });
+      // Animación más lenta y suave para el efecto de "redibujado"
+      ch.options.animation = { duration: REPLAY_DURATION, easing: REPLAY_EASING };
+      ch.update();
+    }));
+  }
+
+  function pulseEmpresaKPIs() {
+    ['kpi-empresa-ventas','kpi-empresa-ope','kpi-empresa-admon'].forEach(gridId => {
+      const grid = document.getElementById(gridId);
+      if (!grid) return;
+      grid.querySelectorAll('.kpi-card').forEach(card => {
+        card.classList.remove('kpi-live-pulse');
+        void card.offsetWidth; // forzar reflow para reiniciar la animación
+        card.classList.add('kpi-live-pulse');
+      });
+    });
+  }
+
+  window.startEmpresaLiveAnimations = function () {
+    if (empresaLiveTimer) return; // ya está corriendo
+    empresaLiveTimer = setInterval(() => {
+      if (document.hidden) return; // pestaña del navegador no visible
+      EMPRESA_CHART_IDS.forEach(replayChart);
+      pulseEmpresaKPIs();
+      if (window.animateEmpresaKPINumbers) window.animateEmpresaKPINumbers(REPLAY_DURATION);
+    }, 15000);
+  };
+
+  window.stopEmpresaLiveAnimations = function () {
+    if (empresaLiveTimer) { clearInterval(empresaLiveTimer); empresaLiveTimer = null; }
   };
 
   /* ── Init ──────────────────────────────── */
