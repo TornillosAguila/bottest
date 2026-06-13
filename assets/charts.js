@@ -715,7 +715,7 @@
       EMPRESA_CHART_IDS.forEach(replayChart);
       pulseEmpresaKPIs();
       if (window.animateEmpresaKPINumbers) window.animateEmpresaKPINumbers(REPLAY_DURATION);
-    }, 15000);
+    }, 150000); // cada 2 minutos y medio
   };
 
   window.stopEmpresaLiveAnimations = function () {
