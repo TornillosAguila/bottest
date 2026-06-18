@@ -249,7 +249,8 @@ tr:hover td { background: rgba(255,106,19,.04); }
 }
 .hero-left .hero-label {
   font-size: 11px; font-weight: 700;
-  letter-spacing: 2px; color: var(--orange); margin-bottom: 8px;
+  letter-spacing: 2px; color: #ffffff; margin-bottom: 8px;
+  text-shadow: 0 0 14px rgba(255,106,19,.6), 0 0 6px rgba(255,176,32,.45);
 }
 .hero-left .hero-value {
   font-size: 48px; font-weight: 800; color: var(--text); line-height: 1;
@@ -276,7 +277,7 @@ tr:hover td { background: rgba(255,106,19,.04); }
 }
 .kpi-card.kpi-live-pulse { animation: kpiLivePulse 1.4s ease-out; }
 
-.hero-right { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.hero-right { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 .hero-metric {
   background: rgba(255,106,19,.06); border: 1px solid rgba(255,106,19,.18);
   border-radius: 10px; padding: 12px 14px;
@@ -290,14 +291,14 @@ tr:hover td { background: rgba(255,106,19,.04); }
 .hero-metric-sub   { font-size: 10px; color: var(--muted); margin-top: 2px; }
 @media (max-width: 900px) {
   .hero-rent { grid-template-columns: 1fr; }
-  .hero-right { grid-template-columns: repeat(3, 1fr); }
+  .hero-right { grid-template-columns: repeat(2, 1fr); }
   .hero-left .hero-value { font-size: 36px; }
 }
 @media (max-width: 600px) { .hero-right { grid-template-columns: 1fr; } }
 
 /* Section titles para Resumen Empresa */
 .empresa-section-title {
-  font-size: 14px; font-weight: 700; color: var(--gold);
+  font-size: 14px; font-weight: 700; color: #ffffff;
   padding: 14px 0 10px; margin: 18px 0 14px;
   border-bottom: 2px solid rgba(255,106,19,.25);
   letter-spacing: .5px;
