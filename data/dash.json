@@ -2,7 +2,7 @@
   "_meta": {
     "version": 11,
     "updated": "2026-06-13",
-    "publishedAt": "2026-07-06T21:18:53.523Z",
+    "publishedAt": "2026-07-11T00:17:29.002Z",
     "description": "Grupo Aguila - 2026 + Cartera recalculada + RECUPERACION normalizada (May/22, May/29, Jun/05, Jun/12 a fraccion) + Auth por rol + depuracion datos sucios (v11)"
   },
   "ventas": {
@@ -117,6 +117,10 @@
       {
         "mes": "JULIO",
         "label": "Jul/03"
+      },
+      {
+        "mes": "JULIO",
+        "label": "Jul/10"
       }
     ],
     "data": {
@@ -146,7 +150,8 @@
         440155,
         438034,
         522893,
-        448327
+        448327,
+        367120
       ],
       "CALL CENTER": [
         519139,
@@ -174,7 +179,8 @@
         690193,
         701998,
         630319,
-        669772
+        669772,
+        750403
       ],
       "PLATAFORMA": [
         199215,
@@ -202,7 +208,8 @@
         201388,
         219552,
         185377,
-        184366
+        184366,
+        190493
       ],
       "ASESORES": [
         2748960,
@@ -230,7 +237,8 @@
         2105573,
         2170943,
         1823108,
-        2104856
+        2104856,
+        2011618
       ],
       "VENTAS TOTALES": [
         3990288,
@@ -258,7 +266,8 @@
         3437309,
         3530527,
         3161697,
-        3407321
+        3407321,
+        3319634
       ]
     }
   },
