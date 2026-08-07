@@ -2,7 +2,7 @@
   "_meta": {
     "version": 11,
     "updated": "2026-06-13",
-    "publishedAt": "2026-08-07T23:11:37.690Z",
+    "publishedAt": "2026-08-07T23:12:51.528Z",
     "description": "Grupo Aguila - 2026 + Cartera recalculada + RECUPERACION normalizada (May/22, May/29, Jun/05, Jun/12 a fraccion) + Auth por rol + depuracion datos sucios (v11)"
   },
   "ventas": {
@@ -855,7 +855,7 @@
         243708,
         691408,
         528945,
-        1.18,
+        1184550,
         506173
       ],
       "FLUJO": [
@@ -886,7 +886,7 @@
         -966320,
         -207336,
         1512786,
-        320982.82,
+        -863566,
         -275743
       ],
       "CARTERA_VIGENTE": [
