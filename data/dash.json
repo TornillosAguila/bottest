@@ -2,7 +2,7 @@
   "_meta": {
     "version": 11,
     "updated": "2026-06-13",
-    "publishedAt": "2026-08-08T00:20:45.874Z",
+    "publishedAt": "2026-08-08T00:22:21.421Z",
     "description": "Grupo Aguila - 2026 + Cartera recalculada + RECUPERACION normalizada (May/22, May/29, Jun/05, Jun/12 a fraccion) + Auth por rol + depuracion datos sucios (v11)"
   },
   "ventas": {
@@ -428,6 +428,10 @@
       {
         "mes": "JULIO",
         "label": "Jul/31"
+      },
+      {
+        "mes": "JULIO",
+        "label": "Jul/07"
       }
     ],
     "data": {
@@ -459,7 +463,8 @@
         2477593,
         2342263,
         2274254,
-        2193280
+        2193280,
+        1859110
       ],
       "DEVOLUCIONES": [
         23,
@@ -489,7 +494,8 @@
         40,
         44,
         25,
-        30
+        30,
+        25
       ],
       "NIVEL_SERVICIO": [
         378335,
@@ -519,7 +525,8 @@
         225077,
         204275,
         227161,
-        240305
+        240305,
+        222184
       ],
       "NIVEL_SERVICIO_PCT": [
         10.91,
@@ -549,7 +556,8 @@
         8.51,
         7.93,
         8.13,
-        7.55
+        7.55,
+        8.63
       ],
       "MAQUINAS": [
         18,
@@ -579,7 +587,8 @@
         17,
         null,
         null,
-        24
+        24,
+        18
       ],
       "DIAS_REPARACION": [
         2,
@@ -596,6 +605,7 @@
         5,
         1,
         3,
+        2,
         2,
         2,
         2,
