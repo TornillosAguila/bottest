@@ -369,7 +369,8 @@
 
     mk('chartRecuperacion', { type:'line', data:{ labels:LB, datasets:[
       ds_line('% Recuperación', A.data['RECUPERACION'].map(v=>v!==null?+(v*100).toFixed(1):null), '#2dd4bf'),
-      { label:'Meta', data:Array(LB.length).fill(A.metas['RECUPERACION']),
+      { label:'Meta <'+(A.metas['RECUPERACION']*100).toFixed(0)+'%',
+        data:Array(LB.length).fill(A.metas['RECUPERACION']*100),
         borderColor:'#f87171aa', borderWidth:1.5, borderDash:[5,4], pointRadius:0, fill:false }]},
       options: lineOpts('%') });
 
@@ -427,8 +428,8 @@
     const recMes = porMes(A.cortes, A.data['RECUPERACION'], 'avg');
     mk('chartRecuperacionMes', { type:'line', data:{ labels: recMes.labels, datasets:[
       ds_line('% Recuperación promedio', recMes.valoresMes.map(v=>v!=null?+(v*100).toFixed(1):null), '#2dd4bf', {fill:true}),
-      { label:'Meta <'+A.metas['RECUPERACION']+'%',
-        data: Array(recMes.labels.length).fill(A.metas['RECUPERACION']),
+      { label:'Meta <'+(A.metas['RECUPERACION']*100).toFixed(0)+'%',
+        data: Array(recMes.labels.length).fill(A.metas['RECUPERACION']*100),
         type:'line', borderColor:'#f87171aa', borderWidth:1.5, borderDash:[5,4], pointRadius:0, fill:false },
     ]}, options: lineOpts('%') });
 

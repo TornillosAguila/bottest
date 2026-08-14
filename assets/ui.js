@@ -524,6 +524,7 @@
           </div>
         </div>
         ${fieldRows}
+        <div class="modal-error" id="nc-err" style="display:none"></div>
         <div class="modal-actions">
           <button class="btn-secondary" id="nc-cancel">Cancelar</button>
           <button class="btn-primary"   id="nc-save">➕ Agregar corte</button>
@@ -531,11 +532,42 @@
       </div>`);
 
     ov.querySelector('#nc-cancel').addEventListener('click', () => ov.remove());
+
+    /* Muestra un error dentro del modal (sin cerrarlo) */
+    const errBox = ov.querySelector('#nc-err');
+    const showModalErr = (msg) => {
+      errBox.textContent = '⛔ ' + msg;
+      errBox.style.display = 'block';
+    };
+    const clearModalErr = () => { errBox.style.display = 'none'; errBox.textContent = ''; };
+    // Limpia el error en cuanto el usuario cambia mes o día
+    ov.querySelector('#nc-mes').addEventListener('change', clearModalErr);
+    ov.querySelector('#nc-dia').addEventListener('input',  clearModalErr);
+
     ov.querySelector('#nc-save').addEventListener('click', () => {
-      const mes = ov.querySelector('#nc-mes').value;
-      const dia = parseInt(ov.querySelector('#nc-dia').value) || 1;
-      const abr = MES_ABR[mes] || mes.slice(0,3);
+      const mes    = ov.querySelector('#nc-mes').value;
+      const diaStr = ov.querySelector('#nc-dia').value.trim();
+      const dia    = parseInt(diaStr);
+
+      /* ── VALIDACIÓN 1: día obligatorio y en rango 1–31 ── */
+      if (diaStr === '' || isNaN(dia) || dia < 1 || dia > 31) {
+        showModalErr('Captura un día válido del corte (1 a 31).');
+        ov.querySelector('#nc-dia').focus();
+        return;
+      }
+
+      const abr   = MES_ABR[mes] || mes.slice(0,3);
       const label = `${abr}/${String(dia).padStart(2,'0')}`;
+
+      /* ── VALIDACIÓN 2: la fecha NO puede estar ya capturada en esta sección ──
+         Antes se hacía push sin revisar, así que una fecha repetida entraba
+         como "siguiente columna" duplicando el corte. Ahora se bloquea. */
+      const yaExiste = rawSec.cortes.some(c => c.label === label);
+      if (yaExiste) {
+        const pos = rawSec.cortes.findIndex(c => c.label === label) + 1;
+        showModalErr(`La fecha ${label} ya está capturada en ${seccion.toUpperCase()} (corte #${pos}). No se puede agregar dos veces.`);
+        return;
+      }
 
       rawSec.cortes.push({ mes, label });
 
@@ -567,7 +599,7 @@
         rawSec.data['PLAZO_COBRO'].push(parseFloat(ov.querySelector('#na-cobro').value)||null);
         rawSec.data['RECUPERACION'].push(parseFloat(ov.querySelector('#na-rec').value)||null);
         rawSec.data['GASTOS_OPERACION'].push(gas);
-        rawSec.data['FLUJO'].push((ing&&egr)?(ing-egr-(gas||0)):null);
+        rawSec.data['FLUJO'].push(ing != null ? ing - (egr||0) - (gas||0) : null);
         if (!Array.isArray(rawSec.data['CARTERA_VIGENTE'])) rawSec.data['CARTERA_VIGENTE'] = [];
         if (!Array.isArray(rawSec.data['CARTERA_VENCIDA'])) rawSec.data['CARTERA_VENCIDA'] = [];
         rawSec.data['CARTERA_VIGENTE'].push(isNaN(cvig)?null:cvig);
@@ -808,7 +840,7 @@
       const ok   = c.metaOp==='>0'?prom>0:(c.metaOp==='<'||c.metaOp==='<='?prom<=(meta||Infinity):prom>=(meta||0));
       const bCls = ok?'up':c.key==='FLUJO'&&prom<0?'down':'warn';
       let valFmt  = c.tipo==='$'?fmtK(prom):c.tipo==='pct'?(prom*100).toFixed(1)+'%':prom.toFixed(1);
-      let metaFmt = c.tipo==='$'?fmtK(meta):meta||'—';
+      let metaFmt = c.tipo==='$'?fmtK(meta):c.tipo==='pct'?(meta*100).toFixed(0)+'%':(meta||'—');
       grid.innerHTML += `
         <div class="kpi-card ${c.cls}">
           <div class="kpi-label">${c.icon} ${c.label}</div>

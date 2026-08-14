@@ -102,19 +102,20 @@
     if (A.metas['CARTERA_VIGENTE'] == null) A.metas['CARTERA_VIGENTE'] = 2200000;
     if (A.metas['CARTERA_VENCIDA'] == null) A.metas['CARTERA_VENCIDA'] = 250000;
 
-    /* Preservar FLUJO explícito del JSON si existe; calcular sólo cuando falte */
-    const flujoExistente = A.data['FLUJO'] || [];
+    /* FLUJO = INGRESOS - EGRESOS - GASTOS_OPERACION.
+       REGLA ÚNICA (idéntica a rebuildDash en ui.js): si no hay INGRESOS del
+       corte, el flujo es NULL (no se puede calcular un flujo real sin ingreso).
+       Antes el parser, al cargar, preservaba el FLUJO del JSON o calculaba
+       (ing||0)-egr-gas incluso con ingreso null; eso producía flujos falsos
+       muy negativos (p. ej. Feb/07 ≈ -2.18M, Feb/27 ≈ -5.20M) que DESAPARECÍAN
+       tras "Actualizar" (rebuild). Ahora carga y rebuild coinciden siempre.
+       Para todos los cortes con ingreso presente el resultado es idéntico al
+       FLUJO que ya venía guardado (verificado: guardado == ing-egr-gas). */
     A.data['FLUJO'] = A.cortes.map((_,i) => {
-      // Si ya viene un valor explícito en el JSON, respetarlo
-      if (flujoExistente[i] != null && !isNaN(flujoExistente[i])) {
-        return flujoExistente[i];
-      }
-      // Si no, calcularlo (tratando null como 0 para Ing/Egr/Gas)
       const ing = A.data['INGRESOS']?.[i];
       const egr = A.data['EGRESOS']?.[i];
       const gas = A.data['GASTOS_OPERACION']?.[i];
-      if (ing == null && egr == null && gas == null) return null;
-      return (ing || 0) - (egr || 0) - (gas || 0);
+      return ing != null ? ing - (egr || 0) - (gas || 0) : null;
     });
 
     const admon = {

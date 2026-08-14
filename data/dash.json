@@ -1,9 +1,9 @@
 {
   "_meta": {
-    "version": 11,
-    "updated": "2026-06-13",
-    "publishedAt": "2026-08-08T14:48:45.770Z",
-    "description": "Grupo Aguila - 2026 + Cartera recalculada + RECUPERACION normalizada (May/22, May/29, Jun/05, Jun/12 a fraccion) + Auth por rol + depuracion datos sucios (v11)"
+    "version": 12,
+    "updated": "2026-08-14",
+    "publishedAt": "2026-08-14T00:00:00.000Z",
+    "description": "Grupo Aguila - 2026 (v12): corregido encabezado ultimo corte OPE (Jul/07 mal etiquetado -> Ago/07 / AGOSTO); FLUJO consistente carga-vs-rebuild (null si INGRESOS null); meta % Recuperacion a escala porcentual en graficas. Datos atipicos flagueados para revision manual del admin."
   },
   "ventas": {
     "metas": {
@@ -430,8 +430,8 @@
         "label": "Jul/31"
       },
       {
-        "mes": "JULIO",
-        "label": "Jul/07"
+        "mes": "AGOSTO",
+        "label": "Ago/07"
       }
     ],
     "data": {
