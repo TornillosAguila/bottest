@@ -2,7 +2,7 @@
   "_meta": {
     "version": 13,
     "updated": "2026-08-15",
-    "publishedAt": "2026-08-15T00:00:00.000Z",
+    "publishedAt": "2026-08-15T14:36:11.957Z",
     "description": "Grupo Aguila - 2026 (v13): reintegrada columna ASESORES en Detalle Ventas (idx Abr/17..Ago/07 danados por edicion de celda sin revertir escala $M/$K; restaurados con valores verdaderos). Ago/14 ASESORES reconstruido aprox 2,230,000 desde display -> CONFIRMAR exacto. VENTAS TOTALES recalculado. ui.js: parche makeEditable (revierte escala M/K y no guarda si la celda no cambio)."
   },
   "ventas": {
@@ -762,6 +762,10 @@
       {
         "mes": "AGOSTO",
         "label": "Ago/07"
+      },
+      {
+        "mes": "AGOSTO",
+        "label": "Ago/14"
       }
     ],
     "data": {
@@ -795,7 +799,8 @@
         3715978,
         2925456,
         4108551,
-        2491739
+        2491739,
+        2592171
       ],
       "PLAZO_COBRO": [
         53,
@@ -827,7 +832,8 @@
         24,
         26.65,
         24,
-        26
+        26,
+        25
       ],
       "RECUPERACION": [
         0.35,
@@ -859,7 +865,8 @@
         0.28,
         0.32,
         0.3,
-        0.31
+        0.31,
+        0.3
       ],
       "EGRESOS": [
         2119635,
@@ -891,7 +898,8 @@
         1674247,
         2604472,
         3878121,
-        2514576
+        2514576,
+        1784260
       ],
       "GASTOS_OPERACION": [
         368683,
@@ -923,7 +931,8 @@
         528945,
         1184550,
         506173,
-        302857
+        302857,
+        491959
       ],
       "FLUJO": [
         478073.1299999999,
@@ -955,7 +964,8 @@
         1512786,
         -863566,
         -275743,
-        -325694
+        -325694,
+        315952
       ],
       "CARTERA_VIGENTE": [
         10891000,
@@ -987,7 +997,8 @@
         8657330,
         8556989,
         7927930,
-        8352695
+        8352695,
+        9098767
       ],
       "CARTERA_VENCIDA": [
         2.41,
@@ -1019,7 +1030,8 @@
         3634095,
         3277470,
         2703895,
-        3112141
+        3112141,
+        3679171
       ]
     }
   }
