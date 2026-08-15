@@ -732,11 +732,28 @@
     const allow = canEditSection(seccion);
     td.setAttribute('contenteditable', allow ? 'true' : 'false');
     if (!allow) return;
-    td.addEventListener('focus', () => window.Auth?.touch?.());
+    // Al enfocar: guarda el texto original para poder detectar si REALMENTE cambió
+    td.addEventListener('focus', () => {
+      window.Auth?.touch?.();
+      td.dataset.orig = td.textContent;
+    });
     td.addEventListener('blur', () => {
-      const raw = td.textContent.replace(/[$,K M\s]/g,'').trim();
-      const n = parseFloat(raw);
+      const txt = td.textContent.trim();
+
+      /* GUARDA ANTI-CORRUPCIÓN #1: si la celda NO cambió respecto al valor que
+         se mostró al enfocarla, NO se guarda nada. Antes, con solo pasar el
+         cursor por una celda y salir (blur) se re-guardaba el número mostrado,
+         lo que dañó la columna ASESORES. */
+      if (txt === (td.dataset.orig || '').trim()) return;
+
+      /* GUARDA ANTI-CORRUPCIÓN #2: el valor se muestra formateado ($2.01M / $350K).
+         Hay que REVERTIR la escala del sufijo antes de guardar. Antes se quitaba
+         "$ K M" pero no se multiplicaba, guardando 2.01 en vez de 2,010,000. */
+      const mult = /m/i.test(txt) ? 1e6 : /k/i.test(txt) ? 1e3 : 1;
+      const raw  = txt.replace(/[$,\sKkMm%]/g, '').trim();
+      let n = parseFloat(raw);
       if (!isNaN(n)) {
+        n *= mult;
         td.classList.add('modified');
         onchange(n);
       }
