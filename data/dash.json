@@ -2,7 +2,7 @@
   "_meta": {
     "version": 13,
     "updated": "2026-08-15",
-    "publishedAt": "2026-08-15T14:36:11.957Z",
+    "publishedAt": "2026-08-22T00:35:52.231Z",
     "description": "Grupo Aguila - 2026 (v13): reintegrada columna ASESORES en Detalle Ventas (idx Abr/17..Ago/07 danados por edicion de celda sin revertir escala $M/$K; restaurados con valores verdaderos). Ago/14 ASESORES reconstruido aprox 2,230,000 desde display -> CONFIRMAR exacto. VENTAS TOTALES recalculado. ui.js: parche makeEditable (revierte escala M/K y no guarda si la celda no cambio)."
   },
   "ventas": {
@@ -141,6 +141,10 @@
       {
         "mes": "AGOSTO",
         "label": "Ago/14"
+      },
+      {
+        "mes": "AGOSTO",
+        "label": "Ago/21"
       }
     ],
     "data": {
@@ -176,7 +180,8 @@
         564947,
         425394,
         442578,
-        430266
+        430266,
+        376753
       ],
       "CALL CENTER": [
         519139,
@@ -210,7 +215,8 @@
         610793,
         668915,
         624275,
-        732009
+        732009,
+        626536
       ],
       "PLATAFORMA": [
         199215,
@@ -244,7 +250,8 @@
         179232,
         184208,
         170083,
-        197988
+        197988,
+        171944
       ],
       "ASESORES": [
         2748960,
@@ -278,7 +285,8 @@
         1849320,
         2046494,
         1984626,
-        2230000
+        2230000,
+        1815257
       ],
       "VENTAS TOTALES": [
         3990288,
@@ -312,7 +320,8 @@
         3204292,
         3325011,
         3221562,
-        3590263
+        3590263,
+        2990490
       ]
     }
   },
