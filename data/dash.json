@@ -2,7 +2,7 @@
   "_meta": {
     "version": 13,
     "updated": "2026-08-15",
-    "publishedAt": "2026-08-22T00:35:52.231Z",
+    "publishedAt": "2026-08-24T16:49:44.312Z",
     "description": "Grupo Aguila - 2026 (v13): reintegrada columna ASESORES en Detalle Ventas (idx Abr/17..Ago/07 danados por edicion de celda sin revertir escala $M/$K; restaurados con valores verdaderos). Ago/14 ASESORES reconstruido aprox 2,230,000 desde display -> CONFIRMAR exacto. VENTAS TOTALES recalculado. ui.js: parche makeEditable (revierte escala M/K y no guarda si la celda no cambio)."
   },
   "ventas": {
