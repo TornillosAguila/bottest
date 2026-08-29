@@ -2,7 +2,7 @@
   "_meta": {
     "version": 13,
     "updated": "2026-08-15",
-    "publishedAt": "2026-08-28T23:57:54.471Z",
+    "publishedAt": "2026-08-29T14:39:13.831Z",
     "description": "Grupo Aguila - 2026 (v13): reintegrada columna ASESORES en Detalle Ventas (idx Abr/17..Ago/07 danados por edicion de celda sin revertir escala $M/$K; restaurados con valores verdaderos). Ago/14 ASESORES reconstruido aprox 2,230,000 desde display -> CONFIRMAR exacto. VENTAS TOTALES recalculado. ui.js: parche makeEditable (revierte escala M/K y no guarda si la celda no cambio)."
   },
   "ventas": {
@@ -785,6 +785,10 @@
       {
         "mes": "AGOSTO",
         "label": "Ago/14"
+      },
+      {
+        "mes": "AGOSTO",
+        "label": "Ago/28"
       }
     ],
     "data": {
@@ -819,7 +823,8 @@
         2925456,
         4108551,
         2491739,
-        2592171
+        2592171,
+        3190529
       ],
       "PLAZO_COBRO": [
         53,
@@ -852,6 +857,7 @@
         26.65,
         24,
         26,
+        25,
         25
       ],
       "RECUPERACION": [
@@ -885,7 +891,8 @@
         0.32,
         0.3,
         0.31,
-        0.3
+        0.3,
+        0.33
       ],
       "EGRESOS": [
         2119635,
@@ -918,7 +925,8 @@
         2604472,
         3878121,
         2514576,
-        1784260
+        1784260,
+        2911243
       ],
       "GASTOS_OPERACION": [
         368683,
@@ -951,7 +959,8 @@
         1184550,
         506173,
         302857,
-        491959
+        491959,
+        374984
       ],
       "FLUJO": [
         478073.1299999999,
@@ -984,7 +993,8 @@
         -863566,
         -275743,
         -325694,
-        315952
+        315952,
+        -95698
       ],
       "CARTERA_VIGENTE": [
         10891000,
@@ -1017,7 +1027,8 @@
         8556989,
         7927930,
         8352695,
-        9098767
+        9098767,
+        8374475
       ],
       "CARTERA_VENCIDA": [
         2.41,
@@ -1050,7 +1061,8 @@
         3277470,
         2703895,
         3112141,
-        3679171
+        3679171,
+        4301306
       ]
     }
   }
