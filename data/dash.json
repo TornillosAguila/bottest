@@ -2,7 +2,7 @@
   "_meta": {
     "version": 13,
     "updated": "2026-08-15",
-    "publishedAt": "2026-08-29T15:08:59.352Z",
+    "publishedAt": "2026-09-05T15:06:51.947Z",
     "description": "Grupo Aguila - 2026 (v13): reintegrada columna ASESORES en Detalle Ventas (idx Abr/17..Ago/07 danados por edicion de celda sin revertir escala $M/$K; restaurados con valores verdaderos). Ago/14 ASESORES reconstruido aprox 2,230,000 desde display -> CONFIRMAR exacto. VENTAS TOTALES recalculado. ui.js: parche makeEditable (revierte escala M/K y no guarda si la celda no cambio)."
   },
   "ventas": {
@@ -808,6 +808,10 @@
       {
         "mes": "AGOSTO",
         "label": "Ago/28"
+      },
+      {
+        "mes": "SEPTIEMBRE",
+        "label": "Sep/04"
       }
     ],
     "data": {
@@ -843,7 +847,8 @@
         4108551,
         2491739,
         2592171,
-        3190529
+        3190529,
+        3021063
       ],
       "PLAZO_COBRO": [
         53,
@@ -877,7 +882,8 @@
         24,
         26,
         25,
-        25
+        25,
+        32
       ],
       "RECUPERACION": [
         0.35,
@@ -911,7 +917,8 @@
         0.3,
         0.31,
         0.3,
-        0.33
+        0.33,
+        0.3
       ],
       "EGRESOS": [
         2119635,
@@ -945,7 +952,8 @@
         3878121,
         2514576,
         1784260,
-        2911243
+        2911243,
+        2686159
       ],
       "GASTOS_OPERACION": [
         368683,
@@ -979,7 +987,8 @@
         506173,
         302857,
         491959,
-        374984
+        374984,
+        655566
       ],
       "FLUJO": [
         478073.1299999999,
@@ -1013,7 +1022,8 @@
         -275743,
         -325694,
         315952,
-        -95698
+        -95698,
+        -320662
       ],
       "CARTERA_VIGENTE": [
         10891000,
@@ -1047,7 +1057,8 @@
         7927930,
         8352695,
         9098767,
-        8374475
+        8374475,
+        7876991
       ],
       "CARTERA_VENCIDA": [
         2.41,
@@ -1081,7 +1092,8 @@
         2703895,
         3112141,
         3679171,
-        4301306
+        4301306,
+        3600900
       ]
     }
   }
