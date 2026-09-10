@@ -74,6 +74,15 @@
     /* — OPE — */
     const O = raw.ope;
     const oMeses = [...new Set(O.cortes.map(c => c.mes))];
+    /* Asegura arrays nuevos de LOGÍSTICA por si dash.json es antiguo */
+    ['REPARTO_LOCAL','REPARTO_FORANEO','ALM_PEDIDOS','ALM_PARTIDAS'].forEach(k => {
+      if (!Array.isArray(O.data[k])) O.data[k] = O.cortes.map(() => null);
+    });
+    /* Metas de logística: valores de referencia (ALM_PARTIDAS por confirmar) */
+    if (O.metas['REPARTO_LOCAL']   == null) O.metas['REPARTO_LOCAL']   = 246;
+    if (O.metas['REPARTO_FORANEO'] == null) O.metas['REPARTO_FORANEO'] = 500;
+    if (O.metas['ALM_PEDIDOS']     == null) O.metas['ALM_PEDIDOS']     = 98;
+    if (!('ALM_PARTIDAS' in O.metas))       O.metas['ALM_PARTIDAS']    = null;
     const ope = {
       cortes:    O.cortes,
       meses:     oMeses,
@@ -85,6 +94,10 @@
         {key:'NIVEL_SERVICIO',    row:6, label:'Nivel de Servicio ($)', tipo:'$',   metaOp:'>=', color:'#f59e0b'},
         {key:'MAQUINAS',          row:7, label:'Máquinas Reparadas',    tipo:'num', metaOp:'>=', color:'#a78bfa'},
         {key:'DIAS_REPARACION',   row:8, label:'Días Prom. Reparación', tipo:'num', metaOp:'<=', color:'#f87171'},
+        {key:'REPARTO_LOCAL',     row:9,  label:'Reparto Local',        tipo:'num', metaOp:'>=', color:'#38bdf8'},
+        {key:'REPARTO_FORANEO',   row:10, label:'Reparto Foráneo',      tipo:'num', metaOp:'>=', color:'#fb7185'},
+        {key:'ALM_PEDIDOS',       row:11, label:'Pedidos x Almacenista',tipo:'num', metaOp:'>=', color:'#34d399'},
+        {key:'ALM_PARTIDAS',      row:12, label:'Partidas x Almacenista',tipo:'num',metaOp:'>=', color:'#fbbf24'},
       ],
     };
 

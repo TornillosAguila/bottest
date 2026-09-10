@@ -491,6 +491,10 @@
           <div><label>Nivel Servicio (%)</label><input type="number" id="no-nspct" placeholder="0" step="0.1" style="width:100%;padding:8px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;margin-bottom:10px"></div>
           <div><label>Máquinas Reparadas</label><input type="number" id="no-maq" placeholder="0" style="width:100%;padding:8px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;margin-bottom:10px"></div>
           <div><label>Días Prom. Reparación</label><input type="number" id="no-dias" placeholder="0" step="0.1" style="width:100%;padding:8px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;margin-bottom:10px"></div>
+          <div><label>🚚 Reparto Local</label><input type="number" id="no-rlocal" placeholder="0" style="width:100%;padding:8px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;margin-bottom:10px"></div>
+          <div><label>🌎 Reparto Foráneo</label><input type="number" id="no-rforaneo" placeholder="0" style="width:100%;padding:8px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;margin-bottom:10px"></div>
+          <div><label>📦 Pedidos x Almacenista</label><input type="number" id="no-alpe" placeholder="0" style="width:100%;padding:8px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;margin-bottom:10px"></div>
+          <div><label>📑 Partidas x Almacenista</label><input type="number" id="no-alpa" placeholder="0" style="width:100%;padding:8px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;margin-bottom:10px"></div>
         </div>`;
     } else { // admon
       fieldRows = `
@@ -588,6 +592,13 @@
         rawSec.data['NIVEL_SERVICIO_PCT'].push(parseFloat(ov.querySelector('#no-nspct').value)||null);
         rawSec.data['MAQUINAS'].push(parseFloat(ov.querySelector('#no-maq').value)||null);
         rawSec.data['DIAS_REPARACION'].push(parseFloat(ov.querySelector('#no-dias').value)||null);
+        ['REPARTO_LOCAL','REPARTO_FORANEO','ALM_PEDIDOS','ALM_PARTIDAS'].forEach(k => {
+          if (!Array.isArray(rawSec.data[k])) rawSec.data[k] = [];
+        });
+        rawSec.data['REPARTO_LOCAL'].push(parseFloat(ov.querySelector('#no-rlocal').value)||null);
+        rawSec.data['REPARTO_FORANEO'].push(parseFloat(ov.querySelector('#no-rforaneo').value)||null);
+        rawSec.data['ALM_PEDIDOS'].push(parseFloat(ov.querySelector('#no-alpe').value)||null);
+        rawSec.data['ALM_PARTIDAS'].push(parseFloat(ov.querySelector('#no-alpa').value)||null);
       } else {
         const ing = parseFloat(ov.querySelector('#na-ing').value)||null;
         const egr = parseFloat(ov.querySelector('#na-egr').value)||null;
@@ -835,6 +846,44 @@
     });
   }
 
+  /* KPIs de LOGÍSTICA (Reparto + Almacén) — tarjetas calculadas a mano
+     para métricas compuestas (total, %, ratios) sin depender de metas absolutas. */
+  function buildKPIsLog() {
+    const O    = window.Dash.ope;
+    const grid = document.getElementById('kpi-grid-log');
+    if (!grid) return;
+    const L  = O.data['REPARTO_LOCAL']   || [];
+    const F  = O.data['REPARTO_FORANEO'] || [];
+    const PE = O.data['ALM_PEDIDOS']     || [];
+    const PA = O.data['ALM_PARTIDAS']    || [];
+    const aL = avg(L.filter(v=>v!==null)), aF = avg(F.filter(v=>v!==null));
+    const aPE = avg(PE.filter(v=>v!==null)), aPA = avg(PA.filter(v=>v!==null));
+    const repTot  = aL + aF;
+    const pctF    = repTot>0 ? aF/repTot*100 : 0;
+    const ratio   = aPE>0 ? aPA/aPE : 0;
+    const metaRep = (O.metas['REPARTO_LOCAL']||0) + (O.metas['REPARTO_FORANEO']||0);
+    const metaPctF= metaRep>0 ? (O.metas['REPARTO_FORANEO']||0)/metaRep*100 : 0;
+    const metaPed = O.metas['ALM_PEDIDOS']||0;
+    const okRep = repTot>=metaRep, okPed = aPE>=metaPed;
+    const card = (cls,icon,label,val,sub,badge,bCls,pct) => `
+      <div class="kpi-card ${cls}">
+        <div class="kpi-label">${icon} ${label}</div>
+        <div class="kpi-value">${val}</div>
+        <div class="kpi-sub">${sub}</div>
+        <div class="kpi-badge ${bCls}">${badge}</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${Math.min(pct,100)}%;background:${bCls==='up'?'#22c55e':'#f59e0b'}"></div></div>
+      </div>`;
+    grid.innerHTML =
+        card('blue','🚚','Reparto Total', Math.round(repTot), 'Local + Foráneo · prom/corte',
+             (okRep?'✓':'▼')+' Meta: '+metaRep, okRep?'up':'warn', okRep?80:50)
+      + card('red','🌎','% Foráneo', pctF.toFixed(1)+'%', 'Del total repartido',
+             'Ref: '+metaPctF.toFixed(0)+'%', 'up', pctF)
+      + card('green','📦','Pedidos x Almac.', Math.round(aPE), 'Promedio por corte',
+             (okPed?'✓':'▼')+' Meta: '+metaPed, okPed?'up':'warn', okPed?80:50)
+      + card('amber','📑','Partidas / Pedido', ratio.toFixed(1), 'Líneas surtidas por pedido',
+             'Productividad almacén', 'up', ratio/5*100);
+  }
+
   function buildKPIsAdmon() {
     const A    = window.Dash.admon;
     const grid = document.getElementById('kpi-grid-admon');
@@ -1033,7 +1082,7 @@
       const vals = O.data[ind.key]||[];
       const prom = avg(vals.filter(v=>v!==null));
       const meta = O.metas[ind.key];
-      const ok   = ind.metaOp==='<'||ind.metaOp==='<='?prom<=meta:prom>=meta;
+      const ok   = meta==null ? true : (ind.metaOp==='<'||ind.metaOp==='<='?prom<=meta:prom>=meta);
       const pCls = ok?'green':'red';
       const fv   = ind.tipo==='$'?fmtK:v=>v!==null?v.toFixed(1):'—';
       h += `<tr><td><span class="dot" style="background:${ind.color}"></span>${ind.label}</td>`;
@@ -1041,7 +1090,7 @@
         h += `<td class="editable" data-key="${ind.key}" data-ci="${ci}">${fv(v)}</td>`;
       });
       h += `<td><strong>${fv(prom)}</strong></td>`;
-      h += `<td><span class="pill ${pCls}">${ind.tipo==='$'?fmtK(meta):meta}</span></td></tr>`;
+      h += `<td><span class="pill ${pCls}">${meta==null?'—':(ind.tipo==='$'?fmtK(meta):meta)}</span></td></tr>`;
     });
     h += '</tbody></table>';
     div.innerHTML = h;
@@ -1131,6 +1180,14 @@
     const totNS      = sumNN(O.data['NIVEL_SERVICIO']);
     const totMaq     = sumNN(O.data['MAQUINAS']);
     const avgDias    = avgNN(O.data['DIAS_REPARACION']);
+    // Ope · Logística
+    const totRepLocal   = sumNN(O.data['REPARTO_LOCAL']   || []);
+    const totRepForaneo = sumNN(O.data['REPARTO_FORANEO'] || []);
+    const totReparto    = totRepLocal + totRepForaneo;
+    const pctForaneo    = totReparto>0 ? totRepForaneo/totReparto*100 : 0;
+    const totPedidos    = sumNN(O.data['ALM_PEDIDOS']  || []);
+    const totPartidas   = sumNN(O.data['ALM_PARTIDAS'] || []);
+    const ratioPartPed  = totPedidos>0 ? totPartidas/totPedidos : 0;
     // Admon
     const totIng = sumNN(A.data['INGRESOS']);
     const totEgr = sumNN(A.data['EGRESOS']);
@@ -1184,7 +1241,11 @@
       <div class="kpi-card green"><div class="kpi-label">↩️ Devoluciones</div><div class="kpi-value" data-anim-val="${totDev}" data-anim-fmt="int">${Math.round(totDev)}</div><div class="kpi-sub">Total anual</div></div>
       <div class="kpi-card amber"><div class="kpi-label">📊 Nivel Servicio</div><div class="kpi-value" data-anim-val="${totNS}" data-anim-fmt="money">${fmtK(totNS)}</div><div class="kpi-sub">Mercancía negada en ${fmtK(totNS)}</div></div>
       <div class="kpi-card purple"><div class="kpi-label">🔧 Máqs. Reparadas</div><div class="kpi-value" data-anim-val="${totMaq}" data-anim-fmt="int">${Math.round(totMaq)}</div><div class="kpi-sub">Total anual</div></div>
-      <div class="kpi-card teal"><div class="kpi-label">⏱️ Días Prom. Reparación</div><div class="kpi-value" data-anim-val="${avgDias}" data-anim-fmt="dplain">${avgDias.toFixed(1)}</div><div class="kpi-sub">Promedio anual</div></div>`;
+      <div class="kpi-card teal"><div class="kpi-label">⏱️ Días Prom. Reparación</div><div class="kpi-value" data-anim-val="${avgDias}" data-anim-fmt="dplain">${avgDias.toFixed(1)}</div><div class="kpi-sub">Promedio anual</div></div>
+      <div class="kpi-card blue"><div class="kpi-label">🚚 Reparto Anual</div><div class="kpi-value" data-anim-val="${totReparto}" data-anim-fmt="int">${Math.round(totReparto)}</div><div class="kpi-sub">Local ${Math.round(totRepLocal)} + Foráneo ${Math.round(totRepForaneo)}</div></div>
+      <div class="kpi-card red"><div class="kpi-label">🌎 % Foráneo</div><div class="kpi-value" data-anim-val="${pctForaneo}" data-anim-fmt="pct">${pctForaneo.toFixed(1)}%</div><div class="kpi-sub">Del total repartido</div></div>
+      <div class="kpi-card green"><div class="kpi-label">📦 Pedidos Almacén</div><div class="kpi-value" data-anim-val="${totPedidos}" data-anim-fmt="int">${Math.round(totPedidos)}</div><div class="kpi-sub">Total anual x almacenista</div></div>
+      <div class="kpi-card amber"><div class="kpi-label">📑 Partidas / Pedido</div><div class="kpi-value" data-anim-val="${ratioPartPed}" data-anim-fmt="dplain">${ratioPartPed.toFixed(1)}</div><div class="kpi-sub">Productividad almacén</div></div>`;
 
     /* ── KPIs ADMINISTRACIÓN ── */
     const gA = document.getElementById('kpi-empresa-admon');
@@ -1269,7 +1330,7 @@
         }, 60);
       }
       if (id==='tabla-v') buildTablaVentas();
-      if (id==='ope')     { buildKPIsOpe(); window.buildOpe(); }
+      if (id==='ope')     { buildKPIsOpe(); buildKPIsLog(); window.buildOpe(); }
       if (id==='tabla-o') buildTablaOpe();
       if (id==='admon')   { buildKPIsAdmon(); window.buildAdmon(); }
       if (id==='tabla-a') buildTablaAdmon();

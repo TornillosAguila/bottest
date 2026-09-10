@@ -220,6 +220,35 @@
           <div class="chart-box"><canvas id="chartMaquinasMes" role="img" aria-label="Máquinas reparadas por mes"></canvas></div>
         </div>
       </div>
+
+      <div class="section-divider">🚚 Logística — Reparto y Almacén</div>
+      <div class="kpi-grid" id="kpi-grid-log" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px"></div>
+
+      <div class="charts-row cols-2e">
+        <div class="panel">
+          <div class="panel-title">🚚 Reparto Local vs Foráneo por Corte</div>
+          <div class="panel-sub">Pedidos entregados · apilado (Local + Foráneo)</div>
+          <div class="chart-box"><canvas id="chartReparto" role="img" aria-label="Reparto local vs foráneo"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">📦 Pedidos y Partidas por Corte</div>
+          <div class="panel-sub">Almacenista · pedidos y partidas surtidas</div>
+          <div class="chart-box"><canvas id="chartAlmacen" role="img" aria-label="Pedidos y partidas por corte"></canvas></div>
+        </div>
+      </div>
+
+      <div class="charts-row cols-2e">
+        <div class="panel">
+          <div class="panel-title">🚚 Reparto por Mes</div>
+          <div class="panel-sub">Suma mensual · apilado (Local + Foráneo)</div>
+          <div class="chart-box"><canvas id="chartRepartoMes" role="img" aria-label="Reparto por mes"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">📑 Partidas por Pedido (Mensual)</div>
+          <div class="panel-sub">Productividad de almacén · partidas ÷ pedidos</div>
+          <div class="chart-box"><canvas id="chartPartidasPedidoMes" role="img" aria-label="Partidas por pedido mensual"></canvas></div>
+        </div>
+      </div>
     </div>
 
     <!-- ══ TABLA OPE ══ -->
@@ -426,6 +455,18 @@
           <div class="chart-box"><canvas id="chartEmpOpeCalidad" role="img"></canvas></div>
         </div>
       </div>
+      <div class="charts-row cols-2e">
+        <div class="panel">
+          <div class="panel-title">🚚 Reparto Local vs Foráneo (Mensual)</div>
+          <div class="panel-sub">Logística · pedidos entregados por mes</div>
+          <div class="chart-box"><canvas id="chartEmpOpeReparto" role="img"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">📦 Pedidos y Partidas por Almacenista (Mensual)</div>
+          <div class="panel-sub">Logística · productividad de almacén</div>
+          <div class="chart-box"><canvas id="chartEmpOpeAlmacen" role="img"></canvas></div>
+        </div>
+      </div>
 
       <!-- ── Sección ADMINISTRACIÓN ── -->
       <div class="empresa-section-title">💼 Resumen de Administración — Año 2026</div>
@@ -467,9 +508,9 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="./assets/auth.js?v=11"></script>
-<script src="./assets/parser.js?v=12"></script>
-<script src="./assets/ui.js?v=13"></script>
-<script src="./assets/charts.js?v=12"></script>
+<script src="./assets/parser.js?v=14"></script>
+<script src="./assets/ui.js?v=14"></script>
+<script src="./assets/charts.js?v=14"></script>
 
 </body>
 </html>

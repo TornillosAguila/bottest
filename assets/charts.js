@@ -330,6 +330,41 @@
       ds_bar('Reparadas', maqMes.valoresMes, maqMes.meses.map((_,i)=>COLS[i%COLS.length])),
       ds_metaArr(maqMes.conteoMes.map(n => O.metas['MAQUINAS'] * n), '#34d399'),
     ]}, options: barOpts('num') });
+
+    /* ── LOGÍSTICA · por corte ── */
+    const RL  = O.data['REPARTO_LOCAL']   || [];
+    const RF  = O.data['REPARTO_FORANEO'] || [];
+    const APE = O.data['ALM_PEDIDOS']     || [];
+    const APA = O.data['ALM_PARTIDAS']    || [];
+
+    const stackCorte = barOpts('num');
+    stackCorte.scales = { x:{ stacked:true, grid:{display:false}, ticks:X_TICKS },
+                          y:{ stacked:true, grid:{color:GRID}, ticks:{...TICK} } };
+    mk('chartReparto', { type:'bar', data:{ labels:LB, datasets:[
+      ds_bar('Local',   RL, '#38bdf8'),
+      ds_bar('Foráneo', RF, '#fb7185') ]}, options: stackCorte });
+
+    mk('chartAlmacen', { type:'bar', data:{ labels:LB, datasets:[
+      ds_bar('Pedidos',  APE, '#34d399'),
+      ds_bar('Partidas', APA, '#fbbf24') ]}, options: barOpts('num') });
+
+    /* ── LOGÍSTICA · por mes ── */
+    const rlMes = porMes(O.cortes, RL, 'sum');
+    const rfMes = porMes(O.cortes, RF, 'sum');
+    const stackMes = barOpts('num');
+    stackMes.scales = { x:{ stacked:true, grid:{display:false}, ticks:TICK },
+                        y:{ stacked:true, grid:{color:GRID}, ticks:{...TICK} } };
+    mk('chartRepartoMes', { type:'bar', data:{ labels: rlMes.labels, datasets:[
+      ds_bar('Local',   rlMes.valoresMes, '#38bdf8'),
+      ds_bar('Foráneo', rfMes.valoresMes, '#fb7185') ]}, options: stackMes });
+
+    const peMes = porMes(O.cortes, APE, 'sum');
+    const paMes = porMes(O.cortes, APA, 'sum');
+    const ratioMes = peMes.valoresMes.map((pe,i) =>
+      (pe && paMes.valoresMes[i] != null) ? +(paMes.valoresMes[i]/pe).toFixed(2) : null);
+    mk('chartPartidasPedidoMes', { type:'line', data:{ labels: peMes.labels, datasets:[
+      ds_line('Partidas / Pedido', ratioMes, '#2dd4bf', {fill:true}) ]},
+      options: lineOpts('num') });
   };
 
   /* ════════════════════════════════════════
@@ -491,6 +526,31 @@
       datasets:[
         ds_bar('Devoluciones',    dMes.valoresMes,  '#34d399'),
         ds_bar('Máqs. Reparadas', mqMes.valoresMes, '#a78bfa'),
+      ]},
+      options: barOpts('num') });
+
+    /* ── Chart 4b: Logística · Reparto Local vs Foráneo (mensual, apilado) ── */
+    const rlEmp = porMes(O.cortes, O.data['REPARTO_LOCAL']||[],   'sum');
+    const rfEmp = porMes(O.cortes, O.data['REPARTO_FORANEO']||[], 'sum');
+    const stackEmp = barOpts('num');
+    stackEmp.scales = { x:{ stacked:true, grid:{display:false}, ticks:TICK },
+                        y:{ stacked:true, grid:{color:GRID}, ticks:{...TICK} } };
+    mk('chartEmpOpeReparto', { type:'bar', data:{
+      labels: rlEmp.labels,
+      datasets:[
+        ds_bar('Local',   rlEmp.valoresMes, '#38bdf8'),
+        ds_bar('Foráneo', rfEmp.valoresMes, '#fb7185'),
+      ]},
+      options: stackEmp });
+
+    /* ── Chart 4c: Logística · Pedidos vs Partidas (mensual) ── */
+    const peEmp = porMes(O.cortes, O.data['ALM_PEDIDOS']||[],  'sum');
+    const paEmp = porMes(O.cortes, O.data['ALM_PARTIDAS']||[], 'sum');
+    mk('chartEmpOpeAlmacen', { type:'bar', data:{
+      labels: peEmp.labels,
+      datasets:[
+        ds_bar('Pedidos',  peEmp.valoresMes, '#34d399'),
+        ds_bar('Partidas', paEmp.valoresMes, '#fbbf24'),
       ]},
       options: barOpts('num') });
 
@@ -677,7 +737,7 @@
   const REPLAY_EASING   = 'easeInOutQuart';
   const EMPRESA_CHART_IDS = [
     'chartEmpVentasCanales','chartEmpVentasMes',
-    'chartEmpOpeFlujo','chartEmpOpeCalidad',
+    'chartEmpOpeFlujo','chartEmpOpeCalidad','chartEmpOpeReparto','chartEmpOpeAlmacen',
     'chartEmpAdmonFinanzas','chartEmpAdmonFlujo','chartEmpCartera',
     'chartRentabilidadMes',
   ];
