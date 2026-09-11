@@ -2,7 +2,7 @@
   "_meta": {
     "version": 14,
     "updated": "2026-08-15",
-    "publishedAt": "2026-09-05T15:30:50.471Z",
+    "publishedAt": "2026-09-11T23:33:07.825Z",
     "description": "Grupo Aguila - 2026 (v14): + Logistica en Operaciones. Nuevos rubros REPARTO_LOCAL/REPARTO_FORANEO (L/F) y ALM_PEDIDOS/ALM_PARTIDAS (PE/PA) tomados de INDICADORES_DE_OPERACION Hoja3, alineados por semana. KPIs, etiquetas y graficas de logistica agregados. Cortes sin dato en Hoja3 (Jun/19, Jun/26, Jul/10 y Jul/17..Ago) quedan en null. Meta ALM_PARTIDAS=null (el 26 del Excel parece error, por confirmar). Version subida a 14 para invalidar localStorage."
   },
   "ventas": {
@@ -971,6 +971,10 @@
       {
         "mes": "SEPTIEMBRE",
         "label": "Sep/04"
+      },
+      {
+        "mes": "SEPTIEMBRE",
+        "label": "Sep/11"
       }
     ],
     "data": {
@@ -1007,7 +1011,8 @@
         2491739,
         2592171,
         3190529,
-        3021063
+        3021063,
+        2152828
       ],
       "PLAZO_COBRO": [
         53,
@@ -1042,6 +1047,7 @@
         26,
         25,
         25,
+        32,
         32
       ],
       "RECUPERACION": [
@@ -1077,7 +1083,8 @@
         0.31,
         0.3,
         0.33,
-        0.3
+        0.3,
+        0.29
       ],
       "EGRESOS": [
         2119635,
@@ -1112,7 +1119,8 @@
         2514576,
         1784260,
         2911243,
-        2686159
+        2686159,
+        1811198
       ],
       "GASTOS_OPERACION": [
         368683,
@@ -1147,7 +1155,8 @@
         302857,
         491959,
         374984,
-        655566
+        655566,
+        226164
       ],
       "FLUJO": [
         478073.1299999999,
@@ -1182,7 +1191,8 @@
         -325694,
         315952,
         -95698,
-        -320662
+        -320662,
+        115466
       ],
       "CARTERA_VIGENTE": [
         10891000,
@@ -1217,7 +1227,8 @@
         8352695,
         9098767,
         8374475,
-        7876991
+        7876991,
+        81503553
       ],
       "CARTERA_VENCIDA": [
         2.41,
@@ -1252,7 +1263,8 @@
         3112141,
         3679171,
         4301306,
-        3600900
+        3600900,
+        3538825
       ]
     }
   }
