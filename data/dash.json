@@ -2,7 +2,7 @@
   "_meta": {
     "version": 14,
     "updated": "2026-08-15",
-    "publishedAt": "2026-09-12T00:26:39.062Z",
+    "publishedAt": "2026-09-12T15:44:32.418Z",
     "description": "Grupo Aguila - 2026 (v14): + Logistica en Operaciones. Nuevos rubros REPARTO_LOCAL/REPARTO_FORANEO (L/F) y ALM_PEDIDOS/ALM_PARTIDAS (PE/PA) tomados de INDICADORES_DE_OPERACION Hoja3, alineados por semana. KPIs, etiquetas y graficas de logistica agregados. Cortes sin dato en Hoja3 (Jun/19, Jun/26, Jul/10 y Jul/17..Ago) quedan en null. Meta ALM_PARTIDAS=null (el 26 del Excel parece error, por confirmar). Version subida a 14 para invalidar localStorage."
   },
   "ventas": {
@@ -493,6 +493,10 @@
       {
         "mes": "AGOSTO",
         "label": "Ago/04"
+      },
+      {
+        "mes": "AGOSTO",
+        "label": "Ago/11"
       }
     ],
     "data": {
@@ -528,7 +532,8 @@
         1859110,
         1791229,
         2743917,
-        1790326
+        1790326,
+        1479180
       ],
       "DEVOLUCIONES": [
         23,
@@ -562,6 +567,7 @@
         25,
         30,
         34,
+        35,
         35
       ],
       "NIVEL_SERVICIO": [
@@ -596,7 +602,8 @@
         222184,
         347022,
         211628,
-        233000
+        233000,
+        229184
       ],
       "NIVEL_SERVICIO_PCT": [
         10.91,
@@ -630,7 +637,8 @@
         8.63,
         12.12,
         7.71,
-        8.3
+        8.3,
+        8.13
       ],
       "MAQUINAS": [
         18,
@@ -664,7 +672,8 @@
         18,
         32,
         18,
-        21
+        21,
+        23
       ],
       "DIAS_REPARACION": [
         2,
@@ -698,7 +707,8 @@
         2,
         3,
         2875,
-        3
+        3,
+        2
       ],
       "REPARTO_LOCAL": [
         313,
