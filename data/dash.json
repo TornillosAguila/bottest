@@ -2,7 +2,7 @@
   "_meta": {
     "version": 15,
     "updated": "2026-09-23",
-    "publishedAt": "2026-09-23T15:27:13.869Z",
+    "publishedAt": "2026-09-23T15:27:30.531Z",
     "description": "Grupo Aguila - 2026 (v15): Operaciones: ultimos 3 cortes corregidos a SEPTIEMBRE (Sep/04, Sep/11, Sep/18; antes Ago/04, Ago/11, Ago/18) para que se acumulen en su mes. Logistica completada desde INDICADORES_DE_OPERACION_11092026 Hoja3 (Reparto L/F Jun/19..Sep/18, Almacen PE/PA Jun/19-Jun/26, PA May/01=81). Arrays de logistica extendidos a 34 cortes (antes 32, causaba desfase en tabla). Almacen sin dato en Hoja3 desde Jul/17 queda null. Version 15 para invalidar localStorage."
   },
   "ventas": {
@@ -1137,7 +1137,7 @@
         0.33,
         0.3,
         0.29,
-        31
+        0.31
       ],
       "EGRESOS": [
         2119635,
