@@ -563,6 +563,28 @@
       const abr   = MES_ABR[mes] || mes.slice(0,3);
       const label = `${abr}/${String(dia).padStart(2,'0')}`;
 
+      /* ── VALIDACIÓN 1b: orden cronológico ──
+         El mes viene preseleccionado con el del último corte; si ya cambió de mes
+         y se captura un día menor (ej. Ago/04 después de Ago/28) el corte quedaba
+         en el mes equivocado. Se bloquea y se sugiere el mes siguiente. */
+      const last = rawSec.cortes[rawSec.cortes.length - 1];
+      if (last) {
+        const iLast = MES_OPTIONS.indexOf(last.mes);
+        const iNew  = MES_OPTIONS.indexOf(mes);
+        const dLast = parseInt(String(last.label).split('/')[1]) || 0;
+        if (iNew < iLast) {
+          showModalErr(`El último corte es ${last.label} (${last.mes}). No se puede capturar un mes anterior.`);
+          return;
+        }
+        if (iNew === iLast && dia <= dLast) {
+          const sig = MES_OPTIONS[iLast + 1];
+          showModalErr(`El día ${dia} no puede ir después de ${last.label} en ${mes}.` +
+            (sig ? ` ¿Es un corte de ${sig[0] + sig.slice(1).toLowerCase()}? Cambia el mes.` : ''));
+          ov.querySelector('#nc-mes').focus();
+          return;
+        }
+      }
+
       /* ── VALIDACIÓN 2: la fecha NO puede estar ya capturada en esta sección ──
          Antes se hacía push sin revisar, así que una fecha repetida entraba
          como "siguiente columna" duplicando el corte. Ahora se bloquea. */
@@ -594,6 +616,8 @@
         rawSec.data['DIAS_REPARACION'].push(parseFloat(ov.querySelector('#no-dias').value)||null);
         ['REPARTO_LOCAL','REPARTO_FORANEO','ALM_PEDIDOS','ALM_PARTIDAS'].forEach(k => {
           if (!Array.isArray(rawSec.data[k])) rawSec.data[k] = [];
+          // el corte nuevo ya está en cortes → el array debe quedar en n-1 antes del push
+          while (rawSec.data[k].length < rawSec.cortes.length - 1) rawSec.data[k].push(null);
         });
         rawSec.data['REPARTO_LOCAL'].push(parseFloat(ov.querySelector('#no-rlocal').value)||null);
         rawSec.data['REPARTO_FORANEO'].push(parseFloat(ov.querySelector('#no-rforaneo').value)||null);
@@ -1086,7 +1110,9 @@
       const pCls = ok?'green':'red';
       const fv   = ind.tipo==='$'?fmtK:v=>v!==null?v.toFixed(1):'—';
       h += `<tr><td><span class="dot" style="background:${ind.color}"></span>${ind.label}</td>`;
-      vals.forEach((v,ci) => {
+      // Recorre los CORTES (no el array) para que cada valor quede bajo su fecha
+      O.cortes.forEach((_,ci) => {
+        const v = vals[ci] ?? null;
         h += `<td class="editable" data-key="${ind.key}" data-ci="${ci}">${fv(v)}</td>`;
       });
       h += `<td><strong>${fv(prom)}</strong></td>`;
@@ -1100,7 +1126,11 @@
         const key = td.dataset.key;
         const ci  = parseInt(td.dataset.ci);
         td.setAttribute('contenteditable','true');
-        makeEditable(td, 'ope', n => { raw.data[key][ci] = n; });
+        makeEditable(td, 'ope', n => {
+          if (!Array.isArray(raw.data[key])) raw.data[key] = [];
+          while (raw.data[key].length < raw.cortes.length) raw.data[key].push(null);
+          raw.data[key][ci] = n;
+        });
       });
     }
   }

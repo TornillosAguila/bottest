@@ -74,6 +74,15 @@
     /* — OPE — */
     const O = raw.ope;
     const oMeses = [...new Set(O.cortes.map(c => c.mes))];
+    /* Normaliza longitudes: cada array debe tener 1 valor por corte.
+       Un array más corto desfasa la tabla (Promedio/Meta caían dentro de las columnas). */
+    [V, raw.ope, raw.admon].forEach(sec => {
+      const n = sec.cortes.length;
+      Object.keys(sec.data).forEach(k => {
+        const a = sec.data[k];
+        if (Array.isArray(a) && a.length < n) { while (a.length < n) a.push(null); }
+      });
+    });
     /* Asegura arrays nuevos de LOGÍSTICA por si dash.json es antiguo */
     ['REPARTO_LOCAL','REPARTO_FORANEO','ALM_PEDIDOS','ALM_PARTIDAS'].forEach(k => {
       if (!Array.isArray(O.data[k])) O.data[k] = O.cortes.map(() => null);

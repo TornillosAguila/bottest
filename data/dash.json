@@ -1,9 +1,9 @@
 {
   "_meta": {
-    "version": 14,
-    "updated": "2026-08-15",
-    "publishedAt": "2026-09-19T15:25:26.774Z",
-    "description": "Grupo Aguila - 2026 (v14): + Logistica en Operaciones. Nuevos rubros REPARTO_LOCAL/REPARTO_FORANEO (L/F) y ALM_PEDIDOS/ALM_PARTIDAS (PE/PA) tomados de INDICADORES_DE_OPERACION Hoja3, alineados por semana. KPIs, etiquetas y graficas de logistica agregados. Cortes sin dato en Hoja3 (Jun/19, Jun/26, Jul/10 y Jul/17..Ago) quedan en null. Meta ALM_PARTIDAS=null (el 26 del Excel parece error, por confirmar). Version subida a 14 para invalidar localStorage."
+    "version": 15,
+    "updated": "2026-09-23",
+    "publishedAt": "2026-09-23T18:00:00.000Z",
+    "description": "Grupo Aguila - 2026 (v15): Operaciones: ultimos 3 cortes corregidos a SEPTIEMBRE (Sep/04, Sep/11, Sep/18; antes Ago/04, Ago/11, Ago/18) para que se acumulen en su mes. Logistica completada desde INDICADORES_DE_OPERACION_11092026 Hoja3 (Reparto L/F Jun/19..Sep/18, Almacen PE/PA Jun/19-Jun/26, PA May/01=81). Arrays de logistica extendidos a 34 cortes (antes 32, causaba desfase en tabla). Almacen sin dato en Hoja3 desde Jul/17 queda null. Version 15 para invalidar localStorage."
   },
   "ventas": {
     "metas": {
@@ -500,16 +500,16 @@
         "label": "Ago/28"
       },
       {
-        "mes": "AGOSTO",
-        "label": "Ago/04"
+        "mes": "SEPTIEMBRE",
+        "label": "Sep/04"
       },
       {
-        "mes": "AGOSTO",
-        "label": "Ago/11"
+        "mes": "SEPTIEMBRE",
+        "label": "Sep/11"
       },
       {
-        "mes": "AGOSTO",
-        "label": "Ago/18"
+        "mes": "SEPTIEMBRE",
+        "label": "Sep/18"
       }
     ],
     "data": {
@@ -751,17 +751,19 @@
         265,
         265,
         223,
-        null,
-        null,
+        242,
+        191,
         191,
         null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
+        255,
+        238,
+        260,
+        245,
+        234,
+        253,
+        222,
+        208,
+        186
       ],
       "REPARTO_FORANEO": [
         841,
@@ -785,17 +787,19 @@
         553,
         553,
         570,
-        null,
-        null,
+        471,
+        550,
         516,
         null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
+        537,
+        498,
+        461,
+        537,
+        503,
+        467,
+        384,
+        475,
+        362
       ],
       "ALM_PEDIDOS": [
         134,
@@ -819,9 +823,11 @@
         96,
         96,
         97,
-        null,
-        null,
+        98,
+        94,
         103,
+        null,
+        null,
         null,
         null,
         null,
@@ -846,16 +852,18 @@
         76,
         130,
         115,
-        null,
+        81,
         332,
         157,
         281,
         376,
         376,
         282,
-        null,
-        null,
+        362,
+        357,
         380,
+        null,
+        null,
         null,
         null,
         null,
