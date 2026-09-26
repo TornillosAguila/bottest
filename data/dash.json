@@ -2,7 +2,7 @@
   "_meta": {
     "version": 15,
     "updated": "2026-09-23",
-    "publishedAt": "2026-09-26T14:43:04.580Z",
+    "publishedAt": "2026-09-26T15:37:46.030Z",
     "description": "Grupo Aguila - 2026 (v15): Operaciones: ultimos 3 cortes corregidos a SEPTIEMBRE (Sep/04, Sep/11, Sep/18; antes Ago/04, Ago/11, Ago/18) para que se acumulen en su mes. Logistica completada desde INDICADORES_DE_OPERACION_11092026 Hoja3 (Reparto L/F Jun/19..Sep/18, Almacen PE/PA Jun/19-Jun/26, PA May/01=81). Arrays de logistica extendidos a 34 cortes (antes 32, causaba desfase en tabla). Almacen sin dato en Hoja3 desde Jul/17 queda null. Version 15 para invalidar localStorage."
   },
   "ventas": {
@@ -519,6 +519,10 @@
       {
         "mes": "SEPTIEMBRE",
         "label": "Sep/18"
+      },
+      {
+        "mes": "SEPTIEMBRE",
+        "label": "Sep/25"
       }
     ],
     "data": {
@@ -556,7 +560,8 @@
         2743917,
         1790326,
         1479180,
-        1292869
+        1292869,
+        2774551
       ],
       "DEVOLUCIONES": [
         23,
@@ -592,7 +597,8 @@
         34,
         35,
         35,
-        30
+        30,
+        21
       ],
       "NIVEL_SERVICIO": [
         378335,
@@ -628,7 +634,8 @@
         211628,
         233000,
         229184,
-        266336
+        266336,
+        218513
       ],
       "NIVEL_SERVICIO_PCT": [
         10.91,
@@ -664,7 +671,8 @@
         7.71,
         8.3,
         8.13,
-        8.3
+        8.3,
+        8.46
       ],
       "MAQUINAS": [
         18,
@@ -700,7 +708,8 @@
         18,
         21,
         23,
-        20
+        20,
+        10
       ],
       "DIAS_REPARACION": [
         2,
@@ -735,6 +744,7 @@
         3,
         2875,
         3,
+        2,
         2,
         2
       ],
@@ -772,7 +782,8 @@
         253,
         222,
         208,
-        186
+        186,
+        221
       ],
       "REPARTO_FORANEO": [
         841,
@@ -808,7 +819,8 @@
         467,
         384,
         475,
-        362
+        362,
+        334
       ],
       "ALM_PEDIDOS": [
         134,
@@ -835,6 +847,7 @@
         98,
         94,
         103,
+        null,
         null,
         null,
         null,
@@ -871,6 +884,7 @@
         362,
         357,
         380,
+        null,
         null,
         null,
         null,
