@@ -2,7 +2,7 @@
   "_meta": {
     "version": 15,
     "updated": "2026-09-23",
-    "publishedAt": "2026-09-26T15:37:46.030Z",
+    "publishedAt": "2026-10-03T00:19:36.552Z",
     "description": "Grupo Aguila - 2026 (v15): Operaciones: ultimos 3 cortes corregidos a SEPTIEMBRE (Sep/04, Sep/11, Sep/18; antes Ago/04, Ago/11, Ago/18) para que se acumulen en su mes. Logistica completada desde INDICADORES_DE_OPERACION_11092026 Hoja3 (Reparto L/F Jun/19..Sep/18, Almacen PE/PA Jun/19-Jun/26, PA May/01=81). Arrays de logistica extendidos a 34 cortes (antes 32, causaba desfase en tabla). Almacen sin dato en Hoja3 desde Jul/17 queda null. Version 15 para invalidar localStorage."
   },
   "ventas": {
@@ -1052,6 +1052,10 @@
       {
         "mes": "SEPTIEMBRE",
         "label": "Sep/25"
+      },
+      {
+        "mes": "OCTUBRE",
+        "label": "Oct/02"
       }
     ],
     "data": {
@@ -1091,7 +1095,8 @@
         3021063,
         2152828,
         2665756,
-        3467428
+        3467428,
+        3629703
       ],
       "PLAZO_COBRO": [
         53,
@@ -1129,7 +1134,8 @@
         32,
         32,
         33,
-        33
+        33,
+        34
       ],
       "RECUPERACION": [
         0.35,
@@ -1167,7 +1173,8 @@
         0.3,
         0.29,
         0.31,
-        0.32
+        0.32,
+        0.33
       ],
       "EGRESOS": [
         2119635,
@@ -1205,7 +1212,8 @@
         2686159,
         1811198,
         1053158,
-        3148663
+        3148663,
+        3283913
       ],
       "GASTOS_OPERACION": [
         368683,
@@ -1243,7 +1251,8 @@
         655566,
         226164,
         1450668,
-        190278
+        190278,
+        572463
       ],
       "FLUJO": [
         478073.1299999999,
@@ -1281,7 +1290,8 @@
         -320662,
         115466,
         161930,
-        128487
+        128487,
+        -226673
       ],
       "CARTERA_VIGENTE": [
         10891000,
@@ -1319,7 +1329,8 @@
         7876991,
         8150000,
         8117591,
-        8012357
+        8012357,
+        7482145
       ],
       "CARTERA_VENCIDA": [
         2.41,
@@ -1357,7 +1368,8 @@
         3600900,
         3538825,
         4215862,
-        4013443
+        4013443,
+        4135696
       ]
     }
   }
