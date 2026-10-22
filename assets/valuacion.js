@@ -494,7 +494,6 @@
           <label class="vm-check ${ST.mode !== 'calendario' ? 'disabled' : ''}" title="Escala los flujos a los días del mes que no tienen corte capturado">
             <input type="checkbox" id="vm-proy" ${ST.proyectar ? 'checked' : ''} ${ST.mode !== 'calendario' ? 'disabled' : ''}> Proyectar días sin corte
           </label>
-          <button class="vm-btn" id="vm-print" title="Imprimir o guardar como PDF para la junta">🖨️ Imprimir / PDF</button>
           <button class="vm-btn vm-admin-only" id="vm-import" title="Actualizar el gasto fijo desde el Excel (hoja DATOS)">📥 Cargar Excel de gastos</button>
         </div>
       </div>
@@ -949,10 +948,6 @@
     }));
     const pr = root.querySelector('#vm-proy');
     if (pr) pr.addEventListener('change', () => { ST.proyectar = pr.checked; saveState(); render(); });
-    root.querySelector('#vm-print')?.addEventListener('click', () => {
-      document.body.classList.add('vm-printing');
-      setTimeout(() => { window.print(); document.body.classList.remove('vm-printing'); }, 60);
-    });
     root.querySelector('#vm-import')?.addEventListener('click', startImport);
   }
 
