@@ -567,3 +567,15 @@ td.new-col { border-left: 2px solid rgba(52,211,153,.18); }
   body.vm-printing .vm-chip-sep { display: none; }
   body.vm-printing .toast, body.vm-printing .modal-overlay { display: none !important; }
 }
+
+/* Matriz concepto × mes (Valuación · Global/Trimestres) */
+.vm-matrix td.hm-hi { background: rgba(251,113,133,.20); color: #fecdd3; font-weight: 600; }
+.vm-matrix td.hm-up { background: rgba(251,191,36,.13); color: #fde68a; }
+.vm-matrix td.hm-lo { background: rgba(52,211,153,.10); color: #a7f3d0; }
+.vm-matrix td.hm-zero { color: rgba(168,153,138,.45); }
+.vm-matrix th:first-child, .vm-matrix td:first-child { position: sticky; left: 0; background: #140d07; z-index: 1; }
+.vm-matrix tr.vm-row-cat td:first-child { background: #1d130b; }
+.vm-hm-key { display: inline-block; padding: 1px 7px; border-radius: 6px; font-size: 10px; margin: 0 2px; }
+.vm-hm-key.hm-hi { background: rgba(251,113,133,.2); color: #fecdd3; }
+.vm-hm-key.hm-up { background: rgba(251,191,36,.15); color: #fde68a; }
+.vm-hm-key.hm-lo { background: rgba(52,211,153,.12); color: #a7f3d0; }

@@ -556,6 +556,51 @@
   }
 
   /* ── Tabla de gasto por concepto ────────────────────────────── */
+  /* ── Matriz concepto × mes (Global / Trimestres) ────────────── */
+  function gastoMatrix(p, M, cm, monthly) {
+    if (!isNum(M.g.total)) return '<div class="vm-empty">Sin gasto fijo cargado para este periodo.</div>';
+    const ms = p.months.filter(m => M.g.monthsWith.includes(m));
+    const MM = ms.map(m => monthly.find(x => x.m === m).M);
+    const all = gastos(cm), nAll = Math.max(1, all.monthsWith.length);
+    const nP = Math.max(1, ms.length);
+    const cell = (v, avg) => {
+      let cls = '';
+      if (!v) cls = 'hm-zero';
+      else if (avg > 0) {
+        const r = v / avg;
+        cls = r > 1.5 && v - avg > 15000 ? 'hm-hi' : r > 1.15 ? 'hm-up' : r < 0.85 ? 'hm-lo' : '';
+      } else cls = 'hm-hi';
+      return `<td class="${cls}">${v ? fmt(v) : '—'}</td>`;
+    };
+    const cats = Object.keys(M.g.byCat).sort((a, b) => M.g.byCat[b] - M.g.byCat[a]);
+    let h = '<table class="vm-table vm-gastos vm-matrix"><thead><tr><th>Concepto</th>' +
+      ms.map(m => `<th>${MES_ABR[m]}</th>`).join('') +
+      `<th class="vm-col-hl">Total ${esc(p.label)}</th><th>% part.</th><th>Prom. mensual</th><th>Mes más alto</th></tr></thead><tbody>`;
+    const maxMes = vals => { let bi = -1, bv = -Infinity; vals.forEach((v, i) => { if (v > bv) { bv = v; bi = i; } }); return bv > 0 ? `${MES_ABR[ms[bi]]} · ${fmtM(bv)}` : '—'; };
+    cats.forEach((k, ci) => {
+      const cv = MM.map(x => x.g.byCat[k] || 0), avgK = (all.byCat[k] || 0) / nAll;
+      h += `<tr class="vm-row-cat"><td><span class="dot" style="background:${catColor(k, ci)}"></span>${esc(cap(k))}</td>` +
+        cv.map(v => `<td>${fmt(v)}</td>`).join('') +
+        `<td class="vm-col-hl">${fmt(M.g.byCat[k])}</td><td>${pct(div(M.g.byCat[k], M.g.total))}</td><td>${fmt(M.g.byCat[k] / nP)}</td><td>${maxMes(cv)}</td></tr>`;
+      Object.keys(M.g.byConcept).filter(c => M.g.cat[c] === k && M.g.byConcept[c])
+        .sort((a, b) => M.g.byConcept[b] - M.g.byConcept[a]).forEach(c => {
+          const vs = MM.map(x => x.g.byConcept[c] || 0), avg = (all.byConcept[c] || 0) / nAll;
+          h += `<tr class="vm-row-sub"><td>${esc(cap(c))}</td>` + vs.map(v => cell(v, avg)).join('') +
+            `<td class="vm-col-hl">${fmt(M.g.byConcept[c])}</td><td>${pct(div(M.g.byConcept[c], M.g.total))}</td><td>${fmt(M.g.byConcept[c] / nP)}</td><td>${maxMes(vs)}</td></tr>`;
+        });
+    });
+    const tot = MM.map(x => x.g.total);
+    h += `<tr class="vm-row-total"><td>Total gasto fijo</td>${tot.map(v => `<td>${fmt(v)}</td>`).join('')}<td class="vm-col-hl">${fmt(M.g.total)}</td><td>100%</td><td>${fmt(M.g.total / nP)}</td><td>${maxMes(tot)}</td></tr>`;
+    h += `<tr class="vm-row-sub"><td>Variación vs mes anterior</td>${tot.map((v, i) => {
+      const prevM = monthly.find(x => x.m === ms[i] - 1);
+      const pv = prevM ? prevM.M.g.total : null;
+      const d = div(v - pv, pv);
+      return `<td style="color:${!isNum(d) ? 'inherit' : d > 0 ? 'var(--red)' : 'var(--green)'}">${sgnP(d)}</td>`;
+    }).join('')}<td class="vm-col-hl"></td><td></td><td></td><td></td></tr>`;
+    h += `<tr class="vm-row-sub"><td>Gasto fijo / ventas</td>${MM.map(x => `<td>${pct(x.pl.gfv)}</td>`).join('')}<td class="vm-col-hl">${pct(M.pl.gfv)}</td><td></td><td></td><td></td></tr>`;
+    return h + '</tbody></table>';
+  }
+
   function gastoTable(p, M, P, cm) {
     const all = gastos(cm), nAll = Math.max(1, all.monthsWith.length);
     const nP = Math.max(1, M.g.monthsWith.length);
@@ -753,9 +798,13 @@
         ${panel('Gasto fijo por categoría y mes', 'Apilado · resaltado = periodo seleccionado · línea = promedio mensual', 'vmGasTrend', 270)}
         ${panel('Top conceptos: periodo vs promedio mensual', p.kind === 'month' ? 'Mes seleccionado vs su promedio ' + MES_ABR[cm[0]] + '–' + MES_ABR[cm[cm.length - 1]] : 'Promedio mensual del periodo vs promedio del año', 'vmGasVsProm', 270)}
       </div>
-      <div class="panel vm-table-panel"><div class="panel-title">Detalle por concepto</div>
+      ${p.kind === 'month'
+        ? `<div class="panel vm-table-panel"><div class="panel-title">Detalle por concepto — ${esc(name)}</div>
         <div class="panel-sub">Agrupado por categoría · semáforo: Alto = >1.5× su promedio mensual y +$15K · Arriba = >15% sobre promedio</div>
-        <div class="table-wrap">${gastoTable(p, M, P, cm)}</div></div>
+        <div class="table-wrap">${gastoTable(p, M, P, cm)}</div></div>`
+        : `<div class="panel vm-table-panel"><div class="panel-title">Detalle por concepto y mes — ${esc(name)}</div>
+        <div class="panel-sub">Cada mes por separado · color de celda vs el promedio mensual del concepto: <span class="vm-hm-key hm-hi">Alto &gt;1.5× y +$15K</span> <span class="vm-hm-key hm-up">Arriba &gt;15%</span> <span class="vm-hm-key hm-lo">Abajo &lt;−15%</span> · clic en un mes arriba para ver su detalle</div>
+        <div class="table-wrap">${gastoMatrix(p, M, cm, monthly)}</div></div>`}
 
       <div class="panel vm-quality"><div class="panel-title">🩺 Calidad de datos del periodo</div>
         <div class="panel-sub">Valores que difieren más de 20× de la mediana del indicador · se reportan, no se corrigen automáticamente</div>
