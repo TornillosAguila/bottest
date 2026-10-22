@@ -345,16 +345,20 @@
     setTimeout(() => ov.querySelector('#gh-token').focus(), 50);
   }
 
-  async function commitToGitHub() {
+  /* onlySections (opcional): lista explícita de secciones a subir (p. ej. ['gastos']
+     desde el importador de Valuación Mensual). Sin argumento = secciones propias. */
+  async function commitToGitHub(onlySections) {
     if (!adminLogged()) { toast('🔒 Inicia sesión de administrador', 'error'); return; }
+    const explicit = Array.isArray(onlySections) && onlySections.length > 0;
     const token = getGhToken();
-    if (!token) { showGitHubTokenModal(() => commitToGitHub()); return; }
+    if (!token) { showGitHubTokenModal(() => commitToGitHub(explicit ? onlySections : undefined)); return; }
 
-    const secs = ownedSections();
+    const secs = explicit ? onlySections.slice() : ownedSections();
     if (!secs.length) { toast('🔒 Tu usuario no tiene una sección para guardar', 'error'); return; }
 
-    // Persistir localmente (solo la sección propia) para consistencia de esta sesión
-    saveToLocalStorage();
+    // Persistir localmente (solo la sección propia) para consistencia de esta sesión.
+    // Las subidas explícitas (gastos) no usan override local.
+    if (!explicit) saveToLocalStorage();
 
     const base = `https://api.github.com/repos/${GH_CONFIG.owner}/${GH_CONFIG.repo}/contents/${GH_CONFIG.path}`;
     const headers = {
@@ -416,9 +420,10 @@
         if (putRes.status === 200 || putRes.status === 201) {
           // Éxito: el override local ya no hace falta y podría re-aplicar datos
           // viejos en el próximo load, así que lo limpiamos.
-          try { localStorage.removeItem('dashOverride'); } catch(e){}
+          if (!explicit) { try { localStorage.removeItem('dashOverride'); } catch(e){} }
           // Reflejar en memoria lo que realmente quedó en el repo
           window.DashRaw = merged;
+          if (window.Dash) window.Dash.gastos = merged.gastos || null;
           if (typeof rebuildDash === 'function') rebuildDash();
           toast('✅ Guardado en GitHub (' + secs.join(', ') +
                 '). Visible en ~1-2 min.', 'success', 7000);
@@ -724,7 +729,7 @@
           saveToLocalStorage();
           document.dispatchEvent(new Event('dashrebuilt'));   // refresca todas las vistas
         });
-        div.querySelector(`#atb-github-${seccion}`).addEventListener('click', commitToGitHub);
+        div.querySelector(`#atb-github-${seccion}`).addEventListener('click', () => commitToGitHub());
         div.querySelector(`#atb-refresh-${seccion}`).addEventListener('click', () => {
           rebuildDash();                          // recalcula totales/flujo/meses y refresca todo
           toast('🔄 Dashboards actualizados');
@@ -741,7 +746,7 @@
         <button class="btn-admin github" id="atb-github-${seccion}" title="Guardar los datos directo en el repositorio" style="background:rgba(52,211,153,.18);border-color:rgba(52,211,153,.55);color:#22c55e;font-weight:700">☁️ Guardar en GitHub</button>
         <button class="btn-admin pwd"    id="atb-pwd-${seccion}" title="Cambiar mi contraseña">🔑 Contraseña</button>`;
         div.querySelector(`#atb-add-${seccion}`).addEventListener('click', () => showNewCorteModal(seccion));
-        div.querySelector(`#atb-github-${seccion}`).addEventListener('click', commitToGitHub);
+        div.querySelector(`#atb-github-${seccion}`).addEventListener('click', () => commitToGitHub());
         div.querySelector(`#atb-pwd-${seccion}`).addEventListener('click', showChangePasswordModal);
       }
     } else if (adminLogged()) {
@@ -804,7 +809,7 @@
     const O = window.Dash.ope;
     const A = window.Dash.admon;
     const allMeses = [...new Set([...V.meses,...O.meses,...A.meses])];
-    const MABRV    = {ENERO:'Ene',FEBRERO:'Feb',MARZO:'Mar',ABRIL:'Abr',MAYO:'May',JUNIO:'Jun'};
+    const MABRV    = MES_ABR;   // mapa completo Ene–Dic (antes solo llegaba a Jun → "Ene–OCTUBRE")
     const first    = MABRV[allMeses[0]] || allMeses[0];
     const last     = MABRV[allMeses[allMeses.length-1]] || allMeses[allMeses.length-1];
     document.getElementById('hdr-periodo').innerHTML  = `Período: <span>${first}–${last} 2026</span>`;
@@ -986,7 +991,7 @@
     const V   = window.Dash.ventas;
     const row = document.getElementById('month-filter-row');
     if (!row) return;
-    const MABRV = {ENERO:'Enero',FEBRERO:'Febrero',MARZO:'Marzo',ABRIL:'Abril',MAYO:'Mayo',JUNIO:'Junio'};
+    const MABRV = Object.fromEntries(MES_OPTIONS.map(m => [m, m[0] + m.slice(1).toLowerCase()]));
     row.innerHTML = `<span class="filter-label">Mes:</span>
       <button class="month-btn active" onclick="filterCanal('TODOS',this)">Todos</button>`;
     V.meses.forEach(mes => {
@@ -1366,6 +1371,7 @@
       if (id==='tabla-a') buildTablaAdmon();
       if (id==='consolidado') { buildSemaforo(); window.buildConsolidado(); }
       if (id==='empresa')     { buildResumenEmpresa(); window.buildEmpresa(); window.animateEmpresaKPINumbers && window.animateEmpresaKPINumbers(); }
+      if (id==='valuacion')   { window.buildValuacion && window.buildValuacion(); }
     }
 
     // Animaciones "en vivo" (gráficas + KPIs) solo mientras Resumen Empresa
@@ -1375,6 +1381,15 @@
     } else {
       window.stopEmpresaLiveAnimations && window.stopEmpresaLiveAnimations();
     }
+  };
+
+  /* ── API mínima para el módulo Valuación Mensual (valuacion.js) ── */
+  window.DashAdmin = {
+    toast, createOverlay, esc,
+    isLogged: adminLogged,
+    // Gastos fijos: los carga el super-admin o el usuario de Administración
+    canEditGastos: () => adminLogged() && (canEditSection('gastos') || canEditSection('admon')),
+    commitSections: secs => commitToGitHub(secs),
   };
 
   /* ── Init ─────────────────────────────────────────────────── */

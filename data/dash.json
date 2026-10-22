@@ -1,9 +1,9 @@
 {
   "_meta": {
-    "version": 15,
-    "updated": "2026-09-23",
+    "version": 18,
+    "updated": "2026-10-22",
     "publishedAt": "2026-10-17T00:47:02.421Z",
-    "description": "Grupo Aguila - 2026 (v15): Operaciones: ultimos 3 cortes corregidos a SEPTIEMBRE (Sep/04, Sep/11, Sep/18; antes Ago/04, Ago/11, Ago/18) para que se acumulen en su mes. Logistica completada desde INDICADORES_DE_OPERACION_11092026 Hoja3 (Reparto L/F Jun/19..Sep/18, Almacen PE/PA Jun/19-Jun/26, PA May/01=81). Arrays de logistica extendidos a 34 cortes (antes 32, causaba desfase en tabla). Almacen sin dato en Hoja3 desde Jul/17 queda null. Version 15 para invalidar localStorage."
+    "description": "Grupo Aguila - 2026 (v18): correcciones de captura confirmadas por Sistemas: Ope DIAS_REPARACION Ago/28 2875->2.8; Admon CARTERA_VENCIDA Jun/26 1.9->1900000; Ope NIVEL_SERVICIO Ene/30 259->259000; Admon CARTERA_VENCIDA Ene/09 2.41->2410000; Ventas PLATAFORMA Mar/06 185->185000 (VENTAS TOTALES recalculado). Incluye seccion \"gastos\" (v16, ENE-SEP 2026) para el modulo Valuacion Mensual. Version 18 para invalidar localStorage."
   },
   "ventas": {
     "metas": {
@@ -275,7 +275,7 @@
         198806,
         175773,
         187461,
-        185,
+        185000,
         176468,
         170143,
         196512,
@@ -361,7 +361,7 @@
         4071359,
         3089003,
         3388103,
-        3246069,
+        3430884,
         3299959,
         3180366,
         3481348,
@@ -631,7 +631,7 @@
         378335,
         332742,
         345044,
-        259,
+        259000,
         259377,
         292055,
         201446,
@@ -769,7 +769,7 @@
         2,
         2,
         3,
-        2875,
+        2.8,
         3,
         2,
         2,
@@ -1382,7 +1382,7 @@
         8478615
       ],
       "CARTERA_VENCIDA": [
-        2.41,
+        2410000,
         2743000,
         2494000,
         2753000,
@@ -1406,7 +1406,7 @@
         3530984,
         3957780,
         4009790,
-        1.9,
+        1900000,
         3330504,
         3634095,
         3277470,
@@ -1423,5 +1423,563 @@
         3843252
       ]
     }
+  },
+  "gastos": {
+    "anio": 2026,
+    "fuente": "GASTOSFIJOSTETOR_ENE-SEP_2026.xlsx · hoja DATOS",
+    "actualizado": "2026-10-22",
+    "meses": [
+      "ENERO",
+      "FEBRERO",
+      "MARZO",
+      "ABRIL",
+      "MAYO",
+      "JUNIO",
+      "JULIO",
+      "AGOSTO",
+      "SEPTIEMBRE"
+    ],
+    "conceptos": [
+      {
+        "concepto": "NOMINA",
+        "categoria": "CAPITAL HUMANO",
+        "valores": [
+          597567.75,
+          616077,
+          645397.18,
+          636208.47,
+          634703.24,
+          593110.91,
+          609760.28,
+          587124.6,
+          596708
+        ]
+      },
+      {
+        "concepto": "IMPUESTOS",
+        "categoria": "OBLIGACIONES FISCALES",
+        "valores": [
+          514318,
+          552372,
+          470028,
+          468530,
+          442349,
+          385482,
+          439201,
+          546554,
+          404878
+        ]
+      },
+      {
+        "concepto": "PRESTAMOS",
+        "categoria": "FINANCIERO Y CORPORATIVO",
+        "valores": [
+          235904.29,
+          234558.47,
+          231520.28,
+          231867.51,
+          230044.59,
+          229176.53,
+          395843,
+          336485,
+          334555
+        ]
+      },
+      {
+        "concepto": "IMSS",
+        "categoria": "CAPITAL HUMANO",
+        "valores": [
+          369314.81,
+          94645,
+          398611.35,
+          95218.83,
+          385078.92,
+          92217.89,
+          392870,
+          87503,
+          356961
+        ]
+      },
+      {
+        "concepto": "VEHICULOS",
+        "categoria": "FLOTA Y LOGISTICA",
+        "valores": [
+          168840.59,
+          112500.71,
+          163976.43,
+          83271.14,
+          539197.57,
+          98928.09,
+          104815.46,
+          98926,
+          98927
+        ]
+      },
+      {
+        "concepto": "DIVIDENDOS",
+        "categoria": "FINANCIERO Y CORPORATIVO",
+        "valores": [
+          125000,
+          125000,
+          125000,
+          125000,
+          125000,
+          125000,
+          125000,
+          125000,
+          125000
+        ]
+      },
+      {
+        "concepto": "FLETES",
+        "categoria": "FLOTA Y LOGISTICA",
+        "valores": [
+          23019.57,
+          132085.69,
+          117337.95,
+          145128.78,
+          95528.58,
+          167179.63,
+          99187.4,
+          89404,
+          180471
+        ]
+      },
+      {
+        "concepto": "GASOLINA",
+        "categoria": "FLOTA Y LOGISTICA",
+        "valores": [
+          66950.43,
+          96020.92,
+          102787.79,
+          119319.65,
+          90681.13,
+          125708.21,
+          115689.98,
+          121225,
+          103562
+        ]
+      },
+      {
+        "concepto": "MEJORAS LOCAL",
+        "categoria": "INSTALACIONES Y SERVICIOS",
+        "valores": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          487350,
+          116000,
+          0
+        ]
+      },
+      {
+        "concepto": "VIATICOS",
+        "categoria": "FLOTA Y LOGISTICA",
+        "valores": [
+          40182.6,
+          58865.96,
+          74954.55,
+          43913.11,
+          57963.08,
+          72260.87,
+          58261.57,
+          61159.06,
+          78480
+        ]
+      },
+      {
+        "concepto": "RENTA",
+        "categoria": "INSTALACIONES Y SERVICIOS",
+        "valores": [
+          60000,
+          60000,
+          60000,
+          60000,
+          60000,
+          60000,
+          60000,
+          60000,
+          60000
+        ]
+      },
+      {
+        "concepto": "SISTEMA",
+        "categoria": "OPERACION Y ADMINISTRACION",
+        "valores": [
+          95102.3,
+          0,
+          45095,
+          0,
+          2563.6,
+          0,
+          0,
+          38042,
+          358419
+        ]
+      },
+      {
+        "concepto": "PTU",
+        "categoria": "CAPITAL HUMANO",
+        "valores": [
+          0,
+          0,
+          0,
+          0,
+          432600,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "concepto": "SEGUROS",
+        "categoria": "FLOTA Y LOGISTICA",
+        "valores": [
+          230620.64,
+          52455.04,
+          0,
+          17105,
+          0,
+          9255,
+          0,
+          58585,
+          0
+        ]
+      },
+      {
+        "concepto": "IMPUESTO SOBRE NOMINA",
+        "categoria": "CAPITAL HUMANO",
+        "valores": [
+          32645,
+          32697,
+          36148,
+          33808,
+          31880,
+          32406,
+          32514,
+          30823,
+          29755
+        ]
+      },
+      {
+        "concepto": "MOBILIARIO Y EQUIPO",
+        "categoria": "OPERACION Y ADMINISTRACION",
+        "valores": [
+          11182,
+          0,
+          33107.72,
+          51737.84,
+          10084.44,
+          2170,
+          0,
+          48598,
+          105999
+        ]
+      },
+      {
+        "concepto": "MANTENIMIENTO VEHICULOS",
+        "categoria": "FLOTA Y LOGISTICA",
+        "valores": [
+          3872.96,
+          26567.44,
+          24668,
+          23614.25,
+          13104.42,
+          35874.8,
+          12705,
+          33089,
+          62969
+        ]
+      },
+      {
+        "concepto": "ASESORIAS",
+        "categoria": "OPERACION Y ADMINISTRACION",
+        "valores": [
+          12992,
+          12992,
+          12992,
+          22852,
+          12992,
+          12992,
+          52790,
+          47792,
+          40600
+        ]
+      },
+      {
+        "concepto": "FINIQUITOS",
+        "categoria": "CAPITAL HUMANO",
+        "valores": [
+          21797.14,
+          0,
+          0,
+          15084.5,
+          21498.57,
+          16770.48,
+          21597,
+          32947,
+          66545
+        ]
+      },
+      {
+        "concepto": "REFRENDOS",
+        "categoria": "FLOTA Y LOGISTICA",
+        "valores": [
+          181077.91,
+          0,
+          8933,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "concepto": "FONACOT",
+        "categoria": "CAPITAL HUMANO",
+        "valores": [
+          14512.08,
+          13418.14,
+          12711.93,
+          11481.18,
+          15475.46,
+          16420.6,
+          15824,
+          42934,
+          0
+        ]
+      },
+      {
+        "concepto": "PAPELERIA Y ARTICULOS DE OFICINA",
+        "categoria": "OPERACION Y ADMINISTRACION",
+        "valores": [
+          8837.9,
+          21322.44,
+          15524.73,
+          8689,
+          6275.99,
+          41528.39,
+          6350,
+          1838,
+          15012
+        ]
+      },
+      {
+        "concepto": "TELEFONOS",
+        "categoria": "INSTALACIONES Y SERVICIOS",
+        "valores": [
+          11511,
+          12299,
+          13444,
+          12669,
+          12189,
+          11442,
+          11520,
+          11728,
+          14801
+        ]
+      },
+      {
+        "concepto": "UNIFORMES",
+        "categoria": "CAPITAL HUMANO",
+        "valores": [
+          0,
+          5220,
+          0,
+          5800,
+          0,
+          0,
+          53130,
+          30740,
+          5162
+        ]
+      },
+      {
+        "concepto": "CUOTAS A CAMARAS",
+        "categoria": "OPERACION Y ADMINISTRACION",
+        "valores": [
+          15110,
+          20802,
+          19800,
+          0,
+          0,
+          17400,
+          8700,
+          0,
+          18040
+        ]
+      },
+      {
+        "concepto": "LLANTAS",
+        "categoria": "FLOTA Y LOGISTICA",
+        "valores": [
+          34680,
+          0,
+          15180,
+          0,
+          10500,
+          0,
+          25779.99,
+          7900,
+          0
+        ]
+      },
+      {
+        "concepto": "BOLSAS",
+        "categoria": "OPERACION Y ADMINISTRACION",
+        "valores": [
+          6330.12,
+          0,
+          32776,
+          6359.37,
+          0,
+          7920.25,
+          0,
+          10200,
+          0
+        ]
+      },
+      {
+        "concepto": "TONER",
+        "categoria": "OPERACION Y ADMINISTRACION",
+        "valores": [
+          3780,
+          9570,
+          3260,
+          9440,
+          2380,
+          7240,
+          5588,
+          6310,
+          6340
+        ]
+      },
+      {
+        "concepto": "PROPAGANDA Y PUBLICIDAD",
+        "categoria": "OPERACION Y ADMINISTRACION",
+        "valores": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          10010,
+          27536
+        ]
+      },
+      {
+        "concepto": "FUMIGACION",
+        "categoria": "INSTALACIONES Y SERVICIOS",
+        "valores": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          34000,
+          0,
+          0
+        ]
+      },
+      {
+        "concepto": "LIMPIEZA",
+        "categoria": "INSTALACIONES Y SERVICIOS",
+        "valores": [
+          2387.5,
+          1976,
+          2553.5,
+          2169,
+          2158,
+          2529,
+          500,
+          2212,
+          3020
+        ]
+      },
+      {
+        "concepto": "CAFETERIA",
+        "categoria": "OPERACION Y ADMINISTRACION",
+        "valores": [
+          687,
+          0,
+          1874,
+          1935,
+          2858,
+          0,
+          3728.4,
+          0,
+          1304
+        ]
+      },
+      {
+        "concepto": "LUZ",
+        "categoria": "INSTALACIONES Y SERVICIOS",
+        "valores": [
+          0,
+          2933,
+          0,
+          381,
+          0,
+          2326,
+          0,
+          5511.03,
+          0
+        ]
+      },
+      {
+        "concepto": "AGUA POTABLE",
+        "categoria": "INSTALACIONES Y SERVICIOS",
+        "valores": [
+          1024,
+          1023,
+          1024,
+          1061,
+          1057,
+          1056,
+          0,
+          1061,
+          1062.28
+        ]
+      },
+      {
+        "concepto": "AGUA GARRAFON",
+        "categoria": "INSTALACIONES Y SERVICIOS",
+        "valores": [
+          1348,
+          1376,
+          630,
+          770,
+          1190,
+          770,
+          315,
+          945,
+          560
+        ]
+      },
+      {
+        "concepto": "ALARMA",
+        "categoria": "INSTALACIONES Y SERVICIOS",
+        "valores": [
+          812.8,
+          812.8,
+          812.8,
+          812.8,
+          812.8,
+          812.8,
+          812.8,
+          812.8,
+          812.8
+        ]
+      }
+    ]
   }
 }

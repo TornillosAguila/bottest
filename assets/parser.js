@@ -157,7 +157,18 @@
       ],
     };
 
-    return { ventas, ope, admon, _raw: raw };
+    /* — GASTOS FIJOS (mensual calendario, módulo Valuación Mensual) —
+       Sección opcional: si dash.json es antiguo no existe y el módulo lo indica. */
+    const G = raw.gastos && Array.isArray(raw.gastos.conceptos) ? raw.gastos : null;
+    if (G) {
+      const n = (G.meses || []).length;
+      G.conceptos.forEach(c => {
+        if (!Array.isArray(c.valores)) c.valores = [];
+        while (c.valores.length < n) c.valores.push(0);
+      });
+    }
+
+    return { ventas, ope, admon, gastos: G, _raw: raw };
   }
 
   /* Carga dash.json (primero revisa override en localStorage) */
