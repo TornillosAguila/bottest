@@ -2,7 +2,7 @@
   "_meta": {
     "version": 19,
     "updated": "2026-10-23",
-    "publishedAt": "2026-10-24T00:27:23.685Z",
+    "publishedAt": "2026-10-24T00:50:44.958Z",
     "description": "Grupo Aguila - 2026 (v19): Operaciones SEP (4,11,18,25) y OCT (2,9,16) reintegrados desde INDICADORES_DE_OPERACION Hoja3 (no se habian guardado). Oct/02 NIVEL_SERVICIO capturado \"$2,513.01\" -> 251301 (por confirmar). Version 19 para invalidar localStorage. correcciones de captura confirmadas por Sistemas: Ope DIAS_REPARACION Ago/28 2875->2.8; Admon CARTERA_VENCIDA Jun/26 1.9->1900000; Ope NIVEL_SERVICIO Ene/30 259->259000; Admon CARTERA_VENCIDA Ene/09 2.41->2410000; Ventas PLATAFORMA Mar/06 185->185000 (VENTAS TOTALES recalculado). Incluye seccion \"gastos\" (v16, ENE-SEP 2026) para el modulo Valuacion Mensual. Version 18 para invalidar localStorage."
   },
   "ventas": {
@@ -571,6 +571,10 @@
       {
         "mes": "OCTUBRE",
         "label": "Oct/16"
+      },
+      {
+        "mes": "OCTUBRE",
+        "label": "Oct/23"
       }
     ],
     "data": {
@@ -612,7 +616,8 @@
         2774551,
         2105314,
         1778233,
-        1790320
+        1790320,
+        2210766
       ],
       "DEVOLUCIONES": [
         23,
@@ -652,7 +657,8 @@
         21,
         25,
         33,
-        29
+        29,
+        31
       ],
       "NIVEL_SERVICIO": [
         378335,
@@ -692,7 +698,8 @@
         218513,
         251301,
         235211,
-        331482
+        331482,
+        252274
       ],
       "NIVEL_SERVICIO_PCT": [
         10.91,
@@ -732,7 +739,8 @@
         8.46,
         9.51,
         8.39,
-        9.5
+        9.5,
+        8.98
       ],
       "MAQUINAS": [
         18,
@@ -772,7 +780,8 @@
         10,
         22,
         18,
-        26
+        26,
+        20
       ],
       "DIAS_REPARACION": [
         2,
@@ -806,6 +815,7 @@
         2,
         3,
         2.8,
+        2,
         2,
         2,
         2,
@@ -852,7 +862,8 @@
         221,
         191,
         146,
-        236
+        236,
+        240
       ],
       "REPARTO_FORANEO": [
         841,
@@ -892,7 +903,8 @@
         334,
         462,
         293,
-        421
+        421,
+        293
       ],
       "ALM_PEDIDOS": [
         134,
@@ -919,6 +931,7 @@
         98,
         94,
         103,
+        null,
         null,
         null,
         null,
@@ -959,6 +972,7 @@
         362,
         357,
         380,
+        null,
         null,
         null,
         null,
