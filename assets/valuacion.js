@@ -402,9 +402,8 @@
     const vt = val(M.v.total);
     if (isNum(vt) && M.vMeta > 0) {
       const c = vt / M.vMeta;
-      const peor = CANALES.map(k => ({ k, c: div(val(M.v[k]), M.vMetaCanal[k]) })).filter(x => isNum(x.c)).sort((a, b) => a.c - b.c)[0];
       add(c >= 1 ? 'good' : c >= 0.9 ? 'warn' : 'bad',
-        `Ventas al ${pct(c, 0)} de la meta (${fmtM(vt)} vs ${fmtM(M.vMeta)}).` + (peor ? ` Canal más rezagado: ${CAN_LBL[peor.k]} (${pct(peor.c, 0)}).` : ''));
+        `Ventas al ${pct(c, 0)} de la meta (${fmtM(vt)} vs ${fmtM(M.vMeta)}).`);
     }
 
     /* Flujo y cartera */
