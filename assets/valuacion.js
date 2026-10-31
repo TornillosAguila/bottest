@@ -98,7 +98,10 @@
     const out = [];
     for (let m = 0; m <= Math.min(11, lastData); m++) {
       const finMes = new Date(y, m + 1, 1);       // día siguiente al último del mes
-      if (y < t0.getFullYear() || finMes <= t0) out.push(m);
+      // Mes ya terminado, o mes en curso cuyo reporte de gasto fijo ya está
+      // cargado (Administración lo da por cerrado → se puede valuar antes del día 1).
+      const gastoCerrado = !!(G && G.meses && G.meses.includes(MES[m]));
+      if (y < t0.getFullYear() || finMes <= t0 || gastoCerrado) out.push(m);
     }
     return out;
   }
@@ -980,7 +983,11 @@
       return false;
     };
     if (!(sheetName && tryFind(sheetName))) sheetName = names.find(n => tryFind(n));
-    if (!rows) throw new Error('No encontré una hoja con columnas CONCEPTO · CATEGORIA · MES · MONTO (normalmente la hoja DATOS).');
+    if (!rows) {
+      const mx = names.map(n => parseGastosMatrix(wb, n)).find(Boolean);
+      if (mx) return mx;
+      throw new Error('No encontré una hoja con columnas CONCEPTO · CATEGORIA · MES · MONTO (hoja DATOS) ni el formato por meses (CONCEPTO | MONTO por mes, renglón TOTAL).');
+    }
     const errs = [], data = {}, order = [], cat = {};
     let maxM = -1;
     for (let i = hdrRow + 1; i < rows.length; i++) {
@@ -999,6 +1006,50 @@
     if (maxM < 0) throw new Error('La hoja no tiene renglones de gasto válidos.');
     const meses = MES.slice(0, maxM + 1);
     const conceptos = order.map(c => ({ concepto: c, categoria: cat[c] || 'SIN CATEGORIA', valores: meses.map((_, i) => data[c][i] || 0) }));
+    return { sheetName, meses, conceptos, errs };
+  }
+
+  /* Formato alterno «por meses» (ej. Gastos_fijos_TA_Y_AP.xlsx · Hoja1):
+     un renglón de encabezado con los nombres de mes; bajo cada mes, la
+     columna del mes trae el CONCEPTO y la siguiente el MONTO, hasta el
+     renglón TOTAL. La categoría se toma del gasto ya cargado. */
+  const GASTO_ALIAS = { 'PAGO DE VEHICULOS': 'VEHICULOS' };
+  function parseGastosMatrix(wb, sheetName) {
+    const r = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], { header: 1, raw: true, defval: null });
+    let hdr = -1, mcols = [];
+    for (let i = 0; i < Math.min(10, r.length) && hdr < 0; i++) {
+      const found = [];
+      (r[i] || []).forEach((v, j) => { const mi = MES.indexOf(norm(v)); if (mi >= 0) found.push({ mi, j }); });
+      if (found.length >= 2) { hdr = i; mcols = found; }
+    }
+    if (hdr < 0) return null;
+    const cur = gastoData();
+    const cat = {}, order = [];
+    if (cur && cur.conceptos) cur.conceptos.forEach(c => { cat[c.concepto] = c.categoria; order.push(c.concepto); });
+    const errs = [], data = {};
+    let maxM = -1;
+    mcols.forEach(({ mi, j }) => {
+      let hitTotal = false;
+      for (let i = hdr + 1; i < r.length; i++) {
+        const row = r[i] || [];
+        let c = norm(row[j]);
+        if (!c) continue;
+        if (c === 'TOTAL') { hitTotal = true; break; }
+        c = GASTO_ALIAS[c] || c;
+        const raw = row[j + 1];
+        const v = raw == null || raw === '' ? 0 : typeof raw === 'number' ? raw : parseFloat(String(raw).replace(/[$,\s]/g, ''));
+        if (!isNum(v)) { errs.push(`${cap(MES[mi])}: monto «${raw}» no numérico (${c})`); continue; }
+        if (!data[c]) { data[c] = {}; if (!order.includes(c)) order.push(c); }
+        data[c][mi] = Math.round(((data[c][mi] || 0) + v) * 100) / 100;
+      }
+      if (!hitTotal) errs.push(`${cap(MES[mi])}: no encontré el renglón TOTAL (se leyó hasta el final de la hoja)`);
+      if (mi > maxM) maxM = mi;
+    });
+    const used = order.filter(c => data[c]);
+    if (maxM < 0 || !used.length) return null;
+    used.forEach(c => { if (!cat[c]) errs.push(`Concepto nuevo «${c}» sin categoría: queda como SIN CATEGORIA`); });
+    const meses = MES.slice(0, maxM + 1);
+    const conceptos = used.map(c => ({ concepto: c, categoria: cat[c] || 'SIN CATEGORIA', valores: meses.map((_, i) => data[c][i] || 0) }));
     return { sheetName, meses, conceptos, errs };
   }
 
