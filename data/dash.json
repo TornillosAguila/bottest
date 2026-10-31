@@ -2,7 +2,7 @@
   "_meta": {
     "version": 19,
     "updated": "2026-10-23",
-    "publishedAt": "2026-10-30T23:56:21.953Z",
+    "publishedAt": "2026-10-30T23:47:12.299Z",
     "description": "Grupo Aguila - 2026 (v19): Operaciones SEP (4,11,18,25) y OCT (2,9,16) reintegrados desde INDICADORES_DE_OPERACION Hoja3 (no se habian guardado). Oct/02 NIVEL_SERVICIO capturado \"$2,513.01\" -> 251301 (por confirmar). Version 19 para invalidar localStorage. correcciones de captura confirmadas por Sistemas: Ope DIAS_REPARACION Ago/28 2875->2.8; Admon CARTERA_VENCIDA Jun/26 1.9->1900000; Ope NIVEL_SERVICIO Ene/30 259->259000; Admon CARTERA_VENCIDA Ene/09 2.41->2410000; Ventas PLATAFORMA Mar/06 185->185000 (VENTAS TOTALES recalculado). Incluye seccion \"gastos\" (v16, ENE-SEP 2026) para el modulo Valuacion Mensual. Version 18 para invalidar localStorage."
   },
   "ventas": {
@@ -1174,6 +1174,10 @@
       {
         "mes": "OCTUBRE",
         "label": "Oct/23"
+      },
+      {
+        "mes": "OCTUBRE",
+        "label": "Oct/30"
       }
     ],
     "data": {
@@ -1217,7 +1221,8 @@
         3629703,
         2454323,
         2580490,
-        3200881
+        3200881,
+        12506349
       ],
       "PLAZO_COBRO": [
         53,
@@ -1259,7 +1264,8 @@
         34,
         33,
         30,
-        30
+        30,
+        32
       ],
       "RECUPERACION": [
         0.35,
@@ -1301,7 +1307,8 @@
         0.33,
         0.3,
         0.3,
-        0.35
+        0.35,
+        0.4
       ],
       "EGRESOS": [
         2119635,
@@ -1343,7 +1350,8 @@
         3283913,
         1170136,
         2817045,
-        2290661
+        2290661,
+        5836815
       ],
       "GASTOS_OPERACION": [
         368683,
@@ -1385,7 +1393,8 @@
         572463,
         174020,
         870609,
-        540302
+        540302,
+        6738597
       ],
       "FLUJO": [
         478073.1299999999,
@@ -1427,7 +1436,8 @@
         -226673,
         1110167,
         -1107164,
-        369918
+        369918,
+        -69063
       ],
       "CARTERA_VIGENTE": [
         10891000,
@@ -1469,7 +1479,8 @@
         7482145,
         7899271,
         8478615,
-        8222612
+        8222612,
+        7486645
       ],
       "CARTERA_VENCIDA": [
         2410000,
@@ -1511,7 +1522,8 @@
         4135696,
         4054329,
         3843252,
-        3734865
+        3734865,
+        3764063
       ]
     }
   },
