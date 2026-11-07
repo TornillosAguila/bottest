@@ -2,7 +2,7 @@
   "_meta": {
     "version": 21,
     "updated": "2026-10-31",
-    "publishedAt": "2026-11-07T00:33:43.253Z",
+    "publishedAt": "2026-11-07T00:44:06.507Z",
     "description": "Grupo Aguila - 2026 (v21): corte Oct/02 (26-Sep a 02-Oct, 5/7 dias en septiembre) reasignado a SEPTIEMBRE en Ventas, Operaciones y Administracion segun regla de cierre (mes con mas dias). Octubre queda con 4 cortes (Oct/09-Oct/30), ventas Oct = 12,987,508. Valores sin cambio. Version 21 para invalidar localStorage. | Anterior: Grupo Aguila - 2026 (v20): Ventas Oct/30 (24-30 Oct) integrado desde reporte semanal de canales; Gastos fijos OCTUBRE integrados desde Gastos_fijos_TA_Y_AP.xlsx Hoja1 (ENE-SEP verificados sin cambios). Ope y Admon ya tenian Oct/30. Por confirmar: Admon Oct/30 INGRESOS/EGRESOS/GASTOS_OPERACION en escala mensual; Gastos OCT PRESTAMOS 5,436,259 y MEJORAS LOCAL 962,500. Version 20 para invalidar localStorage. | Anterior: Grupo Aguila - 2026 (v19): Operaciones SEP (4,11,18,25) y OCT (2,9,16) reintegrados desde INDICADORES_DE_OPERACION Hoja3 (no se habian guardado). Oct/02 NIVEL_SERVICIO capturado \"$2,513.01\" -> 251301 (por confirmar). Version 19 para invalidar localStorage. correcciones de captura confirmadas por Sistemas: Ope DIAS_REPARACION Ago/28 2875->2.8; Admon CARTERA_VENCIDA Jun/26 1.9->1900000; Ope NIVEL_SERVICIO Ene/30 259->259000; Admon CARTERA_VENCIDA Ene/09 2.41->2410000; Ventas PLATAFORMA Mar/06 185->185000 (VENTAS TOTALES recalculado). Incluye seccion \"gastos\" (v16, ENE-SEP 2026) para el modulo Valuacion Mensual. Version 18 para invalidar localStorage."
   },
   "ventas": {
@@ -597,6 +597,10 @@
       {
         "mes": "OCTUBRE",
         "label": "Oct/30"
+      },
+      {
+        "mes": "NOVIEMBRE",
+        "label": "Nov/06"
       }
     ],
     "data": {
@@ -640,7 +644,8 @@
         1778233,
         1790320,
         2210766,
-        1752864
+        1752864,
+        1553783
       ],
       "DEVOLUCIONES": [
         23,
@@ -682,7 +687,8 @@
         33,
         29,
         31,
-        32
+        32,
+        37
       ],
       "NIVEL_SERVICIO": [
         378335,
@@ -724,7 +730,8 @@
         235211,
         331482,
         252274,
-        229448
+        229448,
+        307001
       ],
       "NIVEL_SERVICIO_PCT": [
         10.91,
@@ -766,7 +773,8 @@
         8.39,
         9.5,
         8.98,
-        8.8
+        8.8,
+        9.67
       ],
       "MAQUINAS": [
         18,
@@ -808,7 +816,8 @@
         18,
         26,
         20,
-        19
+        19,
+        25
       ],
       "DIAS_REPARACION": [
         2,
@@ -842,6 +851,7 @@
         2,
         3,
         2.8,
+        2,
         2,
         2,
         2,
@@ -892,7 +902,8 @@
         146,
         236,
         240,
-        185
+        185,
+        186
       ],
       "REPARTO_FORANEO": [
         841,
@@ -934,7 +945,8 @@
         293,
         421,
         293,
-        421
+        421,
+        393
       ],
       "ALM_PEDIDOS": [
         134,
@@ -961,6 +973,7 @@
         98,
         94,
         103,
+        null,
         null,
         null,
         null,
@@ -1003,6 +1016,7 @@
         362,
         357,
         380,
+        null,
         null,
         null,
         null,
