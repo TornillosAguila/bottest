@@ -2,7 +2,7 @@
   "_meta": {
     "version": 21,
     "updated": "2026-10-31",
-    "publishedAt": "2026-11-21T00:44:09.373Z",
+    "publishedAt": "2026-11-21T14:50:52.034Z",
     "description": "Grupo Aguila - 2026 (v21): corte Oct/02 (26-Sep a 02-Oct, 5/7 dias en septiembre) reasignado a SEPTIEMBRE en Ventas, Operaciones y Administracion segun regla de cierre (mes con mas dias). Octubre queda con 4 cortes (Oct/09-Oct/30), ventas Oct = 12,987,508. Valores sin cambio. Version 21 para invalidar localStorage. | Anterior: Grupo Aguila - 2026 (v20): Ventas Oct/30 (24-30 Oct) integrado desde reporte semanal de canales; Gastos fijos OCTUBRE integrados desde Gastos_fijos_TA_Y_AP.xlsx Hoja1 (ENE-SEP verificados sin cambios). Ope y Admon ya tenian Oct/30. Por confirmar: Admon Oct/30 INGRESOS/EGRESOS/GASTOS_OPERACION en escala mensual; Gastos OCT PRESTAMOS 5,436,259 y MEJORAS LOCAL 962,500. Version 20 para invalidar localStorage. | Anterior: Grupo Aguila - 2026 (v19): Operaciones SEP (4,11,18,25) y OCT (2,9,16) reintegrados desde INDICADORES_DE_OPERACION Hoja3 (no se habian guardado). Oct/02 NIVEL_SERVICIO capturado \"$2,513.01\" -> 251301 (por confirmar). Version 19 para invalidar localStorage. correcciones de captura confirmadas por Sistemas: Ope DIAS_REPARACION Ago/28 2875->2.8; Admon CARTERA_VENCIDA Jun/26 1.9->1900000; Ope NIVEL_SERVICIO Ene/30 259->259000; Admon CARTERA_VENCIDA Ene/09 2.41->2410000; Ventas PLATAFORMA Mar/06 185->185000 (VENTAS TOTALES recalculado). Incluye seccion \"gastos\" (v16, ENE-SEP 2026) para el modulo Valuacion Mensual. Version 18 para invalidar localStorage."
   },
   "ventas": {
@@ -1250,6 +1250,10 @@
       {
         "mes": "NOVIEMBRE",
         "label": "Nov/14"
+      },
+      {
+        "mes": "NOVIEMBRE",
+        "label": "Nov/20"
       }
     ],
     "data": {
@@ -1296,7 +1300,8 @@
         3200881,
         12506349,
         2630825,
-        3638236
+        3638236,
+        2394678
       ],
       "PLAZO_COBRO": [
         53,
@@ -1341,7 +1346,8 @@
         30,
         32,
         32,
-        32
+        32,
+        null
       ],
       "RECUPERACION": [
         0.35,
@@ -1386,7 +1392,8 @@
         0.35,
         0.4,
         0.37,
-        0.31
+        0.31,
+        null
       ],
       "EGRESOS": [
         2119635,
@@ -1431,7 +1438,8 @@
         2290661,
         5836815,
         1974063,
-        1755489
+        1755489,
+        1808704
       ],
       "GASTOS_OPERACION": [
         368683,
@@ -1476,7 +1484,8 @@
         540302,
         6738597,
         107579,
-        1166476
+        1166476,
+        282365
       ],
       "FLUJO": [
         478073.1299999999,
@@ -1521,7 +1530,8 @@
         369918,
         -69063,
         549183,
-        716271
+        716271,
+        303609
       ],
       "CARTERA_VIGENTE": [
         10891000,
@@ -1566,7 +1576,8 @@
         8222612,
         7486645,
         7709695,
-        7567750
+        7567750,
+        6295740
       ],
       "CARTERA_VENCIDA": [
         2410000,
@@ -1611,7 +1622,8 @@
         3734865,
         3764063,
         3797711,
-        3906568
+        3906568,
+        4036978
       ]
     }
   },
